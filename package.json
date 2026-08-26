@@ -1,6 +1,6 @@
 {
   "name": "@gad-lang/ide-vuetify",
-  "version": "0.1.0",
+  "version": "0.1.0-rc.0",
   "description": "Reusable Vuetify 3 IDE component for the Gad language: file explorer, CodeMirror editor, run/format/doc and a stepping debugger. Backend-agnostic — drive it with any IdeApi implementation (HTTP `gad ide` server, or a fully in-browser WASM + LocalStorage backend).",
   "type": "module",
   "main": "dist/ide-vuetify.js",
