@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@gad-lang/codemirror-gad": "^0.1.0-rc.1",
-    "@gad-lang/ide-vuetify": "workspace:*",
+    "@gad-lang/ide-vuetify": "file:..",
     "@gad-lang/prism-gad": "^0.1.0-rc.1",
     "@lezer/common": "^1.5.0",
     "@lezer/highlight": "^1.2.0",
