@@ -83,5 +83,8 @@
     "vue-tsc": "^2.1.0",
     "vuetify": "^3.8.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "workspaces": [
+    "demo"
+  ]
 }
