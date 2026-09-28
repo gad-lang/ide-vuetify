@@ -162,7 +162,7 @@ export const ideApi = {
     jsonFetch<DocResult>("POST", "api/ide/doc-gen", { source, sourceType, mode }),
   eval: (req: { expr: string; repr?: boolean; source?: string; path?: string }) =>
     jsonFetch<EvalResult>("POST", "api/ide/eval", req),
-  inspect: (req: { expr: string; session?: string; source?: string; path?: string }) =>
+  inspect: (req: { expr: string; session?: string; source?: string; path?: string; sourceType?: string }) =>
     jsonFetch<{ ok: boolean; inspect?: InspectResult; error?: string }>("POST", "api/ide/inspect", req),
   diagnose: (source: string, sourceType?: string) =>
     jsonFetch<{ diagnostics: GadDiagnostic[] }>("POST", "api/ide/diagnose", { source, sourceType }).then(
@@ -170,6 +170,9 @@ export const ideApi = {
     ),
   run: (req: {
     path?: string;
+    /** The source dialect ("gad" | "gadTemplate" | "gadx"): the order imports
+     *  without an extension resolve in (default: from `path`). */
+    sourceType?: string;
     source?: string;
     args?: string[];
     disabled?: string[];
@@ -186,6 +189,9 @@ export const ideApi = {
     breakpointSpecs?: BreakpointSpec[];
     stopOnEntry: boolean;
     path?: string;
+    /** The source dialect ("gad" | "gadTemplate" | "gadx"): the order imports
+     *  without an extension resolve in (default: from `path`). */
+    sourceType?: string;
     args?: string[];
     disabled?: string[];
     safe?: boolean;

@@ -325,6 +325,14 @@ export function createController(
     }
   }
 
+  // The backend source type of a file ("gad" | "gadTemplate" | "gadx"), by its
+  // extension: it picks the parser and the order imports without an extension
+  // resolve in.
+  const sourceTypeOf = (path: string): string => {
+    const l = langOf(path);
+    return l === "gadx" ? "gadx" : l === "gadt" ? "gadTemplate" : "gad";
+  };
+
   // --- diagnose -----------------------------------------------------------
   // Forward the editor's dialect ("gad" | "gadx") so the backend parses .gadx
   // with the Gadx front-end instead of as plain Gad (which flags valid gadx
@@ -341,7 +349,13 @@ export function createController(
     const t = target ?? currentTarget();
     busy.value = true;
     try {
-      runRes.value = await api.run({ source: t.source, path: t.path, args: t.args, tagEncode: t.tagEncode || undefined });
+      runRes.value = await api.run({
+        source: t.source,
+        path: t.path,
+        sourceType: sourceTypeOf(t.path),
+        args: t.args,
+        tagEncode: t.tagEncode || undefined,
+      });
     } finally {
       busy.value = false;
     }
@@ -485,6 +499,7 @@ export function createController(
         await api.dbgStart({
           source: t.source,
           path: t.path,
+          sourceType: sourceTypeOf(t.path),
           args: t.args,
           breakpoints: bpFor(t.path),
           breakpointSpecs: bpSpecsFor(t.path),
@@ -520,14 +535,12 @@ export function createController(
       session: session.value ?? undefined,
       source: source.value,
       path: openPath.value,
+      sourceType: dialect.value,
     });
     return r.ok ? r.inspect ?? null : null;
   };
 
-  const dialect = computed(() => {
-    const l = langOf(openPath.value);
-    return l === "gadx" ? "gadx" : l === "gadt" ? "gadTemplate" : "gad";
-  });
+  const dialect = computed(() => sourceTypeOf(openPath.value));
 
   // --- run/debug profiles (JetBrains-style) -------------------------------
   const runProfiles = computed(() => hooks.getRunProfiles?.() ?? []);
