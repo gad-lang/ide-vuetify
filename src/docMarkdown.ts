@@ -137,3 +137,20 @@ export function renderDocMarkdown(md: string): string {
   }
   return out;
 }
+
+/** A doc comment of a file, as the IDE's backend gives it. */
+export interface DocCommentEntry {
+  kind: string;
+  title?: string;
+  content: string;
+}
+
+// renderDocComments is the documentation of a file as HTML: each doc comment
+// under the line of code it documents — the file's own (a "/***" block, kind
+// "root") untitled, the module's.
+export function renderDocComments(docs: DocCommentEntry[]): string {
+  if (!docs.length) return `<p class="text-medium-emphasis">No documentation comments in this file.</p>`;
+  return docs
+    .map((d) => (d.kind === "root" ? "" : `<h4>${escapeHtml(d.title || d.kind)}</h4>`) + renderDocMarkdown(d.content))
+    .join("\n");
+}

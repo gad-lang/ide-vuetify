@@ -46,7 +46,8 @@
     "build": "vite build && vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
     "clean": "rm -rf dist",
     "prepublishOnly": "bun run clean && bun run build",
-    "typecheck": "vue-tsc -p tsconfig.json --noEmit"
+    "typecheck": "vue-tsc -p tsconfig.json --noEmit",
+    "test": "bun test"
   },
   "peerDependencies": {
     "@gad-lang/codemirror-gad": "^0.1.0",

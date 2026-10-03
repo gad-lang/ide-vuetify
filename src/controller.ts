@@ -6,7 +6,7 @@ import { computed, onScopeDispose, reactive, ref, shallowRef, watch, type Inject
 import type { GadDiagnostic } from "@gad-lang/codemirror-gad";
 import { langOf } from "./codemirror";
 import type { LocalVar } from "./codemirror";
-import { renderDocMarkdown } from "./docMarkdown";
+import { renderDocMarkdown, renderDocComments } from "./docMarkdown";
 import type { BreakpointSpec, DebugResponse, IdeApi, InspectResult, RunMode, RunProfile, TreeNode, UploadedFile, Workspace } from "./api";
 import type { RunResult } from "./types";
 import type { InspectFn } from "./InspectorNode";
@@ -409,14 +409,7 @@ export function createController(
   const docHtml = ref("");
   async function refreshDoc() {
     const docs = await api.doc(source.value);
-    docHtml.value = docs.length
-      ? docs
-          .map((d) =>
-            // the doc of the file (/*** … ***/) is the module's: no declaration to title it
-            (d.kind === "root" ? "" : `<h4>${escapeHtml(d.title || d.kind)}</h4>`) + renderDocMarkdown(d.content),
-          )
-          .join("\n")
-      : `<p class="text-medium-emphasis">No documentation comments in this file.</p>`;
+    docHtml.value = renderDocComments(docs);
   }
 
   // --- debugger -----------------------------------------------------------
