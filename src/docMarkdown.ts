@@ -24,8 +24,9 @@ function renderInline(s: string): string {
   return h;
 }
 
-// Render the non-code text between fenced blocks: headings, bullet lists,
-// blockquotes and paragraphs (blank-line separated).
+// Render the non-code text between fenced blocks: headings, bullet lists (an
+// item goes on in the indented lines under it), blockquotes and paragraphs
+// (blank-line separated).
 function renderTextBlock(text: string): string {
   const lines = text.split("\n");
   let out = "";
@@ -70,6 +71,9 @@ function renderTextBlock(text: string): string {
     } else if (bullet) {
       flushPara();
       list.push(bullet[1]);
+    } else if (list.length && /^\s+\S/.test(raw)) {
+      // an indented line under a bullet goes on with its item
+      list[list.length - 1] += " " + line.trim();
     } else if (quote) {
       flushPara();
       flushList();

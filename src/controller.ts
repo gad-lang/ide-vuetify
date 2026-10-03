@@ -410,7 +410,12 @@ export function createController(
   async function refreshDoc() {
     const docs = await api.doc(source.value);
     docHtml.value = docs.length
-      ? docs.map((d) => `<h4>${escapeHtml(d.title || d.kind)}</h4>` + renderDocMarkdown(d.content)).join("\n")
+      ? docs
+          .map((d) =>
+            // the doc of the file (/*** … ***/) is the module's: no declaration to title it
+            (d.kind === "root" ? "" : `<h4>${escapeHtml(d.title || d.kind)}</h4>`) + renderDocMarkdown(d.content),
+          )
+          .join("\n")
       : `<p class="text-medium-emphasis">No documentation comments in this file.</p>`;
   }
 
