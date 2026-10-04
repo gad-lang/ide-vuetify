@@ -32,7 +32,7 @@ export default defineComponent({
       busy.value = true;
       error.value = "";
       try {
-        await emit("import", url.value.trim(), isArchive.value && extract.value, targetDir.value);
+        await emit("import", url.value.trim(), isArchive.value && extract.value && ctx.canExtract.value, targetDir.value);
         emit("update:modelValue", false);
         url.value = "";
       } catch (e) {
@@ -62,7 +62,7 @@ export default defineComponent({
               hideDetails
               onKeyup={(e: KeyboardEvent) => e.key === "Enter" && doImport()}
             />
-            {isArchive.value && (
+            {isArchive.value && ctx.canExtract.value && (
               <VSwitch
                 modelValue={extract.value}
                 {...{ "onUpdate:modelValue": (v: boolean | null) => (extract.value = !!v) }}

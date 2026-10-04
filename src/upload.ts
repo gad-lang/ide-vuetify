@@ -41,6 +41,35 @@ async function walkRaw(entry: FileSystemEntry, prefix: string, out: RawFile[]): 
   await Promise.all(children.map((c) => walkRaw(c, prefix + entry.name + "/", out)));
 }
 
+/** isTextBytes says whether buf is text — UTF-8, with no NUL —, written as
+ * text; else it is a binary file (an image, a font), written as its bytes. */
+export function isTextBytes(buf: Uint8Array): boolean {
+  if (buf.includes(0)) return false;
+  try {
+    new TextDecoder("utf-8", { fatal: true }).decode(buf);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** bytesToBase64 is buf in base64. */
+export function bytesToBase64(buf: Uint8Array): string {
+  let bin = "";
+  for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
+/** uploadedOf is the file at path holding buf: its text, or its bytes. */
+export function uploadedOf(path: string, buf: Uint8Array): UploadedFile {
+  return isTextBytes(buf) ? { path, content: new TextDecoder().decode(buf) } : { path, content: "", bytes: bytesToBase64(buf) };
+}
+
+/** readUploaded reads a picked file: its text, or its bytes (a binary file). */
+export async function readUploaded(path: string, file: File): Promise<UploadedFile> {
+  return uploadedOf(path, new Uint8Array(await file.arrayBuffer()));
+}
+
 /** readBase64 reads a File's bytes as a base64 string (for archive uploads). */
 export async function readBase64(file: File): Promise<string> {
   const buf = new Uint8Array(await file.arrayBuffer());

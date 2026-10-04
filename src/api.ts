@@ -11,7 +11,14 @@ export interface Workspace {
   root: string;
   name: string;
   openFile: string;
+  /** What the user may do with the files — each omitted is allowed: the
+   * Explorer and the editor offer only these. `import` is uploading and
+   * downloading a URL by the server (api.upload, api.fetchUrl). */
+  actions?: Partial<Record<WorkspaceAction, boolean>>;
 }
+
+/** WorkspaceAction is a way of changing the files of the workspace. */
+export type WorkspaceAction = "create" | "edit" | "rename" | "move" | "delete" | "import";
 
 export interface TreeNode {
   name: string;
@@ -54,7 +61,8 @@ export interface RunProfile {
 export type RunMode = "none" | "run" | "debug" | "";
 
 /** UploadedFile is one file uploaded into the Explorer: its path (relative to the
- * target — a directory drop keeps its subtree layout) and its text content. When
+ * target — a directory drop keeps its subtree layout) and its text content, or
+ * — a binary file (an image, a font) — its bytes (base64) in `bytes`. When
  * `archive` is set it is a downloaded archive the host is asked to extract:
  * `content` may be empty and `bytes` carries the raw archive (base64) instead. */
 export interface UploadedFile {
@@ -62,7 +70,7 @@ export interface UploadedFile {
   content: string;
   /** "zip" | "tar" | "tar.gz" when this is an archive to extract; else omitted. */
   archive?: "zip" | "tar" | "tar.gz";
-  /** Base64 of the raw archive bytes (only for `archive` entries). */
+  /** Base64 of the raw bytes: of a binary file, or of an `archive`. */
   bytes?: string;
 }
 
@@ -148,6 +156,11 @@ export const ideApi = {
   rename: (path: string, to: string) =>
     jsonFetch<{ path: string }>("POST", "api/ide/rename", { path, to }),
   mkdir: (path: string) => jsonFetch<{ path: string }>("POST", "api/ide/mkdir", { path }),
+  /** upload writes files uploaded — text, or bytes (base64) — at their paths. */
+  upload: (files: UploadedFile[]) =>
+    jsonFetch<{ paths: string[] }>("POST", "api/ide/upload", {
+      files: files.map((f) => (f.bytes ? { path: f.path, bytes: f.bytes } : { path: f.path, content: f.content })),
+    }),
   fetchUrl: (url: string, path: string) =>
     jsonFetch<{ path: string; size: number }>("POST", "api/ide/fetch", { url, path }),
   config: () => jsonFetch<Record<string, unknown>>("GET", "api/ide/config"),
@@ -214,7 +227,10 @@ export const ideApi = {
  * `gad ide` server) or a fully in-browser one (WASM + a LocalStorage
  * filesystem).
  */
-export type IdeApi = Omit<typeof ideApi, "rawUrl"> & {
+export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload"> & {
+  /** upload writes files uploaded (Workspace.import); without it, only their
+   * text is written, file by file. */
+  upload?: (files: UploadedFile[]) => Promise<{ paths: string[] }>;
   /** rawUrl is the URL of the file's bytes (an image to show); without it an
    * image file is not shown. */
   rawUrl?: (path: string) => string;

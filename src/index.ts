@@ -16,6 +16,7 @@ export { httpIdeApi, ideApi, probeIde } from "./api";
 export type {
   IdeApi,
   Workspace,
+  WorkspaceAction,
   TreeNode,
   ModuleInfo,
   DocComment,

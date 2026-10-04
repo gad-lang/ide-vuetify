@@ -8,7 +8,7 @@ import {
 } from "./vuetify";
 import DirTree from "./DirTree";
 import { IdeControllerKey } from "./controller";
-import { readBase64, type RawFile } from "./upload";
+import { readBase64, readUploaded, type RawFile } from "./upload";
 import type { UploadedFile } from "./api";
 
 const baseName = (p: string) => p.slice(p.lastIndexOf("/") + 1);
@@ -70,9 +70,9 @@ export default defineComponent({
         if (single.value && archiveOf.value && extract.value) {
           files = [{ path: name.value, content: "", archive: archiveOf.value, bytes: await readBase64(props.raw[0].file) }];
         } else if (single.value) {
-          files = [{ path: name.value, content: await props.raw[0].file.text() }];
+          files = [await readUploaded(name.value, props.raw[0].file)];
         } else {
-          files = await Promise.all(props.raw.map(async (r) => ({ path: r.path, content: await r.file.text() })));
+          files = await Promise.all(props.raw.map((r) => readUploaded(r.path, r.file)));
         }
         emit("confirm", files, targetDir.value);
         emit("update:modelValue", false);

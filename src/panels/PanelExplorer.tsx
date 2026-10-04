@@ -52,7 +52,7 @@ export default defineComponent({
         <div class="pnl-head">
           <span class="text-caption font-weight-medium">EXPLORER</span>
           <div>
-            {ctx.canEdit.value && (
+            {ctx.canCreate.value && (
               <>
                 <VBtn size="x-small" variant="text" icon="mdi-file-plus-outline" title="New file" onClick={() => ctx.newFile()} />
                 <VBtn size="x-small" variant="text" icon="mdi-folder-plus-outline" title="New folder" onClick={() => ctx.newDir()} />
@@ -64,7 +64,15 @@ export default defineComponent({
                 <VBtn size="x-small" variant="text" icon="mdi-link-variant" title="Import from URL" onClick={() => (ctx.urlDialog.value = true)} />
               </>
             )}
-            {ctx.canEdit.value && (
+            {ctx.canRename.value && (
+              <VBtn size="x-small" variant="text" icon="mdi-rename-outline" title="Rename open file"
+                disabled={!ctx.openPath.value} onClick={() => ctx.renameOpen()} />
+            )}
+            {ctx.canMove.value && (
+              <VBtn size="x-small" variant="text" icon="mdi-file-move-outline" title="Move open file"
+                disabled={!ctx.openPath.value} onClick={() => ctx.moveOpen()} />
+            )}
+            {ctx.canDelete.value && (
               <VBtn size="x-small" variant="text" icon="mdi-delete-outline" title="Delete open file"
                 disabled={!ctx.openPath.value} onClick={() => ctx.removeOpen()} />
             )}

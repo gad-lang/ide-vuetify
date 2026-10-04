@@ -23,6 +23,7 @@ import SettingsDialog, { type PanelToggle } from "./SettingsDialog";
 import RunProfileDialog from "./RunProfileDialog";
 import { ConfirmDialog, PromptDialog } from "./PromptDialog";
 import UrlImportDialog from "./UrlImportDialog";
+import MoveDialog from "./MoveDialog";
 
 // The dockview theme CSS is the consumer's responsibility (like Vuetify's
 // styles): import "dockview-core/dist/styles/dockview.css" once in the host app.
@@ -279,6 +280,7 @@ export default defineComponent({
         />
 
         <PromptDialog request={ctx.promptReq.value} onDone={() => (ctx.promptReq.value = null)} />
+        <MoveDialog />
         <ConfirmDialog request={ctx.confirmReq.value} onDone={() => (ctx.confirmReq.value = null)} />
         <UrlImportDialog
           modelValue={ctx.urlDialog.value}

@@ -138,7 +138,7 @@ export default defineComponent({
               {...{ "onUpdate:breakpoints": (b: number[]) => (ctx.breakpoints.value = b) }}
               path={ctx.openPath.value}
               dark={ctx.dark.value}
-              readonly={ctx.readonly.value}
+              readonly={ctx.readonly.value || !ctx.canEdit.value}
               fontSize={ctx.fontSize.value}
               customExtension={ctx.fileTypes.extensionFor(ctx.openPath.value)}
               diagnose={ctx.diagnose}

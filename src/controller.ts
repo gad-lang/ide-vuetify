@@ -8,11 +8,11 @@ import { langOf } from "./codemirror";
 import type { LocalVar } from "./codemirror";
 import { renderDocMarkdown, renderDocComments } from "./docMarkdown";
 import { docKindOf, isImagePath, renderDocSource, type DocKind } from "./docView";
-import type { BreakpointSpec, DebugResponse, IdeApi, InspectResult, RunMode, RunProfile, TreeNode, UploadedFile, Workspace } from "./api";
+import type { BreakpointSpec, DebugResponse, IdeApi, InspectResult, RunMode, RunProfile, TreeNode, UploadedFile, Workspace, WorkspaceAction } from "./api";
 import type { RunResult } from "./types";
 import type { InspectFn } from "./InspectorNode";
 import type { GadEditorView } from "./codemirror";
-import { readWithProgress } from "./upload";
+import { readWithProgress, uploadedOf } from "./upload";
 import { FileTypeRegistry, type FileTypeHandler } from "./fileTypes";
 
 export interface TreeRow {
@@ -91,6 +91,16 @@ export function createController(
   const onReset = hooks.onReset;
   // Read-only workspace: create/delete/upload/import are disabled.
   const readonly = computed(() => hooks.getReadonly?.() ?? false);
+  // What the user may do with the files (Workspace.actions; each omitted is
+  // allowed), none in a read-only workspace.
+  const can = (a: WorkspaceAction) => computed(() => !readonly.value && (workspace.actions?.[a] ?? true));
+  const canCreate = can("create");
+  const canEdit = can("edit");
+  const canRename = can("rename");
+  const canMove = can("move");
+  const canDelete = can("delete");
+  // The backend takes files uploaded and downloads URLs itself (api.upload).
+  const serverImport = computed(() => can("import").value && !!api.upload);
   // File-type registry: tree icons + editor language/plugin per extension.
   const fileTypes = new FileTypeRegistry(hooks.fileTypes);
   const iconFor = (path: string) => fileTypes.iconFor(path);
@@ -188,7 +198,7 @@ export function createController(
   // dirty tabs every that-many milliseconds (e.g. 600000 for 10 min).
   const autosave = computed<boolean | number>(() => hooks.getAutosave?.() ?? false);
   async function saveTab(t: { path: string; content: string; saved: string }) {
-    if (readonly.value || t.content === t.saved) return;
+    if (!canEdit.value || t.content === t.saved) return;
     await api.write(t.path, t.content);
     t.saved = t.content;
   }
@@ -196,7 +206,7 @@ export function createController(
   // Persist on every edit when autosave === true (the source setter has already
   // written v into the active tab's content).
   watch(source, (v) => {
-    if (autosave.value !== true || readonly.value) return;
+    if (autosave.value !== true || !canEdit.value) return;
     const t = tabs.value[active.value];
     if (t) {
       void api.write(t.path, v);
@@ -265,6 +275,38 @@ export function createController(
     if (i >= 0) closeTab(i);
     await loadTree();
   }
+  // renameOpen renames the open file in its folder.
+  async function renameOpen() {
+    const path = openPath.value;
+    if (!path) return;
+    const slash = path.lastIndexOf("/");
+    const dir = slash === -1 ? "" : path.slice(0, slash + 1);
+    const name = await uiPrompt("Rename", "New name", path.slice(slash + 1));
+    if (!name || dir + name === path) return;
+    await api.rename(path, dir + name);
+    retarget(path, dir + name);
+    await loadTree();
+  }
+  // moveReq is the folder picker of a move, open while set.
+  const moveReq = ref<{ path: string; resolve: (dir: string | null) => void } | null>(null);
+  // moveOpen moves the open file to the folder the user picks.
+  async function moveOpen() {
+    const path = openPath.value;
+    if (!path) return;
+    const dir = await new Promise<string | null>((resolve) => (moveReq.value = { path, resolve }));
+    moveReq.value = null;
+    if (dir === null) return;
+    const to = (dir ? dir.replace(/\/$/, "") + "/" : "") + path.slice(path.lastIndexOf("/") + 1);
+    if (to === path) return;
+    await api.rename(path, to);
+    retarget(path, to);
+    await loadTree();
+  }
+  // retarget points the tab of from to its new path.
+  function retarget(from: string, to: string) {
+    const t = tabs.value.find((x) => x.path === from);
+    if (t) t.path = to;
+  }
   async function reset() {
     if (!onReset || !(await uiConfirm("Reset workspace", "Discard all your changes and restore the samples?"))) return;
     await onReset();
@@ -287,7 +329,10 @@ export function createController(
     const base = dir ? dir + "/" : "";
     const placed = files.map((f) => ({ ...f, path: base + f.path }));
     if (hooks.onUpload) await hooks.onUpload(placed, dir);
-    else for (const f of placed) if (!f.archive) await api.write(f.path, f.content);
+    else if (serverImport.value) {
+      // one request a file: an upload's body has a limit
+      for (const f of placed) if (!f.archive) await api.upload!([f]);
+    } else for (const f of placed) if (!f.archive && !f.bytes) await api.write(f.path, f.content);
     await loadTree();
     const firstFile = placed.find((f) => !f.archive);
     if (firstFile) await openFile(firstFile.path);
@@ -309,6 +354,21 @@ export function createController(
   }
   async function uploadUrl(url: string, extract: boolean, targetDir = "") {
     uploadProgress.value = 0;
+    if (serverImport.value && !hooks.onUpload) {
+      // downloaded by the server: no CORS in the way, the bytes as they are
+      uploadProgress.value = -1;
+      try {
+        const name = decodeURIComponent(new URL(url, location.href).pathname.split("/").pop() || "download");
+        const dir = targetDir.replace(/\/$/, "");
+        const path = (dir ? dir + "/" : "") + name;
+        await api.fetchUrl(url, path);
+        await loadTree();
+        await openFile(path);
+      } finally {
+        uploadProgress.value = 0;
+      }
+      return;
+    }
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
@@ -320,7 +380,7 @@ export function createController(
         for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
         await upload([{ path: name, content: "", archive: kind, bytes: btoa(bin) }], targetDir);
       } else {
-        await upload([{ path: name, content: new TextDecoder().decode(buf) }], targetDir);
+        await upload([uploadedOf(name, buf)], targetDir);
       }
     } finally {
       uploadProgress.value = 0;
@@ -381,7 +441,7 @@ export function createController(
   }
   async function save() {
     const t = tabs.value[active.value];
-    if (!t || isImagePath(t.path)) return;
+    if (!t || isImagePath(t.path) || !canEdit.value) return;
     await api.write(t.path, t.content);
     t.saved = t.content;
   }
@@ -629,8 +689,11 @@ export function createController(
     pathExists, archiveKind,
     readonly,
     fileTypes, iconFor,
-    canUpload: computed(() => !!hooks.onUpload && !readonly.value),
-    canEdit: computed(() => !readonly.value),
+    canUpload: computed(() => (!!hooks.onUpload || serverImport.value) && !readonly.value),
+    canCreate, canRename, canMove, canDelete, renameOpen, moveOpen, moveReq,
+    // an archive is extracted only by a host's onUpload
+    canExtract: computed(() => !!hooks.onUpload),
+    canEdit,
     promptReq, confirmReq,
     diagnose,
     // run/format/doc
