@@ -81,6 +81,11 @@ export default defineComponent({
     /** Extra file-type handlers (icon + editor language/plugin) for the Explorer
      * icons and editor highlighting — merged over the built-ins. */
     fileTypes: { type: Array as PropType<FileTypeHandler[]>, default: () => [] },
+    /** The panels the IDE has, by id (explorer, editor, docs, output,
+     * callstack, locals, breakpoints) — default all. One left out is not built,
+     * is taken out of a restored layout and is not offered in the Settings: an
+     * IDE that runs no code needs no Output nor debugger panels. */
+    panels: { type: Array as PropType<string[]>, default: undefined },
   },
   emits: {
     "update:layoutConfig": (_v: SerializedDockview) => true,
@@ -119,8 +124,25 @@ export default defineComponent({
     let lastJSON = "";
     const visible = reactive(new Set<string>());
 
+    // the panels this IDE has (props.panels), in PANELS' order
+    const panelDefs = computed(() => (props.panels ? PANELS.filter((p) => props.panels!.includes(p.id)) : PANELS));
+    const hasPanel = (id: string) => panelDefs.value.some((p) => p.id === id);
+
+    // addPanel adds def — next to the panel it is placed by, or alone when that
+    // one is not there (left out by props.panels, or closed).
+    function addPanel(api: DockviewApi, def: PanelDef) {
+      try {
+        def.add(api);
+      } catch {
+        api.addPanel({ id: def.id, component: def.id, title: def.label });
+      }
+    }
     function buildDefault(api: DockviewApi) {
-      for (const p of PANELS) p.add(api);
+      for (const p of panelDefs.value) addPanel(api, p);
+    }
+    // dropUnknown takes out of a restored layout the panels this IDE has not.
+    function dropUnknown(api: DockviewApi) {
+      for (const p of [...api.panels]) if (!hasPanel(p.id)) api.removePanel(p);
     }
     function syncVisible() {
       if (!dv) return;
@@ -143,7 +165,9 @@ export default defineComponent({
       try {
         if (initial && (initial as { grid?: unknown }).grid) {
           dv.fromJSON(initial);
+          dropUnknown(dv);
           retitle(dv);
+          if (!dv.panels.length) buildDefault(dv);
         } else buildDefault(dv);
       } catch {
         dv.clear();
@@ -174,6 +198,7 @@ export default defineComponent({
         applyingExternal = true;
         try {
           dv.fromJSON(cfg);
+          dropUnknown(dv);
           retitle(dv);
           lastJSON = JSON.stringify(dv.toJSON());
         } catch {
@@ -188,7 +213,8 @@ export default defineComponent({
     function togglePanel(id: string, show: boolean) {
       if (!dv) return;
       if (show) {
-        if (!dv.getPanel(id)) PANELS.find((p) => p.id === id)?.add(dv);
+        const def = panelDefs.value.find((p) => p.id === id);
+        if (def && !dv.getPanel(id)) addPanel(dv, def);
       } else {
         const p = dv.getPanel(id);
         if (p) dv.removePanel(p);
@@ -196,14 +222,15 @@ export default defineComponent({
     }
 
     const panelToggles = computed<PanelToggle[]>(() =>
-      PANELS.map((p) => ({ id: p.id, label: p.label, visible: visible.has(p.id) })),
+      panelDefs.value.map((p) => ({ id: p.id, label: p.label, visible: visible.has(p.id) })),
     );
 
     // The editor toolbar's Doc button bumps ctx.docRequest; reveal/focus Docs.
     watch(
       () => ctx.docRequest.value,
       () => {
-        if (dv && !dv.getPanel("docs")) PANELS.find((p) => p.id === "docs")?.add(dv);
+        const def = panelDefs.value.find((p) => p.id === "docs");
+        if (dv && def && !dv.getPanel("docs")) addPanel(dv, def);
         dv?.getPanel("docs")?.api.setActive();
       },
     );

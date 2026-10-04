@@ -104,6 +104,8 @@ export interface EditorOptions {
   onChange?: (value: string) => void;
   onBreakpointsChange?: (lines: number[]) => void;
   onBreakpointContext?: (line: number) => void;
+  /** The breakpoint gutter (default true): none where nothing is debugged. */
+  breakpoints?: boolean;
   getLocals?: () => Map<string, LocalVar>;
   readonly?: boolean;
   /** Editor font size in pixels (default 13). */
@@ -138,10 +140,12 @@ export class GadEditorView {
         this.themeComp.of(opts.dark ? oneDark : []),
         this.roComp.of(EditorState.readOnly.of(!!opts.readonly)),
         this.fontComp.of(fontTheme(opts.fontSize ?? 13)),
-        breakpointGutter(
-          (lines) => opts.onBreakpointsChange?.(lines),
-          (line) => opts.onBreakpointContext?.(line),
-        ),
+        opts.breakpoints === false
+          ? []
+          : breakpointGutter(
+              (lines) => opts.onBreakpointsChange?.(lines),
+              (line) => opts.onBreakpointContext?.(line),
+            ),
         debugDecorations(() => opts.getLocals?.() ?? new Map()),
         EditorView.updateListener.of((u) => {
           if (u.docChanged) opts.onChange?.(u.state.doc.toString());

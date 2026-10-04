@@ -20,6 +20,8 @@ export default defineComponent({
     customExtension: { type: Function as PropType<() => Extension>, default: undefined },
     diagnose: { type: Function as PropType<DiagnoseFn>, default: undefined },
     breakpoints: { type: Array as PropType<number[]>, default: () => [] },
+    /** Shows the breakpoint gutter (default true); read when mounted. */
+    breakpointGutter: { type: Boolean, default: true },
     debugLine: { type: Number, default: 0 },
     debugColumn: { type: Number, default: 1 },
     getLocals: { type: Function as PropType<() => Map<string, LocalVar>>, default: undefined },
@@ -60,6 +62,7 @@ export default defineComponent({
         },
         onBreakpointsChange: (lines) => emit("update:breakpoints", lines),
         onBreakpointContext: (line) => props.onBreakpointContext?.(line),
+        breakpoints: props.breakpointGutter,
       });
       if (props.breakpoints.length) editor.setBreakpoints(props.breakpoints);
       if (props.debugLine) editor.setDebugLine(props.debugLine, props.debugColumn);

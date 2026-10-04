@@ -128,10 +128,11 @@ export default defineComponent({
             </div>
           ) : has() ? (
             <GadEditor
-              key={ctx.openPath.value}
+              key={ctx.openPath.value + (ctx.canDebug.value ? ":debug" : "")}
               modelValue={ctx.source.value}
               {...{ "onUpdate:modelValue": (v: string) => (ctx.source.value = v) }}
               breakpoints={ctx.breakpoints.value}
+              breakpointGutter={ctx.canDebug.value}
               {...{ "onUpdate:breakpoints": (b: number[]) => (ctx.breakpoints.value = b) }}
               path={ctx.openPath.value}
               dark={ctx.dark.value}
