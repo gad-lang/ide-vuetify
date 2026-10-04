@@ -7,6 +7,7 @@ import type { GadDiagnostic } from "@gad-lang/codemirror-gad";
 import { langOf } from "./codemirror";
 import type { LocalVar } from "./codemirror";
 import { renderDocMarkdown, renderDocComments } from "./docMarkdown";
+import { docKindOf, isImagePath, renderDocSource, type DocKind } from "./docView";
 import type { BreakpointSpec, DebugResponse, IdeApi, InspectResult, RunMode, RunProfile, TreeNode, UploadedFile, Workspace } from "./api";
 import type { RunResult } from "./types";
 import type { InspectFn } from "./InspectorNode";
@@ -156,7 +157,8 @@ export function createController(
       active.value = i;
       return;
     }
-    const content = (await api.read(path)).content;
+    // an image is shown from its URL, not read as text
+    const content = isImagePath(path) ? "" : (await api.read(path)).content;
     tabs.value.push({ path, content, saved: content });
     active.value = tabs.value.length - 1;
   }
@@ -379,13 +381,17 @@ export function createController(
   }
   async function save() {
     const t = tabs.value[active.value];
-    if (!t) return;
+    if (!t || isImagePath(t.path)) return;
     await api.write(t.path, t.content);
     t.saved = t.content;
   }
   async function reload() {
     const t = tabs.value[active.value];
     if (!t) return;
+    if (isImagePath(t.path)) {
+      imageRev.value++; // a new URL: the image read again
+      return;
+    }
     const content = (await api.read(t.path)).content;
     t.content = content;
     t.saved = content;
@@ -406,10 +412,30 @@ export function createController(
     editor.value?.redo();
   }
   // Rendered documentation of the open file, shown by the Docs panel.
+  // docKind says how: an HTML file, a Markdown file, a gad file's doc comments.
   const docHtml = ref("");
+  // The open image: its URL (none without api.rawUrl), changed on Reload.
+  const isImage = computed(() => isImagePath(openPath.value));
+  const imageRev = ref(0);
+  const imageUrl = (path: string) =>
+    api.rawUrl ? api.rawUrl(path) + (imageRev.value ? "&v=" + imageRev.value : "") : "";
+  const docKind = ref<DocKind>("none");
+  let docSeq = 0;
   async function refreshDoc() {
-    const docs = await api.doc(source.value);
-    docHtml.value = renderDocComments(docs);
+    const seq = ++docSeq;
+    const kind = docKindOf(openPath.value);
+    let html: string;
+    if (kind === "gad" && source.value.trim()) {
+      const docs = await api.doc(source.value);
+      html = renderDocComments(docs);
+    } else if (kind === "gad") {
+      html = renderDocComments([]);
+    } else {
+      html = renderDocSource(kind, source.value);
+    }
+    if (seq !== docSeq) return; // a newer refresh (another file) won
+    docKind.value = kind;
+    docHtml.value = html;
   }
 
   // --- debugger -----------------------------------------------------------
@@ -608,7 +634,7 @@ export function createController(
     promptReq, confirmReq,
     diagnose,
     // run/format/doc
-    busy, runRes, run, format, docHtml, refreshDoc,
+    busy, runRes, run, format, docHtml, docKind, refreshDoc, isImage, imageUrl,
     // editor actions
     registerEditor, save, reload, undo, redo,
     fontSize, incFont, decFont, setFontSize,

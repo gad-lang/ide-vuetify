@@ -139,6 +139,8 @@ export const ideApi = {
       "GET",
       "api/ide/file?path=" + encodeURIComponent(path),
     ),
+  /** rawUrl is the URL of the file's bytes as they are (an image to show). */
+  rawUrl: (path: string) => "api/ide/file?raw=1&path=" + encodeURIComponent(path),
   write: (path: string, content: string) =>
     jsonFetch<{ path: string }>("PUT", "api/ide/file", { path, content }),
   mkfile: (path: string) => jsonFetch<{ path: string }>("PUT", "api/ide/file", { path, content: "" }),
@@ -212,7 +214,11 @@ export const ideApi = {
  * `gad ide` server) or a fully in-browser one (WASM + a LocalStorage
  * filesystem).
  */
-export type IdeApi = typeof ideApi;
+export type IdeApi = Omit<typeof ideApi, "rawUrl"> & {
+  /** rawUrl is the URL of the file's bytes (an image to show); without it an
+   * image file is not shown. */
+  rawUrl?: (path: string) => string;
+};
 
 /** httpIdeApi is the HTTP implementation of IdeApi (the `gad ide` server). */
 export const httpIdeApi: IdeApi = ideApi;

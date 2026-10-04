@@ -448,3 +448,27 @@
   border-top: 1px solid rgba(var(--v-border-color), 0.3);
 }
 .gnb-out { padding: 6px 10px; border-top: 1px solid rgba(var(--v-border-color), 0.3); }
+
+/* An image file: shown whole, centered, its aspect ratio kept. */
+.gad-ide__image {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  overflow: auto;
+  background: repeating-conic-gradient(rgba(128, 128, 128, 0.15) 0% 25%, transparent 0% 50%) 50% / 16px 16px;
+}
+.gad-ide__image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+/* An HTML file, rendered sandboxed. */
+.gad-ide__preview-frame {
+  border: 0;
+  width: 100%;
+  background: #fff;
+  padding: 0;
+  min-height: 0;
+}

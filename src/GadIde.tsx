@@ -37,7 +37,7 @@ interface PanelDef {
 const PANELS: PanelDef[] = [
   { id: "explorer", label: "Explorer", add: (a) => a.addPanel({ id: "explorer", component: "explorer", title: "Explorer" }) },
   { id: "editor", label: "Editor", add: (a) => a.addPanel({ id: "editor", component: "editor", title: "Editor", position: { referencePanel: "explorer", direction: "right" } }) },
-  { id: "docs", label: "Docs", add: (a) => a.addPanel({ id: "docs", component: "docs", title: "Docs", position: { referencePanel: "editor", direction: "right" } }) },
+  { id: "docs", label: "Preview", add: (a) => a.addPanel({ id: "docs", component: "docs", title: "Preview", position: { referencePanel: "editor", direction: "right" } }) },
   { id: "output", label: "Output", add: (a) => a.addPanel({ id: "output", component: "output", title: "Output", position: { referencePanel: "editor", direction: "below" } }) },
   { id: "callstack", label: "Call Stack", add: (a) => a.addPanel({ id: "callstack", component: "callstack", title: "Call Stack", position: { referencePanel: "output", direction: "within" } }) },
   { id: "locals", label: "Locals", add: (a) => a.addPanel({ id: "locals", component: "locals", title: "Locals", position: { referencePanel: "output", direction: "within" } }) },
@@ -128,12 +128,23 @@ export default defineComponent({
       for (const p of dv.panels) visible.add(p.id);
     }
 
+    // retitle gives a restored layout's panels their titles of now (a layout
+    // saved with an older one: "Docs", now "Preview").
+    function retitle(api: DockviewApi) {
+      for (const def of PANELS) {
+        const p = api.getPanel(def.id);
+        if (p && p.title !== def.label) p.api.setTitle(def.label);
+      }
+    }
+
     function onReady(e: DockviewReadyEvent) {
       dv = e.api;
       const initial = props.layoutConfig;
       try {
-        if (initial && (initial as { grid?: unknown }).grid) dv.fromJSON(initial);
-        else buildDefault(dv);
+        if (initial && (initial as { grid?: unknown }).grid) {
+          dv.fromJSON(initial);
+          retitle(dv);
+        } else buildDefault(dv);
       } catch {
         dv.clear();
         buildDefault(dv);
@@ -163,6 +174,7 @@ export default defineComponent({
         applyingExternal = true;
         try {
           dv.fromJSON(cfg);
+          retitle(dv);
           lastJSON = JSON.stringify(dv.toJSON());
         } catch {
           /* ignore malformed layout */

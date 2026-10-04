@@ -1,6 +1,7 @@
 // Editor dockview panel: the CodeMirror editor bound to the open file, with the
 // editor/run control toolbar (Save, Format, Reload, Undo, Redo, Run, Debug, the
-// run-profile selector and Doc, plus the debugger step controls while paused).
+// run-profile selector and Preview, plus the debugger step controls while
+// paused). An image file is shown instead of edited.
 import { defineComponent, inject } from "vue";
 import GadEditor from "../GadEditor";
 import { VBtn, VDivider, VList, VListItem, VListSubheader, VMenu } from "../vuetify";
@@ -50,15 +51,15 @@ export default defineComponent({
         <div class="pnl-toolbar">
           {ctx.canEdit.value && (
             <>
-              {iconBtn("mdi-content-save-outline", "Save", () => ctx.save(), { disabled: !has() })}
-              {iconBtn("mdi-auto-fix", "Format", () => ctx.format(), { disabled: !has() })}
+              {iconBtn("mdi-content-save-outline", "Save", () => ctx.save(), { disabled: !has() || ctx.isImage.value })}
+              {iconBtn("mdi-auto-fix", "Format", () => ctx.format(), { disabled: !has() || ctx.isImage.value })}
             </>
           )}
           {iconBtn("mdi-refresh", "Reload from disk", () => ctx.reload(), { disabled: !has() })}
           {ctx.canEdit.value && (
             <>
-              {iconBtn("mdi-undo", "Undo", () => ctx.undo(), { disabled: !has() })}
-              {iconBtn("mdi-redo", "Redo", () => ctx.redo(), { disabled: !has() })}
+              {iconBtn("mdi-undo", "Undo", () => ctx.undo(), { disabled: !has() || ctx.isImage.value })}
+              {iconBtn("mdi-redo", "Redo", () => ctx.redo(), { disabled: !has() || ctx.isImage.value })}
             </>
           )}
           <VDivider vertical class="mx-1" />
@@ -115,11 +116,17 @@ export default defineComponent({
 
           {/* Right-aligned: Doc then Settings. */}
           <span class="pnl-toolbar-spacer" />
-          {iconBtn("mdi-file-document-outline", "Doc", () => ctx.requestDocs(), { disabled: !has() })}
+          {iconBtn("mdi-file-eye-outline", "Preview", () => ctx.requestDocs(), { disabled: !has() })}
           {iconBtn("mdi-cog-outline", "Settings", () => (ctx.settingsOpen.value = true))}
         </div>
         <div class="pnl-editor">
-          {has() ? (
+          {has() && ctx.isImage.value ? (
+            // an image: shown whole, its aspect ratio kept
+            <div class="gad-ide__image">
+              {ctx.imageUrl(ctx.openPath.value) ? <img src={ctx.imageUrl(ctx.openPath.value)} alt={ctx.openPath.value} />
+                : <span class="text-medium-emphasis">No preview of images here.</span>}
+            </div>
+          ) : has() ? (
             <GadEditor
               key={ctx.openPath.value}
               modelValue={ctx.source.value}
