@@ -32,6 +32,22 @@ function renderTextBlock(text: string): string {
   let out = "";
   let para: string[] = [];
   let list: string[] = [];
+  let table: string[] = [];
+
+  // A table: its rows `| a | b |`, the second `|---|---|` (the head above it).
+  const cells = (row: string) =>
+    row.trim().replace(/^\|/, "").replace(/(?<!\\)\|$/, "").split(/(?<!\\)\|/).map((c) => c.trim().replace(/\\\|/g, "|"));
+  const flushTable = () => {
+    if (!table.length) return;
+    const rows = table;
+    table = [];
+    if (rows.length < 2 || !/^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(rows[1])) {
+      para.push(...rows); // not a table: its text
+      return;
+    }
+    const row = (r: string, tag: string) => "<tr>" + cells(r).map((c) => `<${tag}>${renderInline(c)}</${tag}>`).join("") + "</tr>";
+    out += "<table><thead>" + row(rows[0], "th") + "</thead><tbody>" + rows.slice(2).map((r) => row(r, "td")).join("") + "</tbody></table>";
+  };
 
   const flushPara = () => {
     if (para.length) {
@@ -51,6 +67,13 @@ function renderTextBlock(text: string): string {
     const heading = /^(#{1,6})\s+(.*)$/.exec(line);
     const bullet = /^\s*[-*]\s+(.*)$/.exec(line);
     const quote = /^\s*>\s?(.*)$/.exec(line);
+    if (/^\s*\|/.test(line)) {
+      flushPara();
+      flushList();
+      table.push(line);
+      continue;
+    }
+    flushTable();
     if (line.trim() === "") {
       flushPara();
       flushList();
@@ -83,6 +106,7 @@ function renderTextBlock(text: string): string {
       para.push(line);
     }
   }
+  flushTable();
   flushPara();
   flushList();
   return out;

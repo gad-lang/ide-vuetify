@@ -69,3 +69,17 @@ describe("renderDocComments", () => {
     expect(renderDocComments([])).toContain("No documentation comments");
   });
 });
+
+describe("renderDocMarkdown tables", () => {
+  test("a table: its head and its rows", () => {
+    const out = renderDocMarkdown("| slot | what |\n|---|:--:|\n| `head_end` | tags at the end of `<head>` |\n| a \\| b | c |\n\nafter");
+    expect(out).toBe(
+      "<table><thead><tr><th>slot</th><th>what</th></tr></thead><tbody>" +
+        "<tr><td><code>head_end</code></td><td>tags at the end of <code>&lt;head&gt;</code></td></tr>" +
+        "<tr><td>a | b</td><td>c</td></tr></tbody></table><p>after</p>",
+    );
+  });
+  test("pipes with no separator row are text", () => {
+    expect(renderDocMarkdown("| a | b |")).toBe("<p>| a | b |</p>");
+  });
+});

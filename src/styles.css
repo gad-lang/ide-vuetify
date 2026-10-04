@@ -472,3 +472,18 @@
   padding: 0;
   min-height: 0;
 }
+/* Tables of the rendered documentation. */
+.gad-ide__doc table,
+.gp-doc-rendered table {
+  border-collapse: collapse;
+  margin: 0 0 0.75em;
+}
+.gad-ide__doc th,
+.gad-ide__doc td,
+.gp-doc-rendered th,
+.gp-doc-rendered td {
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  padding: 2px 8px;
+  text-align: left;
+  vertical-align: top;
+}
