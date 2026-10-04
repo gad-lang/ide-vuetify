@@ -1,7 +1,8 @@
 // Editor dockview panel: the CodeMirror editor bound to the open file, with the
 // editor/run control toolbar (Save, Format, Reload, Undo, Redo, Run, Debug, the
-// run-profile selector and Preview, plus the debugger step controls while
-// paused). An image file is shown instead of edited.
+// run-profile selector — only where code runs (runMode) — and Preview, plus the
+// debugger step controls while paused). An image file is shown instead of
+// edited.
 import { defineComponent, inject } from "vue";
 import GadEditor from "../GadEditor";
 import { VBtn, VDivider, VList, VListItem, VListSubheader, VMenu } from "../vuetify";
@@ -62,12 +63,13 @@ export default defineComponent({
               {iconBtn("mdi-redo", "Redo", () => ctx.redo(), { disabled: !has() || ctx.isImage.value })}
             </>
           )}
-          <VDivider vertical class="mx-1" />
-          {iconBtn("mdi-play", "Run", () => ctx.runActive(), { disabled: !has() || !ctx.canRun.value, color: "success" })}
-          {iconBtn(ctx.session.value ? "mdi-restart" : "mdi-bug", ctx.session.value ? "Restart" : "Debug",
-            () => ctx.debugActive(), { disabled: !has() || !ctx.canDebug.value, color: "warning" })}
+          {/* Run, Debug and the profile selector: only where code runs (runMode). */}
+          {ctx.canRun.value && <VDivider vertical class="mx-1" />}
+          {ctx.canRun.value && iconBtn("mdi-play", "Run", () => ctx.runActive(), { disabled: !has(), color: "success" })}
+          {ctx.canDebug.value && iconBtn(ctx.session.value ? "mdi-restart" : "mdi-bug", ctx.session.value ? "Restart" : "Debug",
+            () => ctx.debugActive(), { disabled: !has(), color: "warning" })}
           {/* Run/debug profile selector ("…" menu). */}
-          <VMenu location="bottom start" disabled={!ctx.canRun.value}>
+          {ctx.canRun.value && <VMenu location="bottom start">
             {{
               activator: ({ props: menuProps }: { props: Record<string, unknown> }) => (
                 <VBtn size="small" variant="text" class="text-none" appendIcon="mdi-chevron-down" disabled={!ctx.canRun.value} {...menuProps}>
@@ -98,7 +100,7 @@ export default defineComponent({
                 </VList>
               ),
             }}
-          </VMenu>
+          </VMenu>}
           {/* Debugger step controls (shown while paused). */}
           {ctx.stopped.value && (
             <>
