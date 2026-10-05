@@ -138,88 +138,98 @@ async function jsonFetch<T>(method: string, url: string, body?: unknown): Promis
   return data as T;
 }
 
-export const ideApi = {
-  workspace: () => jsonFetch<Workspace>("GET", "api/ide/workspace"),
-  tree: (hidden = false) =>
-    jsonFetch<TreeNode>("GET", "api/ide/tree" + (hidden ? "?hidden=true" : "")),
-  read: (path: string) =>
-    jsonFetch<{ path: string; content: string }>(
-      "GET",
-      "api/ide/file?path=" + encodeURIComponent(path),
-    ),
-  /** rawUrl is the URL of the file's bytes as they are (an image to show). */
-  rawUrl: (path: string) => "api/ide/file?raw=1&path=" + encodeURIComponent(path),
-  write: (path: string, content: string) =>
-    jsonFetch<{ path: string }>("PUT", "api/ide/file", { path, content }),
-  mkfile: (path: string) => jsonFetch<{ path: string }>("PUT", "api/ide/file", { path, content: "" }),
-  del: (path: string) => jsonFetch<{ path: string }>("POST", "api/ide/delete", { path }),
-  rename: (path: string, to: string) =>
-    jsonFetch<{ path: string }>("POST", "api/ide/rename", { path, to }),
-  mkdir: (path: string) => jsonFetch<{ path: string }>("POST", "api/ide/mkdir", { path }),
-  /** upload writes files uploaded — text, or bytes (base64) — at their paths. */
-  upload: (files: UploadedFile[]) =>
-    jsonFetch<{ paths: string[] }>("POST", "api/ide/upload", {
-      files: files.map((f) => (f.bytes ? { path: f.path, bytes: f.bytes } : { path: f.path, content: f.content })),
-    }),
-  fetchUrl: (url: string, path: string) =>
-    jsonFetch<{ path: string; size: number }>("POST", "api/ide/fetch", { url, path }),
-  config: () => jsonFetch<Record<string, unknown>>("GET", "api/ide/config"),
-  saveConfig: (doc: Record<string, unknown>) =>
-    jsonFetch<Record<string, unknown>>("PUT", "api/ide/config", doc),
-  modules: () => jsonFetch<ModuleInfo[]>("GET", "api/ide/modules"),
-  format: (source: string) => jsonFetch<FormatResult>("POST", "api/ide/format", { source }),
-  transpile: (source: string, path?: string) =>
-    jsonFetch<FormatResult>("POST", "api/ide/transpile", { source, path }),
-  doc: (source: string) =>
-    jsonFetch<{ docs: DocComment[] }>("POST", "api/ide/doc", { source }).then((r) => r.docs || []),
-  /** docGen generates documentation for source in the requested mode. */
-  docGen: (source: string, sourceType: string, mode: DocMode): Promise<DocResult> =>
-    jsonFetch<DocResult>("POST", "api/ide/doc-gen", { source, sourceType, mode }),
-  eval: (req: { expr: string; repr?: boolean; source?: string; path?: string }) =>
-    jsonFetch<EvalResult>("POST", "api/ide/eval", req),
-  inspect: (req: { expr: string; session?: string; source?: string; path?: string; sourceType?: string }) =>
-    jsonFetch<{ ok: boolean; inspect?: InspectResult; error?: string }>("POST", "api/ide/inspect", req),
-  diagnose: (source: string, sourceType?: string) =>
-    jsonFetch<{ diagnostics: GadDiagnostic[] }>("POST", "api/ide/diagnose", { source, sourceType }).then(
-      (r) => r.diagnostics || [],
-    ),
-  run: (req: {
-    path?: string;
-    /** The source dialect ("gad" | "gadTemplate" | "gadx"): the order imports
-     *  without an extension resolve in (default: from `path`). */
-    sourceType?: string;
-    source?: string;
-    args?: string[];
-    disabled?: string[];
-    safe?: boolean;
-    saveOut?: string;
-    saveStdout?: string;
-    saveStderr?: string;
-    combine?: boolean;
-    tagEncode?: string;
-  }) => jsonFetch<RunResult>("POST", "api/ide/run", req),
-  dbgStart: (req: {
-    source: string;
-    breakpoints: number[];
-    breakpointSpecs?: BreakpointSpec[];
-    stopOnEntry: boolean;
-    path?: string;
-    /** The source dialect ("gad" | "gadTemplate" | "gadx"): the order imports
-     *  without an extension resolve in (default: from `path`). */
-    sourceType?: string;
-    args?: string[];
-    disabled?: string[];
-    safe?: boolean;
-  }) => jsonFetch<DebugResponse>("POST", "api/ide/debug/start", req),
-  dbgCmd: (session: string, command: string) =>
-    jsonFetch<DebugResponse>("POST", "api/ide/debug/command", { session, command }),
-  dbgEval: (session: string, expr: string, repr: boolean) =>
-    jsonFetch<{ ok: boolean; value?: string; error?: string }>("POST", "api/ide/debug/eval", {
-      session,
-      expr,
-      repr,
-    }),
-};
+/**
+ * createHttpIdeApi is the HTTP client of a `gad ide` server whose API is at
+ * base + "api/ide/…" ("/admin/site-files/ide/"); "" — the default — is
+ * relative to the page, as an app served by the server itself is.
+ */
+export function createHttpIdeApi(base = "") {
+  const u = (p: string) => base + p;
+  return {
+    workspace: () => jsonFetch<Workspace>("GET", u("api/ide/workspace")),
+    tree: (hidden = false) =>
+      jsonFetch<TreeNode>("GET", u("api/ide/tree") + (hidden ? "?hidden=true" : "")),
+    read: (path: string) =>
+      jsonFetch<{ path: string; content: string }>(
+        "GET",
+        u("api/ide/file?path=") + encodeURIComponent(path),
+      ),
+    /** rawUrl is the URL of the file's bytes as they are (an image to show). */
+    rawUrl: (path: string) => u("api/ide/file?raw=1&path=") + encodeURIComponent(path),
+    write: (path: string, content: string) =>
+      jsonFetch<{ path: string }>("PUT", u("api/ide/file"), { path, content }),
+    mkfile: (path: string) => jsonFetch<{ path: string }>("PUT", u("api/ide/file"), { path, content: "" }),
+    del: (path: string) => jsonFetch<{ path: string }>("POST", u("api/ide/delete"), { path }),
+    rename: (path: string, to: string) =>
+      jsonFetch<{ path: string }>("POST", u("api/ide/rename"), { path, to }),
+    mkdir: (path: string) => jsonFetch<{ path: string }>("POST", u("api/ide/mkdir"), { path }),
+    /** upload writes files uploaded — text, or bytes (base64) — at their paths. */
+    upload: (files: UploadedFile[]) =>
+      jsonFetch<{ paths: string[] }>("POST", u("api/ide/upload"), {
+        files: files.map((f) => (f.bytes ? { path: f.path, bytes: f.bytes } : { path: f.path, content: f.content })),
+      }),
+    fetchUrl: (url: string, path: string) =>
+      jsonFetch<{ path: string; size: number }>("POST", u("api/ide/fetch"), { url, path }),
+    config: () => jsonFetch<Record<string, unknown>>("GET", u("api/ide/config")),
+    saveConfig: (doc: Record<string, unknown>) =>
+      jsonFetch<Record<string, unknown>>("PUT", u("api/ide/config"), doc),
+    modules: () => jsonFetch<ModuleInfo[]>("GET", u("api/ide/modules")),
+    format: (source: string) => jsonFetch<FormatResult>("POST", u("api/ide/format"), { source }),
+    transpile: (source: string, path?: string) =>
+      jsonFetch<FormatResult>("POST", u("api/ide/transpile"), { source, path }),
+    doc: (source: string) =>
+      jsonFetch<{ docs: DocComment[] }>("POST", u("api/ide/doc"), { source }).then((r) => r.docs || []),
+    /** docGen generates documentation for source in the requested mode. */
+    docGen: (source: string, sourceType: string, mode: DocMode): Promise<DocResult> =>
+      jsonFetch<DocResult>("POST", u("api/ide/doc-gen"), { source, sourceType, mode }),
+    eval: (req: { expr: string; repr?: boolean; source?: string; path?: string }) =>
+      jsonFetch<EvalResult>("POST", u("api/ide/eval"), req),
+    inspect: (req: { expr: string; session?: string; source?: string; path?: string; sourceType?: string }) =>
+      jsonFetch<{ ok: boolean; inspect?: InspectResult; error?: string }>("POST", u("api/ide/inspect"), req),
+    diagnose: (source: string, sourceType?: string) =>
+      jsonFetch<{ diagnostics: GadDiagnostic[] }>("POST", u("api/ide/diagnose"), { source, sourceType }).then(
+        (r) => r.diagnostics || [],
+      ),
+    run: (req: {
+      path?: string;
+      /** The source dialect ("gad" | "gadTemplate" | "gadx"): the order imports
+       *  without an extension resolve in (default: from `path`). */
+      sourceType?: string;
+      source?: string;
+      args?: string[];
+      disabled?: string[];
+      safe?: boolean;
+      saveOut?: string;
+      saveStdout?: string;
+      saveStderr?: string;
+      combine?: boolean;
+      tagEncode?: string;
+    }) => jsonFetch<RunResult>("POST", u("api/ide/run"), req),
+    dbgStart: (req: {
+      source: string;
+      breakpoints: number[];
+      breakpointSpecs?: BreakpointSpec[];
+      stopOnEntry: boolean;
+      path?: string;
+      /** The source dialect ("gad" | "gadTemplate" | "gadx"): the order imports
+       *  without an extension resolve in (default: from `path`). */
+      sourceType?: string;
+      args?: string[];
+      disabled?: string[];
+      safe?: boolean;
+    }) => jsonFetch<DebugResponse>("POST", u("api/ide/debug/start"), req),
+    dbgCmd: (session: string, command: string) =>
+      jsonFetch<DebugResponse>("POST", u("api/ide/debug/command"), { session, command }),
+    dbgEval: (session: string, expr: string, repr: boolean) =>
+      jsonFetch<{ ok: boolean; value?: string; error?: string }>("POST", u("api/ide/debug/eval"), {
+        session,
+        expr,
+        repr,
+      }),
+  };
+}
+
+export const ideApi = createHttpIdeApi();
 
 /**
  * IdeApi is the full backend contract the reusable <GadIde> component drives.

@@ -12,7 +12,7 @@ export { default as GadNotebook } from "./GadNotebook";
 export { default as InspectorNode, type InspectFn } from "./InspectorNode";
 
 // Backend contract + the built-in HTTP implementation.
-export { httpIdeApi, ideApi, probeIde } from "./api";
+export { httpIdeApi, ideApi, probeIde, createHttpIdeApi } from "./api";
 export type {
   IdeApi,
   Workspace,
