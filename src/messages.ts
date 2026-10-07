@@ -8,6 +8,10 @@ export interface IdeMessages {
   changes: string;
   /** the Git panel's title */
   git: string;
+  /** the header's button that opens the Preview panel */
+  preview: string;
+  /** the header's button that opens the Settings */
+  settings: string;
   refresh: string;
   /** the diff browser's tree */
   files: string;
@@ -53,6 +57,8 @@ export interface IdeMessages {
 export const DEFAULT_MESSAGES: IdeMessages = {
   changes: "Changes",
   git: "Git",
+  preview: "Preview",
+  settings: "Settings",
   refresh: "Refresh",
   files: "Files",
   branches: "Branches",

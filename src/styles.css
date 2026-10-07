@@ -96,6 +96,21 @@
   height: 100%;
   min-height: 0;
 }
+/* The IDE's header: the buttons of the panels — Preview, Git, the host's —,
+   Changes at the right. */
+.gad-ide__header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 3px 8px;
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  background: rgb(var(--v-theme-surface));
+}
+.gad-ide__header-spacer {
+  flex: 1 1 auto;
+}
 .gad-ide__dock {
   flex: 1;
   min-height: 0;

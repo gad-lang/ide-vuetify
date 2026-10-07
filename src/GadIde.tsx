@@ -29,6 +29,7 @@ import PanelChanges from "./panels/PanelChanges";
 import PanelGit from "./panels/PanelGit";
 import { IdeExtraPanelsKey, type ExtraPanel } from "./extraPanels";
 import { IdeMessagesKey, messagesOf, type IdeMessages } from "./messages";
+import { VBtn } from "./vuetify";
 
 // The dockview theme CSS is the consumer's responsibility (like Vuetify's
 // styles): import "dockview-core/dist/styles/dockview.css" once in the host app.
@@ -145,7 +146,7 @@ export default defineComponent({
     const gitPanels: ExtraPanel[] =
       props.workspace.git && props.api.git
         ? [
-            { id: "changes", label: messages.value.changes, icon: "mdi-file-compare", component: PanelChanges, toolbarButton: true,
+            { id: "changes", label: messages.value.changes, icon: "mdi-file-compare", component: PanelChanges, toolbarButton: true, buttonAlign: "right",
               headerExpand: true, expandTitle: messages.value.expand, collapseTitle: messages.value.restore },
             { id: "git", label: messages.value.git, icon: "mdi-source-branch", component: PanelGit, toolbarButton: true,
               headerExpand: true, expandTitle: messages.value.expand, collapseTitle: messages.value.restore },
@@ -282,9 +283,11 @@ export default defineComponent({
 
     // the host's panels, to the IDE's own (the Editor's toolbar): their
     // buttons, and opening one — shown, when it is open
-    provide(IdeExtraPanelsKey, {
+    const extraPanels = {
       buttons: computed(() =>
-        extras.filter((x) => x.toolbarButton).map((x) => ({ id: x.id, label: x.label, icon: x.icon ?? "mdi-view-split-horizontal" })),
+        extras
+          .filter((x) => x.toolbarButton)
+          .map((x) => ({ id: x.id, label: x.label, icon: x.icon ?? "mdi-view-split-horizontal", align: x.buttonAlign ?? ("left" as const) })),
       ),
       open: (id: string) => {
         if (!dv) return;
@@ -292,7 +295,25 @@ export default defineComponent({
         if (def && !dv.getPanel(id)) addPanel(dv, def);
         dv.getPanel(id)?.api.setActive();
       },
-    });
+    };
+    provide(IdeExtraPanelsKey, extraPanels);
+
+    // the header's button of a panel: open (or shown) on its click; marked
+    // while the panel is in the layout
+    const headerBtn = (b: { id: string; label: string; icon: string }, onClick: () => void, disabled = false) => (
+      <VBtn
+        key={b.id}
+        size="small"
+        variant={visible.has(b.id) ? "tonal" : "text"}
+        prependIcon={b.icon}
+        class="text-none"
+        disabled={disabled}
+        data-extra-open={b.id}
+        onClick={onClick}
+      >
+        {b.label}
+      </VBtn>
+    );
 
     const panelToggles = computed<PanelToggle[]>(() =>
       panelDefs.value.map((p) => ({ id: p.id, label: p.label, visible: visible.has(p.id) })),
@@ -321,6 +342,19 @@ export default defineComponent({
 
     return () => (
       <div class="gad-ide">
+        {/* The header: the panels opened by a button — Preview, Git, the
+            host's — and the Settings at the left, Changes at the right. */}
+        <div class="gad-ide__header" data-ide-header>
+          {hasPanel("docs") &&
+            headerBtn({ id: "docs", label: messages.value.preview, icon: "mdi-file-eye-outline" }, () => ctx.requestDocs(), !ctx.openPath.value)}
+          {extraPanels.buttons.value.filter((b) => b.align === "left").map((b) => headerBtn(b, () => extraPanels.open(b.id)))}
+          <VBtn size="small" variant="text" prependIcon="mdi-cog-outline" class="text-none" data-ide-settings
+            onClick={() => (ctx.settingsOpen.value = true)}>
+            {messages.value.settings}
+          </VBtn>
+          <span class="gad-ide__header-spacer" />
+          {extraPanels.buttons.value.filter((b) => b.align === "right").map((b) => headerBtn(b, () => extraPanels.open(b.id)))}
+        </div>
         <div class="gad-ide__dock">
           <DockviewVue style={{ height: "100%" }} theme={dvTheme.value} components={allComponents} onReady={onReady} />
         </div>

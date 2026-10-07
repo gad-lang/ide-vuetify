@@ -4,8 +4,8 @@ import type { Component, ComputedRef, InjectionKey, Ref } from "vue";
  * its component rendered in a dockview panel of the IDE — placed below the
  * editor by default —, in the Settings' panel toggles like the IDE's own,
  * with a button inside it that expands it over the others and brings it back
- * (dockview's maximize); and, with toolbarButton, a button in the Editor's
- * toolbar that opens it (or shows it, when open). */
+ * (dockview's maximize); and, with toolbarButton, a button in the IDE's
+ * header that opens it (or shows it, when open). */
 export interface ExtraPanel {
   /** its id: the dockview panel's and its component's (unique among them) */
   id: string;
@@ -19,8 +19,11 @@ export interface ExtraPanel {
   props?: Record<string, unknown>;
   /** where it opens: below the editor (default), right of it, or left */
   placement?: "bottom" | "right" | "left";
-  /** a button in the Editor's toolbar that opens it */
+  /** a button in the IDE's header that opens it */
   toolbarButton?: boolean;
+  /** where in the header its button is: with the others, at the left
+   * (default), or at the right */
+  buttonAlign?: "left" | "right";
   /** its component draws the expand/collapse button in its own header
    * (ExpandButton, by ExtraPanelExpandKey): none floats over it */
   headerExpand?: boolean;
@@ -29,10 +32,10 @@ export interface ExtraPanel {
   collapseTitle?: string;
 }
 
-/** What the IDE's own panels see of the extra ones: the toolbar buttons and
+/** What the IDE's own panels see of the extra ones: the header's buttons and
  * how to open one. */
 export interface IdeExtraPanels {
-  buttons: ComputedRef<{ id: string; label: string; icon: string }[]>;
+  buttons: ComputedRef<{ id: string; label: string; icon: string; align: "left" | "right" }[]>;
   open: (id: string) => void;
 }
 
