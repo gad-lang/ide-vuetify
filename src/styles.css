@@ -487,3 +487,157 @@
   text-align: left;
   vertical-align: top;
 }
+
+/* an extra panel of the host (extraPanels): its component, and its expand /
+   collapse button at its top right */
+.gad-ide__extra {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+.gad-ide__extra-body {
+  height: 100%;
+  overflow: auto;
+}
+.gad-ide__extra-expand {
+  position: absolute !important;
+  top: 4px;
+  right: 6px;
+  z-index: 5;
+}
+
+/* The Changes and Git panels: a bar (its right free for the expand button),
+   the rest filling the panel */
+.gad-ide__changes,
+.gad-ide__git {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: rgb(var(--v-theme-on-surface));
+}
+.gad-ide__git-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  height: 32px;
+  padding: 0 6px 0 10px;
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  font-size: 0.8125rem;
+}
+.gad-ide__git-title {
+  font-weight: 500;
+}
+.gad-ide__git-count {
+  padding: 0 6px;
+  border-radius: 8px;
+  background: rgba(var(--v-theme-on-surface), 0.08);
+  font-size: 0.75rem;
+}
+.gad-ide__git-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.gad-ide__git-fill > .vx-diff-browser {
+  border: 0;
+  border-radius: 0;
+}
+.gad-ide__git-cols {
+  display: grid;
+  grid-template-columns: minmax(140px, 200px) minmax(260px, 32%) 1fr;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.gad-ide__git-cols > div {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+.gad-ide__git-cols > div + div {
+  border-left: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+.gad-ide__git-head {
+  padding: 6px 10px 2px;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(var(--v-theme-on-surface), 0.6);
+}
+.gad-ide__git-branch,
+.gad-ide__git-commit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+.gad-ide__git-branch {
+  height: 26px;
+  padding: 0 10px;
+}
+.gad-ide__git-commit {
+  height: 24px;
+  padding-right: 8px;
+}
+.gad-ide__git-branch:hover,
+.gad-ide__git-commit:hover {
+  background: rgba(var(--v-theme-on-surface), 0.05);
+}
+.gad-ide__git-branch--active,
+.gad-ide__git-commit--active {
+  background: rgba(var(--v-theme-primary), 0.14);
+}
+.gad-ide__git-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gad-ide__git-graph {
+  flex: 0 0 auto;
+}
+.gad-ide__git-subject {
+  flex: 1 1 auto;
+}
+.gad-ide__git-meta {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  color: rgba(var(--v-theme-on-surface), 0.6);
+}
+.gad-ide__git-ref {
+  flex: 0 0 auto;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  background: rgba(var(--v-theme-info), 0.16);
+  color: rgb(var(--v-theme-info));
+}
+.gad-ide__git-detail {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+.gad-ide__git-message {
+  flex: 0 0 auto;
+  max-height: 35%;
+  overflow: auto;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  font-size: 0.8125rem;
+}
+.gad-ide__git-message-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: rgba(var(--v-theme-on-surface), 0.7);
+}
+.gad-ide__git-message pre {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+}
+.gad-ide__git-spacer {
+  flex: 1 1 auto;
+}

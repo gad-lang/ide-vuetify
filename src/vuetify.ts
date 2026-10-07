@@ -23,6 +23,7 @@ import {
   VListItem as _VListItem,
   VListSubheader as _VListSubheader,
   VMenu as _VMenu,
+  VProgressCircular as _VProgressCircular,
   VProgressLinear as _VProgressLinear,
   VSpacer as _VSpacer,
   VSelect as _VSelect,
@@ -54,6 +55,7 @@ export const VList = _VList as unknown as AnyComponent;
 export const VListItem = _VListItem as unknown as AnyComponent;
 export const VListSubheader = _VListSubheader as unknown as AnyComponent;
 export const VMenu = _VMenu as unknown as AnyComponent;
+export const VProgressCircular = _VProgressCircular as unknown as AnyComponent;
 export const VProgressLinear = _VProgressLinear as unknown as AnyComponent;
 export const VSpacer = _VSpacer as unknown as AnyComponent;
 export const VSwitch = _VSwitch as unknown as AnyComponent;

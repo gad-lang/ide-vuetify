@@ -24,6 +24,10 @@ import RunProfileDialog from "./RunProfileDialog";
 import { ConfirmDialog, PromptDialog } from "./PromptDialog";
 import UrlImportDialog from "./UrlImportDialog";
 import MoveDialog from "./MoveDialog";
+import { panelFor } from "./panels/PanelExtra";
+import PanelChanges from "./panels/PanelChanges";
+import PanelGit from "./panels/PanelGit";
+import { IdeExtraPanelsKey, type ExtraPanel } from "./extraPanels";
 
 // The dockview theme CSS is the consumer's responsibility (like Vuetify's
 // styles): import "dockview-core/dist/styles/dockview.css" once in the host app.
@@ -87,6 +91,11 @@ export default defineComponent({
      * is taken out of a restored layout and is not offered in the Settings: an
      * IDE that runs no code needs no Output nor debugger panels. */
     panels: { type: Array as PropType<string[]>, default: undefined },
+    /** Panels of the host app (ExtraPanel): rendered in the layout like the
+     * IDE's own — below the editor by default —, in the Settings' toggles,
+     * each with an expand/collapse button, and a button in the Editor's
+     * toolbar that opens it (toolbarButton). */
+    extraPanels: { type: Array as PropType<ExtraPanel[]>, default: () => [] },
   },
   emits: {
     "update:layoutConfig": (_v: SerializedDockview) => true,
@@ -125,8 +134,48 @@ export default defineComponent({
     let lastJSON = "";
     const visible = reactive(new Set<string>());
 
-    // the panels this IDE has (props.panels), in PANELS' order
-    const panelDefs = computed(() => (props.panels ? PANELS.filter((p) => props.panels!.includes(p.id)) : PANELS));
+    // the workspace in a git repository (Workspace.git, api.git): the Changes
+    // and Git panels, opened by their buttons as the host's are
+    const gitPanels: ExtraPanel[] =
+      props.workspace.git && props.api.git
+        ? [
+            { id: "changes", label: "Changes", icon: "mdi-file-compare", component: PanelChanges, toolbarButton: true, headerExpand: true },
+            { id: "git", label: "Git", icon: "mdi-source-branch", component: PanelGit, toolbarButton: true, headerExpand: true },
+          ]
+        : [];
+    const extras = [...gitPanels, ...props.extraPanels];
+
+    // the host's panels (extraPanels): placed by the editor (or the first
+    // panel there is), their components wrapped (PanelExtra)
+    const extraDefs = computed<PanelDef[]>(() =>
+      extras.map((x) => ({
+        id: x.id,
+        label: x.label,
+        add: (a: DockviewApi) => {
+          const placement = x.placement ?? "bottom";
+          // another of the same place open: a tab beside it; else the whole
+          // layout's side (below all, as IntelliJ's tool windows)
+          const sibling = extras.find((o) => o.id !== x.id && (o.placement ?? "bottom") === placement && a.getPanel(o.id));
+          const direction = placement === "right" ? "right" : placement === "left" ? "left" : "below";
+          const position = sibling
+            ? { referencePanel: sibling.id, direction: "within" as const }
+            : a.panels.length
+              ? { direction }
+              : undefined;
+          a.addPanel({ id: x.id, component: x.id, title: x.label, ...(position ? { position } : {}) });
+          // below: a third of the height
+          if (!sibling && placement === "bottom") a.getPanel(x.id)?.api.setSize({ height: Math.max(240, Math.round(a.height / 3)) });
+        },
+      })),
+    );
+    const allComponents: Record<string, VueComponent> = { ...components };
+    for (const x of extras) allComponents[x.id] = panelFor(x) as unknown as VueComponent;
+
+    // the panels this IDE has (props.panels), in PANELS' order, then the host's
+    const panelDefs = computed(() => [
+      ...(props.panels ? PANELS.filter((p) => props.panels!.includes(p.id)) : PANELS),
+      ...extraDefs.value,
+    ]);
     const hasPanel = (id: string) => panelDefs.value.some((p) => p.id === id);
 
     // addPanel adds def — next to the panel it is placed by, or alone when that
@@ -139,7 +188,8 @@ export default defineComponent({
       }
     }
     function buildDefault(api: DockviewApi) {
-      for (const p of panelDefs.value) addPanel(api, p);
+      // the host's panels open when asked (their button, the Settings)
+      for (const p of panelDefs.value) if (!extraDefs.value.some((x) => x.id === p.id)) addPanel(api, p);
     }
     // dropUnknown takes out of a restored layout the panels this IDE has not.
     function dropUnknown(api: DockviewApi) {
@@ -222,6 +272,20 @@ export default defineComponent({
       }
     }
 
+    // the host's panels, to the IDE's own (the Editor's toolbar): their
+    // buttons, and opening one — shown, when it is open
+    provide(IdeExtraPanelsKey, {
+      buttons: computed(() =>
+        extras.filter((x) => x.toolbarButton).map((x) => ({ id: x.id, label: x.label, icon: x.icon ?? "mdi-view-split-horizontal" })),
+      ),
+      open: (id: string) => {
+        if (!dv) return;
+        const def = panelDefs.value.find((p) => p.id === id);
+        if (def && !dv.getPanel(id)) addPanel(dv, def);
+        dv.getPanel(id)?.api.setActive();
+      },
+    });
+
     const panelToggles = computed<PanelToggle[]>(() =>
       panelDefs.value.map((p) => ({ id: p.id, label: p.label, visible: visible.has(p.id) })),
     );
@@ -250,7 +314,7 @@ export default defineComponent({
     return () => (
       <div class="gad-ide">
         <div class="gad-ide__dock">
-          <DockviewVue style={{ height: "100%" }} theme={dvTheme.value} components={components} onReady={onReady} />
+          <DockviewVue style={{ height: "100%" }} theme={dvTheme.value} components={allComponents} onReady={onReady} />
         </div>
 
         <SettingsDialog

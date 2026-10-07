@@ -6,6 +6,7 @@
 // independent v-models — `layoutConfig` (dockview layout) and `config` (project
 // settings). Requires Vue 3, Vuetify 3 and dockview-vue as peer dependencies.
 export { default as GadIde } from "./GadIde";
+export type { ExtraPanel } from "./extraPanels";
 export { default as GadEditor } from "./GadEditor";
 export { default as GadPlayground } from "./GadPlayground";
 export { default as GadNotebook } from "./GadNotebook";
@@ -30,7 +31,14 @@ export type {
   DebugFrame,
   DebugVariable,
   DebugResponse,
+  IdeGitApi,
+  GitBranch,
+  GitCommit,
+  GitCommitDetail,
 } from "./api";
+
+// The diff browser (the Changes and Git panels'): rvq's <vx-diff-browser> too.
+export * from "./diff";
 export type { FormatResult, RunResult, GadRunner, DocMode, DocResult } from "./types";
 export { default as DocPanel } from "./DocPanel";
 

@@ -82,12 +82,34 @@ export interface ConfirmRequest {
   resolve: (ok: boolean) => void;
 }
 
+// WRITES are the methods of IdeApi that change the files.
+const WRITES = new Set(["write", "mkfile", "mkdir", "del", "rename", "upload", "fetchUrl"]);
+
+// trackWrites is api calling written after each of its writes (WRITES) is
+// done, failed or not.
+function trackWrites(api: IdeApi, written: () => void): IdeApi {
+  return new Proxy(api, {
+    get(target, key, receiver) {
+      const v = Reflect.get(target, key, receiver);
+      if (typeof v !== "function" || !WRITES.has(String(key))) return v;
+      return (...args: unknown[]) => {
+        const r = v.apply(target, args);
+        Promise.resolve(r).then(written, written);
+        return r;
+      };
+    },
+  });
+}
+
 export function createController(
-  api: IdeApi,
+  rawApi: IdeApi,
   workspace: Workspace,
   dark: Ref<boolean>,
   hooks: ControllerHooks = {},
 ) {
+  // writes counts the writes of the files (the Changes panel looks again)
+  const writes = ref(0);
+  const api = trackWrites(rawApi, () => writes.value++);
   const onReset = hooks.onReset;
   // Read-only workspace: create/delete/upload/import are disabled.
   const readonly = computed(() => hooks.getReadonly?.() ?? false);
@@ -445,6 +467,17 @@ export function createController(
     await api.write(t.path, t.content);
     t.saved = t.content;
   }
+  // refreshFile reads again the file at path when a tab has it with no
+  // changes not saved (written elsewhere: the Changes panel's compare).
+  async function refreshFile(path: string) {
+    const t = tabs.value.find((x) => x.path === path);
+    if (!t || t.content !== t.saved || isImagePath(path)) return;
+    const content = (await api.read(path)).content;
+    if (t.content !== t.saved) return;
+    t.content = content;
+    t.saved = content;
+  }
+
   async function reload() {
     const t = tabs.value[active.value];
     if (!t) return;
@@ -680,6 +713,7 @@ export function createController(
   return {
     api,
     dark,
+    writes, refreshFile, workspace,
     // tree
     tree, rows, openPath, source, isExpanded, toggleDir, openFile,
     tabs, active, activateTab, closeTab, isDirty, autosave,

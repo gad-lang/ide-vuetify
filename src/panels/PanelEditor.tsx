@@ -7,6 +7,7 @@ import { defineComponent, inject } from "vue";
 import GadEditor from "../GadEditor";
 import { VBtn, VDivider, VList, VListItem, VListSubheader, VMenu } from "../vuetify";
 import { IdeControllerKey } from "../controller";
+import { IdeExtraPanelsKey } from "../extraPanels";
 import type { GadEditorView } from "../codemirror";
 import type { RunProfile } from "../api";
 
@@ -17,6 +18,8 @@ export default defineComponent({
   name: "PanelEditor",
   setup() {
     const ctx = inject(IdeControllerKey)!;
+    // the host's panels with a toolbar button (GadIde's extraPanels)
+    const extra = inject(IdeExtraPanelsKey, null);
     const has = () => !!ctx.openPath.value;
 
     const iconBtn = (icon: string, title: string, onClick: () => void, opts: { disabled?: boolean; color?: string } = {}) => (
@@ -118,6 +121,9 @@ export default defineComponent({
 
           {/* Right-aligned: Doc then Settings. */}
           <span class="pnl-toolbar-spacer" />
+          {extra?.buttons.value.map((b) => (
+            <VBtn key={b.id} size="small" variant="text" icon={b.icon} title={b.label} data-extra-open={b.id} onClick={() => extra.open(b.id)} />
+          ))}
           {iconBtn("mdi-file-eye-outline", "Preview", () => ctx.requestDocs(), { disabled: !has() })}
           {iconBtn("mdi-cog-outline", "Settings", () => (ctx.settingsOpen.value = true))}
         </div>

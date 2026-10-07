@@ -6,6 +6,7 @@
 // regardless of backend.
 import type { GadDiagnostic } from "@gad-lang/codemirror-gad";
 import type { DocMode, DocResult, FormatResult, RunResult } from "./types";
+import type { DiffFile } from "./diff/diffBrowserContext";
 
 export interface Workspace {
   root: string;
@@ -15,6 +16,66 @@ export interface Workspace {
    * Explorer and the editor offer only these. `import` is uploading and
    * downloading a URL by the server (api.upload, api.fetchUrl). */
   actions?: Partial<Record<WorkspaceAction, boolean>>;
+  /** The workspace is (in) a git repository: the IDE has its Changes panel
+   * (the files changed, compared and edited) and its Git one (the branches,
+   * their commits and what each changed) — by api.git. */
+  git?: boolean;
+}
+
+/** GitBranch is a branch of the workspace's repository. */
+export interface GitBranch {
+  /** "main", "origin/main" */
+  name: string;
+  /** the commit it points at */
+  hash: string;
+  /** a remote's */
+  remote?: boolean;
+  /** the one checked out */
+  current?: boolean;
+  /** its commit's subject */
+  subject?: string;
+}
+
+/** GitCommit is a commit of a branch's log. */
+export interface GitCommit {
+  hash: string;
+  parents: string[];
+  author: string;
+  email: string;
+  /** ISO 8601 */
+  date: string;
+  subject: string;
+  /** the branches and tags at it ("HEAD -> main", "tag: v1") */
+  refs?: string[];
+}
+
+/** GitCommitDetail is a commit with its full message and the files it
+ * changed (from its first parent: the commit before). */
+export interface GitCommitDetail extends GitCommit {
+  message: string;
+  files: DiffFile[];
+}
+
+/** IdeGitApi is what the IDE's Changes and Git panels ask of the
+ * workspace's repository. Paths are the workspace's. */
+export interface IdeGitApi {
+  /** the files changed (not committed): their summary */
+  changes: () => Promise<DiffFile[]>;
+  /** the diff of a file changed: its old (HEAD's) and current contents */
+  diff: (path: string, from?: string) => Promise<DiffFile>;
+  /** writes the file changed with content (edited in the compare) */
+  save: (path: string, content: string) => Promise<void>;
+  branches: () => Promise<GitBranch[]>;
+  /** the commits of ref, newest first: limit of them after skip */
+  log: (ref: string, skip?: number, limit?: number) => Promise<GitCommit[]>;
+  commit: (hash: string) => Promise<GitCommitDetail>;
+  /** the diff of a file the commit changed, with the commit before */
+  commitDiff: (hash: string, path: string, from?: string) => Promise<DiffFile>;
+  /** the URL that downloads the file as the commit has it */
+  fileUrl?: (hash: string, path: string) => string;
+  /** the URL that downloads the commit's patch (from the commit before): of
+   * the file at path, or the whole commit's */
+  patchUrl?: (hash: string, path?: string) => string;
 }
 
 /** WorkspaceAction is a way of changing the files of the workspace. */
@@ -145,7 +206,26 @@ async function jsonFetch<T>(method: string, url: string, body?: unknown): Promis
  */
 export function createHttpIdeApi(base = "") {
   const u = (p: string) => base + p;
+  const q = (params: Record<string, string | number | undefined>) =>
+    Object.entries(params)
+      .filter(([, v]) => v !== undefined && v !== "")
+      .map(([k, v]) => k + "=" + encodeURIComponent(String(v)))
+      .join("&");
+  const git: IdeGitApi = {
+    changes: () => jsonFetch<{ files: DiffFile[] }>("GET", u("api/ide/git/changes")).then((r) => r.files || []),
+    diff: (path, from) => jsonFetch<DiffFile>("GET", u("api/ide/git/diff?") + q({ path, from })),
+    save: (path, content) => jsonFetch<unknown>("POST", u("api/ide/git/save"), { path, content }).then(() => undefined),
+    branches: () => jsonFetch<{ branches: GitBranch[] }>("GET", u("api/ide/git/branches")).then((r) => r.branches || []),
+    log: (ref, skip, limit) =>
+      jsonFetch<{ commits: GitCommit[] }>("GET", u("api/ide/git/log?") + q({ ref, skip, limit })).then((r) => r.commits || []),
+    commit: (hash) => jsonFetch<GitCommitDetail>("GET", u("api/ide/git/commit?") + q({ hash })),
+    commitDiff: (hash, path, from) => jsonFetch<DiffFile>("GET", u("api/ide/git/commit/diff?") + q({ hash, path, from })),
+    fileUrl: (hash, path) => u("api/ide/git/file?") + q({ hash, path }),
+    patchUrl: (hash, path) => u("api/ide/git/patch?") + q({ hash, path }),
+  };
   return {
+    /** the workspace's repository (Workspace.git) */
+    git,
     workspace: () => jsonFetch<Workspace>("GET", u("api/ide/workspace")),
     tree: (hidden = false) =>
       jsonFetch<TreeNode>("GET", u("api/ide/tree") + (hidden ? "?hidden=true" : "")),
@@ -237,7 +317,10 @@ export const ideApi = createHttpIdeApi();
  * `gad ide` server) or a fully in-browser one (WASM + a LocalStorage
  * filesystem).
  */
-export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload"> & {
+export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload" | "git"> & {
+  /** git is the workspace's repository, when it is in one (Workspace.git):
+   * the Changes and Git panels. */
+  git?: IdeGitApi;
   /** upload writes files uploaded (Workspace.import); without it, only their
    * text is written, file by file. */
   upload?: (files: UploadedFile[]) => Promise<{ paths: string[] }>;
