@@ -7,6 +7,7 @@
 // settings). Requires Vue 3, Vuetify 3 and dockview-vue as peer dependencies.
 export { default as GadIde } from "./GadIde";
 export type { ExtraPanel } from "./extraPanels";
+export { DEFAULT_MESSAGES, type IdeMessages } from "./messages";
 export { default as GadEditor } from "./GadEditor";
 export { default as GadPlayground } from "./GadPlayground";
 export { default as GadNotebook } from "./GadNotebook";

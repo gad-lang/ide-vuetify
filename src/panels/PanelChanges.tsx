@@ -2,10 +2,11 @@
 // committed (api.git.changes), in the diff browser — each compared with
 // HEAD's, the current side edited (a change taken back, undone, redone,
 // saved). Looked at again when the IDE writes a file, and on its button.
-import { defineComponent, h, inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { VBtn, VProgressCircular } from "../vuetify";
 import { IdeControllerKey } from "../controller";
 import { ExpandButton } from "./PanelExtra";
+import { DEFAULT_MESSAGES, diffLabels, IdeMessagesKey } from "../messages";
 import DiffBrowser from "../diff/DiffBrowser.vue";
 import type { Content, DiffFile, SaveState } from "../diff/diffBrowserContext";
 
@@ -16,6 +17,7 @@ export default defineComponent({
   setup() {
     const ctx = inject(IdeControllerKey)!;
     const git = ctx.api.git!;
+    const m = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const files = ref<DiffFile[]>([]);
     const error = ref("");
     const loading = ref(false);
@@ -72,9 +74,9 @@ export default defineComponent({
     return () => (
       <div class="gad-ide__changes" data-git-changes>
         <div class="gad-ide__git-bar">
-          <span class="gad-ide__git-title">Changes</span>
+          <span class="gad-ide__git-title">{m.value.changes}</span>
           <span class="gad-ide__git-count">{files.value.length}</span>
-          <VBtn size="x-small" variant="text" icon="mdi-refresh" title="Refresh" data-changes-refresh onClick={refresh} />
+          <VBtn size="x-small" variant="text" icon="mdi-refresh" title={m.value.refresh} data-changes-refresh onClick={refresh} />
           {loading.value && <VProgressCircular indeterminate size={14} width={2} color="primary" />}
           {error.value && <span class="text-error text-body-2 ms-2">{error.value}</span>}
           <span class="gad-ide__git-spacer" />
@@ -82,13 +84,13 @@ export default defineComponent({
         </div>
         <div class="gad-ide__git-fill">
           {h(DiffBrowser, {
+            ...diffLabels(m.value),
             ref: browser,
             files: files.value,
             load,
             save: canSave && !ctx.readonly.value ? save : undefined,
             dark: ctx.dark.value,
             height: "100%",
-            filesTitle: "Files",
           })}
         </div>
       </div>

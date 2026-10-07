@@ -8,6 +8,7 @@ import { computed, defineComponent, h, inject, onMounted, ref, watch } from "vue
 import { VBtn, VProgressCircular } from "../vuetify";
 import { IdeControllerKey } from "../controller";
 import { ExpandButton } from "./PanelExtra";
+import { DEFAULT_MESSAGES, diffLabels, IdeMessagesKey } from "../messages";
 import DiffBrowser from "../diff/DiffBrowser.vue";
 import type { Content, DiffFile } from "../diff/diffBrowserContext";
 import type { GitBranch, GitCommit, GitCommitDetail } from "../api";
@@ -52,6 +53,7 @@ export default defineComponent({
   setup() {
     const ctx = inject(IdeControllerKey)!;
     const git = ctx.api.git!;
+    const m = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
 
     const branches = ref<GitBranch[]>([]);
     const branch = ref("");
@@ -139,11 +141,11 @@ export default defineComponent({
       const deleted = (f.status || "").trim().startsWith("D");
       return [
         git.fileUrl && !deleted && (
-          <VBtn size="small" variant="text" icon="mdi-file-download-outline" density="comfortable" title="Download the file (this commit's)"
+          <VBtn size="small" variant="text" icon="mdi-file-download-outline" density="comfortable" title={m.value.downloadFile}
             href={git.fileUrl(d.hash, f.path)} download={f.path.slice(f.path.lastIndexOf("/") + 1)} data-git-download-file />
         ),
         git.patchUrl && (
-          <VBtn size="small" variant="text" icon="mdi-file-compare" density="comfortable" title="Download the patch (from the commit before)"
+          <VBtn size="small" variant="text" icon="mdi-file-compare" density="comfortable" title={m.value.downloadPatch}
             href={git.patchUrl(d.hash, f.path)} download data-git-download-patch />
         ),
       ];
@@ -167,8 +169,8 @@ export default defineComponent({
       return (
         <div class="gad-ide__git" data-git-panel>
           <div class="gad-ide__git-bar">
-            <span class="gad-ide__git-title">Git</span>
-            <VBtn size="x-small" variant="text" icon="mdi-refresh" title="Refresh" data-git-refresh onClick={refresh} />
+            <span class="gad-ide__git-title">{m.value.git}</span>
+            <VBtn size="x-small" variant="text" icon="mdi-refresh" title={m.value.refresh} data-git-refresh onClick={refresh} />
             {loading.value > 0 && <VProgressCircular indeterminate size={14} width={2} color="primary" />}
             {error.value && <span class="text-error text-body-2 ms-2" data-git-error>{error.value}</span>}
           <span class="gad-ide__git-spacer" />
@@ -176,9 +178,9 @@ export default defineComponent({
           </div>
           <div class="gad-ide__git-cols">
             <div class="gad-ide__git-branches">
-              <div class="gad-ide__git-head">Branches</div>
+              <div class="gad-ide__git-head">{m.value.branches}</div>
               {local.value.map(branchItem)}
-              {remote.value.length > 0 && <div class="gad-ide__git-head">Remote</div>}
+              {remote.value.length > 0 && <div class="gad-ide__git-head">{m.value.remoteBranches}</div>}
               {remote.value.map(branchItem)}
             </div>
             <div class="gad-ide__git-log">
@@ -201,13 +203,13 @@ export default defineComponent({
               ))}
               {more.value && (
                 <VBtn size="small" variant="text" block data-git-more onClick={() => loadLog(true)}>
-                  More
+                  {m.value.more}
                 </VBtn>
               )}
             </div>
             <div class="gad-ide__git-detail">
               {!d ? (
-                <div class="pa-4 text-medium-emphasis">Choose a commit.</div>
+                <div class="pa-4 text-medium-emphasis">{m.value.chooseCommit}</div>
               ) : (
                 <>
                   <div class="gad-ide__git-message" data-git-message>
@@ -216,8 +218,8 @@ export default defineComponent({
                       <span>{d.author} &lt;{d.email}&gt;</span>
                       <span>{shortDate(d.date)}</span>
                       {git.patchUrl && (
-                        <VBtn size="x-small" variant="tonal" prependIcon="mdi-download" href={git.patchUrl(d.hash)} download data-git-download-commit-patch>
-                          Patch
+                        <VBtn size="x-small" variant="tonal" prependIcon="mdi-download" href={git.patchUrl(d.hash)} download title={m.value.downloadCommitPatch} data-git-download-commit-patch>
+                          {m.value.patch}
                         </VBtn>
                       )}
                     </div>
@@ -227,13 +229,13 @@ export default defineComponent({
                     {h(
                       DiffBrowser,
                       {
+                        ...diffLabels(m.value),
                         key: d.hash,
                         files: d.files,
                         load,
                         dark: ctx.dark.value,
                         height: "100%",
-                        filesTitle: "Files",
-                        oldLabel: d.parents[0] ? d.parents[0].slice(0, 10) : "(none)",
+                        oldLabel: d.parents[0] ? d.parents[0].slice(0, 10) : m.value.noParent,
                         newLabel: d.hash.slice(0, 10),
                       },
                       { toolbar: ({ file }: { file: DiffFile }) => fileButtons(file) },

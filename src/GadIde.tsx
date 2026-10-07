@@ -28,6 +28,7 @@ import { panelFor } from "./panels/PanelExtra";
 import PanelChanges from "./panels/PanelChanges";
 import PanelGit from "./panels/PanelGit";
 import { IdeExtraPanelsKey, type ExtraPanel } from "./extraPanels";
+import { IdeMessagesKey, messagesOf, type IdeMessages } from "./messages";
 
 // The dockview theme CSS is the consumer's responsibility (like Vuetify's
 // styles): import "dockview-core/dist/styles/dockview.css" once in the host app.
@@ -96,6 +97,9 @@ export default defineComponent({
      * each with an expand/collapse button, and a button in the Editor's
      * toolbar that opens it (toolbarButton). */
     extraPanels: { type: Array as PropType<ExtraPanel[]>, default: () => [] },
+    /** The texts of the Changes and Git panels (IdeMessages), translated:
+     * any left out is English. */
+    messages: { type: Object as PropType<Partial<IdeMessages>>, default: undefined },
   },
   emits: {
     "update:layoutConfig": (_v: SerializedDockview) => true,
@@ -121,6 +125,8 @@ export default defineComponent({
       fileTypes: props.fileTypes,
     });
     provide(IdeControllerKey, ctx);
+    const messages = messagesOf(() => props.messages);
+    provide(IdeMessagesKey, messages);
 
     // External fontSize changes (e.g. a restore) reflect into the controller.
     watch(
@@ -139,8 +145,10 @@ export default defineComponent({
     const gitPanels: ExtraPanel[] =
       props.workspace.git && props.api.git
         ? [
-            { id: "changes", label: "Changes", icon: "mdi-file-compare", component: PanelChanges, toolbarButton: true, headerExpand: true },
-            { id: "git", label: "Git", icon: "mdi-source-branch", component: PanelGit, toolbarButton: true, headerExpand: true },
+            { id: "changes", label: messages.value.changes, icon: "mdi-file-compare", component: PanelChanges, toolbarButton: true,
+              headerExpand: true, expandTitle: messages.value.expand, collapseTitle: messages.value.restore },
+            { id: "git", label: messages.value.git, icon: "mdi-source-branch", component: PanelGit, toolbarButton: true,
+              headerExpand: true, expandTitle: messages.value.expand, collapseTitle: messages.value.restore },
           ]
         : [];
     const extras = [...gitPanels, ...props.extraPanels];
