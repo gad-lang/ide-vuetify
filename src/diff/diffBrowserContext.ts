@@ -12,6 +12,7 @@ export interface DiffFile {
   new?: string
   binary?: boolean
   readOnly?: boolean // not to be edited here, though save is given
+  warning?: boolean // its name highlighted in the tree (a file to look at: one removed on purpose)
   removed?: number[] // 1-based lines of old
   added?: number[] // of new
   delRanges?: Record<number, [number, number, number][]>

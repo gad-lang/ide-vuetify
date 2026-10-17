@@ -27,7 +27,7 @@ import MoveDialog from "./MoveDialog";
 import { panelFor } from "./panels/PanelExtra";
 import PanelChanges from "./panels/PanelChanges";
 import PanelGit from "./panels/PanelGit";
-import { IdeExtraPanelsKey, type ExtraPanel } from "./extraPanels";
+import { IdeExtraPanelsKey, type ExtraPanel, type HeaderAction } from "./extraPanels";
 import { IdeMessagesKey, messagesOf, type IdeMessages } from "./messages";
 import { VBtn } from "./vuetify";
 
@@ -98,6 +98,10 @@ export default defineComponent({
      * each with an expand/collapse button, and a button in the Editor's
      * toolbar that opens it (toolbarButton). */
     extraPanels: { type: Array as PropType<ExtraPanel[]>, default: () => [] },
+    /** Buttons of the host app in the IDE's header, at its right after the
+     * panels' (Changes): their icon, their title (and label, when given),
+     * what their click does — a host's "back into the page", say. */
+    headerActions: { type: Array as PropType<HeaderAction[]>, default: () => [] },
     /** The texts of the Changes and Git panels (IdeMessages), translated:
      * any left out is English. */
     messages: { type: Object as PropType<Partial<IdeMessages>>, default: undefined },
@@ -354,6 +358,19 @@ export default defineComponent({
           </VBtn>
           <span class="gad-ide__header-spacer" />
           {extraPanels.buttons.value.filter((b) => b.align === "right").map((b) => headerBtn(b, () => extraPanels.open(b.id)))}
+          {props.headerActions.map((a) =>
+            // with a label, its text beside the icon; else an icon button
+            // (no children: a default slot, even empty, hides the icon)
+            a.label ? (
+              <VBtn key={"action-" + a.id} size="small" variant="text" class="text-none" prependIcon={a.icon}
+                title={a.title ?? a.label} data-ide-action={a.id} onClick={a.onClick}>
+                {a.label}
+              </VBtn>
+            ) : (
+              <VBtn key={"action-" + a.id} size="small" variant="text" density="comfortable" icon={a.icon}
+                title={a.title} data-ide-action={a.id} onClick={a.onClick} />
+            ),
+          )}
         </div>
         <div class="gad-ide__dock">
           <DockviewVue style={{ height: "100%" }} theme={dvTheme.value} components={allComponents} onReady={onReady} />

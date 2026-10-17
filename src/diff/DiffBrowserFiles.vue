@@ -2,6 +2,8 @@
 import { computed, h, inject, reactive, type FunctionalComponent, type Slot } from 'vue'
 import { VChip, VIcon } from 'vuetify/components'
 import { diffBrowserKey, renamedTo, statusColor, treePath, type DiffFile } from './diffBrowserContext'
+import { gadFileIconFor } from '../gadFileIcons'
+import { FileTypeRegistry } from '../fileTypes'
 
 // The tree panel of <vx-diff-browser>: the files changed, in their folders.
 // A folder opens and closes; a file opens its tab. A renamed (moved) file is
@@ -68,6 +70,10 @@ const Actions: FunctionalComponent<{ file: DiffFile }> = (p) => {
   const slot: Slot | undefined = ctx.actions()
   return slot ? slot({ file: p.file }) : null
 }
+// a file's icon: the gad family's own (gad, gadt, gadx, *_test.gad), or
+// the one of its extension, as the IDE's explorer shows them
+const fileTypes = new FileTypeRegistry()
+const iconFor = (path: string) => fileTypes.iconFor(path)
 void h
 </script>
 
@@ -84,8 +90,21 @@ void h
       @click="r.node.file ? ctx.open(r.node.file) : toggle(r.node.path)"
     >
       <template v-if="r.node.file">
-        <v-icon size="16" class="me-1" icon="mdi-file-document-outline" />
-        <span class="vx-diff-tree-name">{{ r.node.name }}</span>
+        <img
+          v-if="gadFileIconFor(r.node.file.path)"
+          :src="gadFileIconFor(r.node.file.path)"
+          alt=""
+          width="16"
+          height="16"
+          class="me-1 vx-diff-tree-icon"
+        />
+        <v-icon v-else size="16" class="me-1" :icon="iconFor(r.node.file.path)" />
+        <span
+          class="vx-diff-tree-name"
+          :class="{ 'vx-diff-tree-warning': r.node.file.warning }"
+          :data-diff-warning="r.node.file.warning ? '' : undefined"
+          >{{ r.node.name }}</span
+        >
         <span v-if="r.node.file.from" class="vx-diff-tree-renamed" :data-renamed-to="r.node.file.path"
           >→ {{ renamedTo(r.node.file) }}</span
         >

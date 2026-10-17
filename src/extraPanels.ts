@@ -52,3 +52,17 @@ export interface ExtraPanelExpand {
 }
 
 export const ExtraPanelExpandKey: InjectionKey<ExtraPanelExpand> = Symbol("gad-ide-extra-panel-expand");
+
+/** HeaderAction is a button of the host app in the IDE's header (GadIde's
+ * headerActions), at its right. */
+export interface HeaderAction {
+  /** its id (data-ide-action) */
+  id: string;
+  /** an mdi icon */
+  icon: string;
+  /** its title (its tooltip); the label's when not given */
+  title?: string;
+  /** its text, beside the icon: none, an icon button */
+  label?: string;
+  onClick: () => void;
+}

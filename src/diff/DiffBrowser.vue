@@ -306,6 +306,14 @@ defineExpose({ open, reload })
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.vx-diff-tree-icon {
+  image-rendering: pixelated;
+  flex: none;
+}
+.vx-diff-tree-warning {
+  color: rgb(var(--v-theme-warning));
+  font-weight: 600;
+}
 .vx-diff-tree-renamed {
   margin-left: 6px;
   color: rgb(var(--v-theme-info));
