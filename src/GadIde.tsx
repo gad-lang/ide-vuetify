@@ -17,6 +17,7 @@ import PanelCallStack from "./panels/PanelCallStack";
 import PanelLocals from "./panels/PanelLocals";
 import PanelOutput from "./panels/PanelOutput";
 import PanelDocs from "./panels/PanelDocs";
+import PanelStructure from "./panels/PanelStructure";
 import PanelBreakpoints from "./panels/PanelBreakpoints";
 import BreakpointConditionDialog from "./BreakpointConditionDialog";
 import SettingsDialog, { type PanelToggle } from "./SettingsDialog";
@@ -44,6 +45,7 @@ interface PanelDef {
 const PANELS: PanelDef[] = [
   { id: "explorer", label: "Explorer", add: (a) => a.addPanel({ id: "explorer", component: "explorer", title: "Explorer" }) },
   { id: "editor", label: "Editor", add: (a) => a.addPanel({ id: "editor", component: "editor", title: "Editor", position: { referencePanel: "explorer", direction: "right" } }) },
+  { id: "structure", label: "Structure", add: (a) => a.addPanel({ id: "structure", component: "structure", title: "Structure", position: { referencePanel: "explorer", direction: "below" } }) },
   { id: "docs", label: "Preview", add: (a) => a.addPanel({ id: "docs", component: "docs", title: "Preview", position: { referencePanel: "editor", direction: "right" } }) },
   { id: "output", label: "Output", add: (a) => a.addPanel({ id: "output", component: "output", title: "Output", position: { referencePanel: "editor", direction: "below" } }) },
   { id: "callstack", label: "Call Stack", add: (a) => a.addPanel({ id: "callstack", component: "callstack", title: "Call Stack", position: { referencePanel: "output", direction: "within" } }) },
@@ -55,6 +57,7 @@ const components = {
   explorer: PanelExplorer,
   editor: PanelEditor,
   docs: PanelDocs,
+  structure: PanelStructure,
   callstack: PanelCallStack,
   locals: PanelLocals,
   breakpoints: PanelBreakpoints,

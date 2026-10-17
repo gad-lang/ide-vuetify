@@ -46,3 +46,17 @@ export interface GadRunner {
    * panel/toggle is hidden. */
   doc?: (source: string, sourceType: string, mode: DocMode) => Promise<DocResult>;
 }
+
+/** OutlineSym is one node of a source's structure (`gad symbols`): a named
+ * declaration, its kind, where it is (0-based offset, 1-based line/column) and
+ * its own members (a class's fields, an enum's values, …). */
+export interface OutlineSym {
+  name: string;
+  /** const|var|func|class|mixin|type|interface|enum|method|property|field|new|met|value */
+  kind: string;
+  detail?: string;
+  offset: number;
+  line: number;
+  column: number;
+  children?: OutlineSym[];
+}

@@ -5,7 +5,7 @@
 // workspace file paths, so the UI edits and documents any text file in the tree
 // regardless of backend.
 import type { GadDiagnostic } from "@gad-lang/codemirror-gad";
-import type { DocMode, DocResult, FormatResult, RunResult } from "./types";
+import type { DocMode, DocResult, FormatResult, OutlineSym, RunResult } from "./types";
 import type { DiffFile } from "./diff/diffBrowserContext";
 
 export interface Workspace {
@@ -255,6 +255,10 @@ export function createHttpIdeApi(base = "") {
       jsonFetch<Record<string, unknown>>("PUT", u("api/ide/config"), doc),
     modules: () => jsonFetch<ModuleInfo[]>("GET", u("api/ide/modules")),
     format: (source: string) => jsonFetch<FormatResult>("POST", u("api/ide/format"), { source }),
+    /** symbols is the structure of source (`gad symbols`): its declarations as
+     * a tree; path (or sourceType) says its dialect. */
+    symbols: (source: string, path?: string, sourceType?: string) =>
+      jsonFetch<OutlineSym[]>("POST", u("api/ide/symbols"), { source, path, sourceType }),
     transpile: (source: string, path?: string) =>
       jsonFetch<FormatResult>("POST", u("api/ide/transpile"), { source, path }),
     doc: (source: string) =>
@@ -317,7 +321,10 @@ export const ideApi = createHttpIdeApi();
  * `gad ide` server) or a fully in-browser one (WASM + a LocalStorage
  * filesystem).
  */
-export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload" | "git"> & {
+export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload" | "git" | "symbols"> & {
+  /** symbols is the structure of a source (the Structure panel); without it,
+   * the panel says there is none. */
+  symbols?: (source: string, path?: string, sourceType?: string) => Promise<OutlineSym[]>;
   /** git is the workspace's repository, when it is in one (Workspace.git):
    * the Changes and Git panels. */
   git?: IdeGitApi;

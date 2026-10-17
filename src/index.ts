@@ -40,8 +40,9 @@ export type {
 
 // The diff browser (the Changes and Git panels'): rvq's <vx-diff-browser> too.
 export * from "./diff";
-export type { FormatResult, RunResult, GadRunner, DocMode, DocResult } from "./types";
+export type { FormatResult, RunResult, GadRunner, DocMode, DocResult, OutlineSym } from "./types";
 export { default as DocPanel } from "./DocPanel";
+export { StructureTree, KIND_ICONS, kindIcon } from "./structure";
 
 // CodeMirror building blocks (for composing a custom shell).
 export {
