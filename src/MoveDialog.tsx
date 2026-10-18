@@ -1,13 +1,15 @@
 // MoveDialog — pick the folder the open file is moved to (ctx.moveReq).
-import { defineComponent, inject, ref, watch } from "vue";
+import { computed, defineComponent, inject, ref, watch } from "vue";
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VDialog, VSpacer } from "./vuetify";
 import DirTree from "./DirTree";
 import { IdeControllerKey } from "./controller";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "./messages";
 
 export default defineComponent({
   name: "MoveDialog",
   setup() {
     const ctx = inject(IdeControllerKey)!;
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const dir = ref("");
     // starts at the file's own folder
     watch(
@@ -29,8 +31,8 @@ export default defineComponent({
           </VCardText>
           <VCardActions>
             <VSpacer />
-            <VBtn variant="text" onClick={() => done(null)}>Cancel</VBtn>
-            <VBtn color="primary" variant="flat" onClick={() => done(dir.value)}>Move</VBtn>
+            <VBtn variant="text" onClick={() => done(null)}>{w.value.cancel}</VBtn>
+            <VBtn color="primary" variant="flat" onClick={() => done(dir.value)}>{w.value.move}</VBtn>
           </VCardActions>
         </VCard>
       </VDialog>

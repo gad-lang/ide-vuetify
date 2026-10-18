@@ -1,11 +1,13 @@
 // Output dockview panel: STDOUT/STDERR from Run and the debugger, plus errors.
-import { defineComponent, inject } from "vue";
+import { computed, defineComponent, inject } from "vue";
 import { IdeControllerKey } from "../controller";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "../messages";
 
 export default defineComponent({
   name: "PanelOutput",
   setup() {
     const ctx = inject(IdeControllerKey)!;
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     return () => {
       const run = ctx.runRes.value;
       return (
@@ -25,7 +27,7 @@ export default defineComponent({
             {(ctx.snap.value?.diagnostics ?? []).map((d, i) => (
               <div key={"s" + i} class="pnl-diag">{d.line}:{d.column} {d.message}</div>
             ))}
-            {!run && !ctx.dbgOutput.value && <div class="text-medium-emphasis">Run or debug to see output.</div>}
+            {!run && !ctx.dbgOutput.value && <div class="text-medium-emphasis">{w.value.runToSeeOutput}</div>}
           </div>
         </div>
       );

@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createI18n } from "vue-i18n";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
@@ -27,4 +28,8 @@ const vuetify = createVuetify({
   theme: { defaultTheme },
 });
 
-createApp(App).use(vuetify).mount("#app");
+// the app's vue-i18n: the IDE reads its words from it (gadIde, gadGit), its
+// defaults merged under what the app has
+const i18n = createI18n({ legacy: false, locale: navigator.language.startsWith("pt") ? "pt" : "en", fallbackLocale: "en" });
+
+createApp(App).use(vuetify).use(i18n).mount("#app");

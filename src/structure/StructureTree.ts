@@ -24,6 +24,7 @@ export const KIND_ICONS: Record<string, { icon: string; color: string }> = {
   const: { icon: "mdi-alpha-c-box-outline", color: "#9876aa" },
   var: { icon: "mdi-alpha-v-box-outline", color: "#3592c4" },
   value: { icon: "mdi-circle-small", color: "#e5932c" },
+  overload: { icon: "mdi-function-variant", color: "#c75450" },
 };
 
 /** kindIcon is the icon and color of kind (a tag for one it does not know). */

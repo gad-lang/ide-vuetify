@@ -2,6 +2,7 @@
 // the dockview panels (Explorer, Editor, Call Stack, Locals, Output) can share
 // one instance via provide/inject. dockview-vue teleports panels into the host's
 // Vue tree, so inject() resolves the provided controller natively.
+import { DEFAULT_MESSAGES, fmt, type IdeMessages } from "./messages";
 import { computed, onScopeDispose, reactive, ref, shallowRef, watch, type InjectionKey, type Ref } from "vue";
 import type { GadDiagnostic } from "@gad-lang/codemirror-gad";
 import { langOf } from "./codemirror";
@@ -58,6 +59,8 @@ export interface ControllerHooks {
   initialFontSize?: number;
   /** Called when the editor font size changes (e.g. to persist it). */
   onFontSize?: (px: number) => void;
+  /** The IDE's words (its prompts and confirms, the run label). */
+  getWords?: () => IdeMessages;
   /** Extra file-type handlers (icon + editor language/plugin) merged over the
    * built-ins, so hosts can support new extensions. */
   fileTypes?: FileTypeHandler[];
@@ -111,6 +114,8 @@ export function createController(
   const writes = ref(0);
   const api = trackWrites(rawApi, () => writes.value++);
   const onReset = hooks.onReset;
+  // the IDE's words (GadIde's), the defaults with none
+  const words = () => hooks.getWords?.() ?? DEFAULT_MESSAGES;
   // Read-only workspace: create/delete/upload/import are disabled.
   const readonly = computed(() => hooks.getReadonly?.() ?? false);
   // What the user may do with the files (Workspace.actions; each omitted is
@@ -276,7 +281,7 @@ export function createController(
   }
 
   async function newFile() {
-    const name = await uiPrompt("New file", "File name (e.g. hello.gad)", "untitled.gad");
+    const name = await uiPrompt(words().newFile, words().fileNamePrompt, "untitled.gad");
     if (!name) return;
     const path = currentDir() + name;
     await api.mkfile(path);
@@ -284,14 +289,14 @@ export function createController(
     await openFile(path);
   }
   async function newDir() {
-    const name = await uiPrompt("New folder", "Folder name", "folder");
+    const name = await uiPrompt(words().newFolder, words().folderName, "folder");
     if (!name) return;
     await api.mkdir(currentDir() + name);
     await loadTree();
   }
   async function removeOpen() {
     const path = openPath.value;
-    if (!path || !(await uiConfirm("Delete file", "Delete " + path + "?"))) return;
+    if (!path || !(await uiConfirm(words().deleteFile, fmt(words().deleteConfirm, path)))) return;
     await api.del(path);
     const i = tabs.value.findIndex((t) => t.path === path);
     if (i >= 0) closeTab(i);
@@ -303,7 +308,7 @@ export function createController(
     if (!path) return;
     const slash = path.lastIndexOf("/");
     const dir = slash === -1 ? "" : path.slice(0, slash + 1);
-    const name = await uiPrompt("Rename", "New name", path.slice(slash + 1));
+    const name = await uiPrompt(words().rename, words().newName, path.slice(slash + 1));
     if (!name || dir + name === path) return;
     await api.rename(path, dir + name);
     retarget(path, dir + name);
@@ -330,7 +335,7 @@ export function createController(
     if (t) t.path = to;
   }
   async function reset() {
-    if (!onReset || !(await uiConfirm("Reset workspace", "Discard all your changes and restore the samples?"))) return;
+    if (!onReset || !(await uiConfirm(words().resetWorkspace, words().resetConfirm))) return;
     await onReset();
     tabs.value = [];
     active.value = -1;
@@ -665,7 +670,7 @@ export function createController(
   const activeProfile = ref<string | null>(null);
   const profileDialog = ref(false);
   const activeProfileObj = computed(() => runProfiles.value.find((p) => p.name === activeProfile.value) ?? null);
-  const runLabel = computed(() => activeProfileObj.value?.name ?? "Current file");
+  const runLabel = computed(() => activeProfileObj.value?.name ?? words().currentFile);
   const canRun = computed(() => runMode.value === "run" || runMode.value === "debug");
   const canDebug = computed(() => runMode.value === "debug");
 

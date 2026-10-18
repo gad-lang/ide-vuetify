@@ -8,9 +8,11 @@ import { fileURLToPath } from "node:url";
 // app), so the bundle ships only this package's own code.
 const external = [
   "vue",
+  "vue-i18n",
   /^vuetify/,
   "@gad-lang/codemirror-gad",
   "@gad-lang/prism-gad",
+  "@gad-lang/git-vuetify",
   /^dockview/,
   /^@codemirror\//,
   /^@lezer\//,

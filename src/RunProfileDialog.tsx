@@ -1,9 +1,10 @@
 // RunProfileDialog — create a named run/debug profile (JetBrains-style): a name,
 // the file to execute (prefilled with the open file) and command-line arguments
 // (chips). On save it emits the new profile.
-import { defineComponent, ref, watch, type PropType } from "vue";
+import { inject, computed, defineComponent, ref, watch, type PropType } from "vue";
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCombobox, VDialog, VSelect, VSpacer, VTextField } from "./vuetify";
 import type { RunProfile } from "./api";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "./messages";
 
 export default defineComponent({
   name: "RunProfileDialog",
@@ -17,6 +18,7 @@ export default defineComponent({
     create: (_p: RunProfile) => true,
   },
   setup(props, { emit }) {
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const name = ref("");
     const path = ref(props.defaultPath);
     const args = ref<string[]>([]);
@@ -51,12 +53,12 @@ export default defineComponent({
         maxWidth="520"
       >
         <VCard>
-          <VCardTitle>New run profile</VCardTitle>
+          <VCardTitle>{w.value.newRunProfile}</VCardTitle>
           <VCardText>
             <VTextField
               modelValue={name.value}
               {...{ "onUpdate:modelValue": (v: string) => (name.value = v) }}
-              label="Name"
+              label={w.value.name}
               density="compact"
               variant="outlined"
               class="mb-2"
@@ -65,7 +67,7 @@ export default defineComponent({
             <VTextField
               modelValue={path.value}
               {...{ "onUpdate:modelValue": (v: string) => (path.value = v) }}
-              label="File"
+              label={w.value.file}
               density="compact"
               variant="outlined"
               class="mb-2"
@@ -74,8 +76,8 @@ export default defineComponent({
             <VCombobox
               modelValue={args.value}
               {...{ "onUpdate:modelValue": (v: string[]) => (args.value = v) }}
-              label="Arguments"
-              hint="Press Enter after each argument (e.g. --count=5, a value, --flag)"
+              label={w.value.arguments}
+              hint={w.value.argumentsHint}
               persistentHint
               multiple
               chips
@@ -87,8 +89,8 @@ export default defineComponent({
               <VSelect
                 modelValue={tagEncode.value}
                 {...{ "onUpdate:modelValue": (v: unknown) => (tagEncode.value = (v as "" | "json" | "yaml") ?? "") }}
-                items={[{ title: "Render (HTML)", value: "" }, { title: "JSON", value: "json" }, { title: "YAML", value: "yaml" }]}
-                label="GADX tag output"
+                items={[{ title: w.value.renderHtml, value: "" }, { title: "JSON", value: "json" }, { title: "YAML", value: "yaml" }]}
+                label={w.value.gadxTagOutput}
                 density="compact"
                 variant="outlined"
                 hideDetails
@@ -98,8 +100,8 @@ export default defineComponent({
           </VCardText>
           <VCardActions>
             <VSpacer />
-            <VBtn onClick={() => emit("update:modelValue", false)}>Cancel</VBtn>
-            <VBtn color="primary" disabled={!path.value.trim()} onClick={save}>Create</VBtn>
+            <VBtn onClick={() => emit("update:modelValue", false)}>{w.value.cancel}</VBtn>
+            <VBtn color="primary" disabled={!path.value.trim()} onClick={save}>{w.value.create}</VBtn>
           </VCardActions>
         </VCard>
       </VDialog>

@@ -2,7 +2,8 @@
 // Formatter, Transpile and Template. It edits a draft of the config document and
 // emits `save` with the next config; panel visibility is toggled live via
 // callbacks (it is layout, not config).
-import { defineComponent, reactive, ref, type PropType } from "vue";
+import { inject, computed, defineComponent, reactive, ref, type PropType } from "vue";
+import { DEFAULT_MESSAGES, IdeMessagesKey, type IdeMessages } from "./messages";
 import {
   VBtn, VCard, VCardActions, VCardText, VCardTitle, VCheckbox, VDialog,
   VSpacer, VTab, VTabs, VTextField, VWindow, VWindowItem,
@@ -10,10 +11,10 @@ import {
 
 // Opt-in force flags: checked forces that construct onto separate lines. Without
 // them a construct wraps only when it overflows the column budget.
-const FORCE_FLAGS: [string, string][] = [
-  ["array-item-in-new-line", "Each array item on its own line"],
-  ["dict-item-in-new-line", "Each dict item on its own line"],
-  ["call-params-in-new-line", "Each call argument on its own line"],
+const FORCE_FLAGS: [string, keyof IdeMessages][] = [
+  ["array-item-in-new-line", "arrayItemNewLine"],
+  ["dict-item-in-new-line", "dictItemNewLine"],
+  ["call-params-in-new-line", "callParamsNewLine"],
 ];
 
 export interface PanelToggle {
@@ -35,6 +36,7 @@ export default defineComponent({
     save: (_next: Record<string, unknown>) => true,
   },
   setup(props, { emit }) {
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const tab = ref("panels");
     const rec = (k: string): Record<string, unknown> => (props.config[k] as Record<string, unknown>) || {};
 
@@ -106,12 +108,12 @@ export default defineComponent({
         maxWidth="560"
       >
         <VCard>
-          <VCardTitle>Settings</VCardTitle>
+          <VCardTitle>{w.value.settings}</VCardTitle>
           <VTabs modelValue={tab.value} {...{ "onUpdate:modelValue": (v: unknown) => (tab.value = v as string) }}>
-            <VTab value="panels">Panels</VTab>
-            <VTab value="formatter">Formatter</VTab>
-            <VTab value="transpile">Transpile</VTab>
-            <VTab value="template">Template</VTab>
+            <VTab value="panels">{w.value.panels}</VTab>
+            <VTab value="formatter">{w.value.formatter}</VTab>
+            <VTab value="transpile">{w.value.transpile}</VTab>
+            <VTab value="template">{w.value.template}</VTab>
           </VTabs>
           <VCardText>
             <VWindow modelValue={tab.value} {...{ "onUpdate:modelValue": (v: unknown) => (tab.value = v as string) }}>
@@ -132,14 +134,14 @@ export default defineComponent({
                 <VCheckbox
                   modelValue={forceAll.value}
                   {...{ "onUpdate:modelValue": (v: boolean | null) => (forceAll.value = !!v) }}
-                  label="Force the full multi-line layout"
+                  label={w.value.forceMultiline}
                   density="compact"
                   hideDetails
                 />
                 <VTextField
                   modelValue={maxColumns.value}
                   {...{ "onUpdate:modelValue": (v: string) => (maxColumns.value = v) }}
-                  label="Max columns (blank uses the default)"
+                  label={w.value.maxColumns}
                   type="number"
                   density="compact"
                   hideDetails
@@ -149,7 +151,7 @@ export default defineComponent({
                     key={k}
                     modelValue={force[k]}
                     {...{ "onUpdate:modelValue": (v: boolean | null) => (force[k] = !!v) }}
-                    label={label}
+                    label={w.value[label]}
                     density="compact"
                     hideDetails
                   />
@@ -157,7 +159,7 @@ export default defineComponent({
                 <VCheckbox
                   modelValue={backup.value}
                   {...{ "onUpdate:modelValue": (v: boolean | null) => (backup.value = !!v) }}
-                  label="Keep .backup on format"
+                  label={w.value.keepBackup}
                   density="compact"
                   hideDetails
                 />
@@ -177,8 +179,8 @@ export default defineComponent({
           </VCardText>
           <VCardActions>
             <VSpacer />
-            <VBtn onClick={() => emit("update:modelValue", false)}>Cancel</VBtn>
-            <VBtn color="primary" onClick={save}>Save</VBtn>
+            <VBtn onClick={() => emit("update:modelValue", false)}>{w.value.cancel}</VBtn>
+            <VBtn color="primary" onClick={save}>{w.value.save}</VBtn>
           </VCardActions>
         </VCard>
       </VDialog>

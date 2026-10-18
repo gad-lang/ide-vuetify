@@ -3,6 +3,7 @@
 // output, executed through the injected GadRunner. The Vuetify/TSX counterpart of
 // the React notebook.
 import { defineComponent, ref, type PropType } from "vue";
+import { ResizeHandle, useStoredSize } from "@gad-lang/git-vuetify";
 import GadEditor from "./GadEditor";
 import DocPanel from "./DocPanel";
 import { VBtn, VBtnToggle, VSelect } from "./vuetify";
@@ -115,13 +116,18 @@ export default defineComponent({
     const diagnoseFor = (cell: Cell) =>
       props.runner.diagnose ? (src: string) => props.runner.diagnose!(src, SOURCE_TYPE[cell.dialect]) : undefined;
 
+    // the height of the cells' editors, the width of their doc: dragged, kept
+    // across visits
+    const editorH = useStoredSize("gad-ide.notebook.editor", 220, 80, 4000);
+    const docW = useStoredSize("gad-ide.notebook.doc", 420, 160, 4000);
+
     return () => (
       <div class="gnb">
         <p class="text-medium-emphasis">Each cell runs independently.</p>
         {cells.value.map((cell) => (
           <div class="gnb-cell" key={cell.id}>
             <div class={"gnb-cell-main" + (cell.showDoc ? " gnb-cell-main--doc" : "")}>
-              <div class="gnb-editor">
+              <div class="gnb-editor" style={{ height: `${editorH.size.value}px` }}>
                 <GadEditor
                   key={cell.id + ":" + cell.dialect}
                   modelValue={cell.source}
@@ -134,7 +140,10 @@ export default defineComponent({
                 />
               </div>
               {props.runner.doc && cell.showDoc && (
-                <div class="gnb-doc">
+                <ResizeHandle onStart={docW.begin} onDrag={(dx: number) => docW.drag(dx, -1)} onReset={docW.reset} />
+              )}
+              {props.runner.doc && cell.showDoc && (
+                <div class="gnb-doc" style={{ flex: `0 0 ${docW.size.value}px`, height: `${editorH.size.value}px` }}>
                   <DocPanel
                     doc={props.runner.doc!}
                     source={() => cell.source}
@@ -147,6 +156,7 @@ export default defineComponent({
                 </div>
               )}
             </div>
+            <ResizeHandle direction="row" onStart={editorH.begin} onDrag={(dy: number) => editorH.drag(dy)} onReset={editorH.reset} />
             <div class="gnb-bar">
               <VBtnToggle
                 modelValue={cell.dialect}

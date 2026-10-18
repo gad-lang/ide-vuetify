@@ -1,14 +1,16 @@
 // Locals dockview panel: EVALUATE (always on top) and LOCALS, each row with an
 // inspect icon that opens the value tree navigator in a dialog.
-import { defineComponent, inject, ref } from "vue";
+import { computed, defineComponent, inject, ref } from "vue";
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VDialog, VSpacer, VTextField } from "../vuetify";
 import InspectorNode from "../InspectorNode";
 import { IdeControllerKey } from "../controller";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "../messages";
 
 export default defineComponent({
   name: "PanelLocals",
   setup() {
     const ctx = inject(IdeControllerKey)!;
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const open = ref(false);
     const expr = ref("");
     const label = ref("");
@@ -26,7 +28,7 @@ export default defineComponent({
             <VTextField
               modelValue={ctx.evalExpr.value}
               {...{ "onUpdate:modelValue": (v: string) => (ctx.evalExpr.value = v) }}
-              label="Evaluate"
+              label={w.value.evaluate}
               density="compact"
               variant="outlined"
               hideDetails
@@ -39,7 +41,7 @@ export default defineComponent({
               size="x-small"
               variant="text"
               icon="mdi-file-tree-outline"
-              title="Inspect value"
+              title={w.value.inspectValue}
               disabled={!ctx.evalExpr.value.trim()}
               onClick={() => openInspect(ctx.evalExpr.value, ctx.evalExpr.value)}
             />
@@ -47,7 +49,7 @@ export default defineComponent({
           {ctx.evalOut.value && <pre class="pnl-out">{ctx.evalOut.value}</pre>}
 
           {/* LOCALS */}
-          <div class="text-caption text-medium-emphasis mt-2 mb-1">LOCALS</div>
+          <div class="text-caption text-medium-emphasis mt-2 mb-1">{w.value.locals.toUpperCase()}</div>
           <ul class="pnl-list">
             {(ctx.snap.value?.locals ?? []).map((v, i) => (
               <li key={i} class="pnl-local">
@@ -58,7 +60,7 @@ export default defineComponent({
                   size="x-small"
                   variant="text"
                   icon="mdi-file-tree-outline"
-                  title="Inspect value"
+                  title={w.value.inspectValue}
                   onClick={() => openInspect(v.name, v.name)}
                 />
               </li>
@@ -82,7 +84,7 @@ export default defineComponent({
             </VCardText>
             <VCardActions>
               <VSpacer />
-              <VBtn onClick={() => (open.value = false)}>Close</VBtn>
+              <VBtn onClick={() => (open.value = false)}>{w.value.close}</VBtn>
             </VCardActions>
           </VCard>
         </VDialog>

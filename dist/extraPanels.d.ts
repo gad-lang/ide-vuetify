@@ -1,0 +1,69 @@
+import type { Component, ComputedRef, InjectionKey, Ref } from "vue";
+/** ExtraPanel is a panel the host app gives the IDE (GadIde's extraPanels):
+ * its component rendered in a dockview panel of the IDE — placed below the
+ * editor by default —, in the Settings' panel toggles like the IDE's own,
+ * with a button inside it that expands it over the others and brings it back
+ * (dockview's maximize); and, with toolbarButton, a button in the IDE's
+ * header that opens it (or shows it, when open). */
+export interface ExtraPanel {
+    /** its id: the dockview panel's and its component's (unique among them) */
+    id: string;
+    /** its title, the tab's */
+    label: string;
+    /** an mdi icon: its toolbar button's */
+    icon?: string;
+    /** what it renders */
+    component: Component;
+    /** the props it is given */
+    props?: Record<string, unknown>;
+    /** where it opens: below the editor (default), right of it, or left */
+    placement?: "bottom" | "right" | "left";
+    /** a button in the IDE's header that opens it */
+    toolbarButton?: boolean;
+    /** where in the header its button is: with the others, at the left
+     * (default), or at the right */
+    buttonAlign?: "left" | "right";
+    /** its component draws the expand/collapse button in its own header
+     * (ExpandButton, by ExtraPanelExpandKey): none floats over it */
+    headerExpand?: boolean;
+    /** the titles of its expand and collapse button */
+    expandTitle?: string;
+    collapseTitle?: string;
+}
+/** What the IDE's own panels see of the extra ones: the header's buttons and
+ * how to open one. */
+export interface IdeExtraPanels {
+    /** bottom: placed below — its button in the IDE's bottom strip */
+    buttons: ComputedRef<{
+        id: string;
+        label: string;
+        icon: string;
+        align: "left" | "right";
+        bottom: boolean;
+    }[]>;
+    open: (id: string) => void;
+}
+export declare const IdeExtraPanelsKey: InjectionKey<IdeExtraPanels>;
+/** What an extra panel's component is given to expand it over the others
+ * (dockview's maximize) and bring it back: drawn by ExpandButton in its
+ * header (ExtraPanel.headerExpand). */
+export interface ExtraPanelExpand {
+    maximized: Ref<boolean>;
+    toggle: () => void;
+    expandTitle: string;
+    collapseTitle: string;
+}
+export declare const ExtraPanelExpandKey: InjectionKey<ExtraPanelExpand>;
+/** HeaderAction is a button of the host app in the IDE's header (GadIde's
+ * headerActions), at its right. */
+export interface HeaderAction {
+    /** its id (data-ide-action) */
+    id: string;
+    /** an mdi icon */
+    icon: string;
+    /** its title (its tooltip); the label's when not given */
+    title?: string;
+    /** its text, beside the icon: none, an icon button */
+    label?: string;
+    onClick: () => void;
+}

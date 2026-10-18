@@ -4,6 +4,7 @@
 // Gadx (.gadx); each keeps its own buffer. The Vuetify/TSX counterpart of the
 // React playground.
 import { computed, defineComponent, reactive, ref, type PropType } from "vue";
+import { ResizeHandle, useStoredSize } from "@gad-lang/git-vuetify";
 import GadEditor from "./GadEditor";
 import DocPanel from "./DocPanel";
 import { VBtn, VBtnToggle, VSelect } from "./vuetify";
@@ -110,9 +111,13 @@ export default defineComponent({
       }
     }
 
+    // the widths of the editor and of the doc: dragged, kept across visits
+    const editorW = useStoredSize("gad-ide.playground.editor", 560, 200, 4000);
+    const docW = useStoredSize("gad-ide.playground.doc", 420, 160, 4000);
+
     return () => (
       <div class="gp-split">
-        <section class="gp-pane">
+        <section class="gp-pane" style={{ flex: `0 0 ${editorW.size.value}px` }}>
           <div class="gp-pane-head">
             <VBtnToggle
               modelValue={dialect.value}
@@ -167,7 +172,8 @@ export default defineComponent({
             />
           </div>
         </section>
-        <section class="gp-pane">
+        <ResizeHandle onStart={editorW.begin} onDrag={(dx: number) => editorW.drag(dx)} onReset={editorW.reset} />
+        <section class="gp-pane" style={{ flex: "1 1 auto" }}>
           <div class="gp-pane-head">Output</div>
           <div class="gp-pane-body">
             {!left.value && <p class="text-medium-emphasis">Format or run the source on the left.</p>}
@@ -176,7 +182,10 @@ export default defineComponent({
           </div>
         </section>
         {props.runner.doc && showDoc.value && (
-          <section class="gp-pane gp-pane--doc">
+          <ResizeHandle onStart={docW.begin} onDrag={(dx: number) => docW.drag(dx, -1)} onReset={docW.reset} />
+        )}
+        {props.runner.doc && showDoc.value && (
+          <section class="gp-pane gp-pane--doc" style={{ flex: `0 0 ${docW.size.value}px` }}>
             <DocPanel doc={props.runner.doc!} source={() => source.value} sourceType={sourceType.value} revision={docRev.value} onNavigate={(line: number) => { gotoLine.value = line; gotoSeq.value++; }}>
               <VBtn class="gp-doc-ctl" size="small" height="32" variant="tonal" title="Close the doc panel" onClick={() => (showDoc.value = false)}>✕</VBtn>
             </DocPanel>

@@ -35,7 +35,8 @@ export interface ExtraPanel {
 /** What the IDE's own panels see of the extra ones: the header's buttons and
  * how to open one. */
 export interface IdeExtraPanels {
-  buttons: ComputedRef<{ id: string; label: string; icon: string; align: "left" | "right" }[]>;
+  /** bottom: placed below — its button in the IDE's bottom strip */
+  buttons: ComputedRef<{ id: string; label: string; icon: string; align: "left" | "right"; bottom: boolean }[]>;
   open: (id: string) => void;
 }
 

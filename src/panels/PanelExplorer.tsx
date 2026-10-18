@@ -3,9 +3,10 @@
 // be uploaded via a dialog (with a target-folder picker) or dragged and dropped
 // onto a folder row (or the panel background = root). Without onUpload, the
 // upload button, URL import and drag-drop are all omitted.
-import { defineComponent, inject, ref } from "vue";
+import { computed, defineComponent, inject, ref } from "vue";
 import { VBtn, VIcon } from "../vuetify";
 import { IdeControllerKey } from "../controller";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "../messages";
 import UploadReviewDialog from "../UploadReviewDialog";
 import { rawFromDataTransfer, rawFromInput, type RawFile } from "../upload";
 import { gadFileIconFor } from "../gadFileIcons";
@@ -15,6 +16,7 @@ export default defineComponent({
   name: "PanelExplorer",
   setup() {
     const ctx = inject(IdeControllerKey)!;
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const fileInput = ref<HTMLInputElement>();
     // The path of the directory row currently under a drag (null = none).
     const dropDir = ref<string | null>(null);
@@ -50,41 +52,41 @@ export default defineComponent({
     return () => (
       <div class="pnl">
         <div class="pnl-head">
-          <span class="text-caption font-weight-medium">EXPLORER</span>
+          <span class="text-caption font-weight-medium">{w.value.explorer.toUpperCase()}</span>
           <div>
             {ctx.canCreate.value && (
               <>
-                <VBtn size="x-small" variant="text" icon="mdi-file-plus-outline" title="New file" onClick={() => ctx.newFile()} />
-                <VBtn size="x-small" variant="text" icon="mdi-folder-plus-outline" title="New folder" onClick={() => ctx.newDir()} />
+                <VBtn size="x-small" variant="text" icon="mdi-file-plus-outline" title={w.value.newFile} onClick={() => ctx.newFile()} />
+                <VBtn size="x-small" variant="text" icon="mdi-folder-plus-outline" title={w.value.newFolder} onClick={() => ctx.newDir()} />
               </>
             )}
             {ctx.canUpload.value && (
               <>
-                <VBtn size="x-small" variant="text" icon="mdi-upload-outline" title="Upload files" onClick={() => fileInput.value?.click()} />
-                <VBtn size="x-small" variant="text" icon="mdi-link-variant" title="Import from URL" onClick={() => (ctx.urlDialog.value = true)} />
+                <VBtn size="x-small" variant="text" icon="mdi-upload-outline" title={w.value.uploadFiles} onClick={() => fileInput.value?.click()} />
+                <VBtn size="x-small" variant="text" icon="mdi-link-variant" title={w.value.importFromUrl} onClick={() => (ctx.urlDialog.value = true)} />
               </>
             )}
             {ctx.canRename.value && (
-              <VBtn size="x-small" variant="text" icon="mdi-rename-outline" title="Rename open file"
+              <VBtn size="x-small" variant="text" icon="mdi-rename-outline" title={w.value.renameOpenFile}
                 disabled={!ctx.openPath.value} onClick={() => ctx.renameOpen()} />
             )}
             {ctx.canMove.value && (
-              <VBtn size="x-small" variant="text" icon="mdi-file-move-outline" title="Move open file"
+              <VBtn size="x-small" variant="text" icon="mdi-file-move-outline" title={w.value.moveOpenFile}
                 disabled={!ctx.openPath.value} onClick={() => ctx.moveOpen()} />
             )}
             {ctx.canDelete.value && (
-              <VBtn size="x-small" variant="text" icon="mdi-delete-outline" title="Delete open file"
+              <VBtn size="x-small" variant="text" icon="mdi-delete-outline" title={w.value.deleteOpenFile}
                 disabled={!ctx.openPath.value} onClick={() => ctx.removeOpen()} />
             )}
             <VBtn
               size="x-small"
               variant="text"
               icon={ctx.showHidden.value ? "mdi-eye-off-outline" : "mdi-eye-outline"}
-              title={ctx.showHidden.value ? "Hide hidden files" : "Show hidden files"}
+              title={ctx.showHidden.value ? w.value.hideHidden : w.value.showHidden}
               onClick={() => ctx.toggleHidden()}
             />
             {ctx.canReset.value && ctx.canEdit.value && (
-              <VBtn size="x-small" variant="text" icon="mdi-backup-restore" title="Reset changes" onClick={() => ctx.reset()} />
+              <VBtn size="x-small" variant="text" icon="mdi-backup-restore" title={w.value.resetChanges} onClick={() => ctx.reset()} />
             )}
           </div>
         </div>

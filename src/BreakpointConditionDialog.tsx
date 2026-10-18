@@ -1,8 +1,9 @@
 // BreakpointConditionDialog — edit a breakpoint's condition (a Gad expression;
 // the breakpoint pauses only when it is truthy) and its disabled flag.
-import { defineComponent, ref, watch, type PropType } from "vue";
+import { inject, computed, defineComponent, ref, watch, type PropType } from "vue";
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCheckbox, VDialog, VSpacer, VTextField } from "./vuetify";
 import type { BpMeta } from "./controller";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "./messages";
 
 export default defineComponent({
   name: "BreakpointConditionDialog",
@@ -16,6 +17,7 @@ export default defineComponent({
     save: (_m: BpMeta) => true,
   },
   setup(props, { emit }) {
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const condition = ref(props.initial.condition ?? "");
     const disabled = ref(!!props.initial.disabled);
     watch(
@@ -43,8 +45,8 @@ export default defineComponent({
             <VTextField
               modelValue={condition.value}
               {...{ "onUpdate:modelValue": (v: string) => (condition.value = v) }}
-              label="Condition (Gad expression)"
-              hint="Pause only when this is truthy, e.g. i > 10"
+              label={w.value.condition}
+              hint={w.value.conditionHint}
               persistentHint
               density="compact"
               variant="outlined"
@@ -54,7 +56,7 @@ export default defineComponent({
             <VCheckbox
               modelValue={disabled.value}
               {...{ "onUpdate:modelValue": (v: boolean | null) => (disabled.value = !!v) }}
-              label="Disabled"
+              label={w.value.disabled}
               density="compact"
               hideDetails
               class="mt-2"
@@ -62,8 +64,8 @@ export default defineComponent({
           </VCardText>
           <VCardActions>
             <VSpacer />
-            <VBtn onClick={() => emit("update:modelValue", false)}>Cancel</VBtn>
-            <VBtn color="primary" onClick={save}>Save</VBtn>
+            <VBtn onClick={() => emit("update:modelValue", false)}>{w.value.cancel}</VBtn>
+            <VBtn color="primary" onClick={save}>{w.value.save}</VBtn>
           </VCardActions>
         </VCard>
       </VDialog>

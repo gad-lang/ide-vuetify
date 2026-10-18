@@ -6,7 +6,9 @@
 // regardless of backend.
 import type { GadDiagnostic } from "@gad-lang/codemirror-gad";
 import type { DocMode, DocResult, FormatResult, OutlineSym, RunResult } from "./types";
-import type { DiffFile } from "./diff/diffBrowserContext";
+import { createHttpGitApi, type GitApi } from "@gad-lang/git-vuetify";
+// the repository's types: @gad-lang/git-vuetify's
+export type { GitAuthor, GitBlame, GitBranch, GitCommit, GitCommitDetail, GitLogFilter } from "@gad-lang/git-vuetify";
 
 export interface Workspace {
   root: string;
@@ -22,61 +24,9 @@ export interface Workspace {
   git?: boolean;
 }
 
-/** GitBranch is a branch of the workspace's repository. */
-export interface GitBranch {
-  /** "main", "origin/main" */
-  name: string;
-  /** the commit it points at */
-  hash: string;
-  /** a remote's */
-  remote?: boolean;
-  /** the one checked out */
-  current?: boolean;
-  /** its commit's subject */
-  subject?: string;
-}
-
-/** GitCommit is a commit of a branch's log. */
-export interface GitCommit {
-  hash: string;
-  parents: string[];
-  author: string;
-  email: string;
-  /** ISO 8601 */
-  date: string;
-  subject: string;
-  /** the branches and tags at it ("HEAD -> main", "tag: v1") */
-  refs?: string[];
-}
-
-/** GitCommitDetail is a commit with its full message and the files it
- * changed (from its first parent: the commit before). */
-export interface GitCommitDetail extends GitCommit {
-  message: string;
-  files: DiffFile[];
-}
-
 /** IdeGitApi is what the IDE's Changes and Git panels ask of the
- * workspace's repository. Paths are the workspace's. */
-export interface IdeGitApi {
-  /** the files changed (not committed): their summary */
-  changes: () => Promise<DiffFile[]>;
-  /** the diff of a file changed: its old (HEAD's) and current contents */
-  diff: (path: string, from?: string) => Promise<DiffFile>;
-  /** writes the file changed with content (edited in the compare) */
-  save: (path: string, content: string) => Promise<void>;
-  branches: () => Promise<GitBranch[]>;
-  /** the commits of ref, newest first: limit of them after skip */
-  log: (ref: string, skip?: number, limit?: number) => Promise<GitCommit[]>;
-  commit: (hash: string) => Promise<GitCommitDetail>;
-  /** the diff of a file the commit changed, with the commit before */
-  commitDiff: (hash: string, path: string, from?: string) => Promise<DiffFile>;
-  /** the URL that downloads the file as the commit has it */
-  fileUrl?: (hash: string, path: string) => string;
-  /** the URL that downloads the commit's patch (from the commit before): of
-   * the file at path, or the whole commit's */
-  patchUrl?: (hash: string, path?: string) => string;
-}
+ * workspace's repository: @gad-lang/git-vuetify's GitApi. */
+export type IdeGitApi = GitApi;
 
 /** WorkspaceAction is a way of changing the files of the workspace. */
 export type WorkspaceAction = "create" | "edit" | "rename" | "move" | "delete" | "import";
@@ -211,18 +161,8 @@ export function createHttpIdeApi(base = "") {
       .filter(([, v]) => v !== undefined && v !== "")
       .map(([k, v]) => k + "=" + encodeURIComponent(String(v)))
       .join("&");
-  const git: IdeGitApi = {
-    changes: () => jsonFetch<{ files: DiffFile[] }>("GET", u("api/ide/git/changes")).then((r) => r.files || []),
-    diff: (path, from) => jsonFetch<DiffFile>("GET", u("api/ide/git/diff?") + q({ path, from })),
-    save: (path, content) => jsonFetch<unknown>("POST", u("api/ide/git/save"), { path, content }).then(() => undefined),
-    branches: () => jsonFetch<{ branches: GitBranch[] }>("GET", u("api/ide/git/branches")).then((r) => r.branches || []),
-    log: (ref, skip, limit) =>
-      jsonFetch<{ commits: GitCommit[] }>("GET", u("api/ide/git/log?") + q({ ref, skip, limit })).then((r) => r.commits || []),
-    commit: (hash) => jsonFetch<GitCommitDetail>("GET", u("api/ide/git/commit?") + q({ hash })),
-    commitDiff: (hash, path, from) => jsonFetch<DiffFile>("GET", u("api/ide/git/commit/diff?") + q({ hash, path, from })),
-    fileUrl: (hash, path) => u("api/ide/git/file?") + q({ hash, path }),
-    patchUrl: (hash, path) => u("api/ide/git/patch?") + q({ hash, path }),
-  };
+  const git: IdeGitApi = createHttpGitApi(u("api/ide/"));
+
   return {
     /** the workspace's repository (Workspace.git) */
     git,

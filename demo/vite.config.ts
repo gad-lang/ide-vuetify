@@ -21,6 +21,7 @@ const alias: Record<string, string> = {
 for (const [name, rel] of [
   ["@gad-lang/codemirror-gad", "../../plugins/js/codemirror-gad/src/index.ts"],
   ["@gad-lang/prism-gad", "../../plugins/js/prism-gad/src/index.ts"],
+  ["@gad-lang/git-vuetify", "../../git-vuetify/src/index.ts"],
 ] as const) {
   const p = srcAlias(rel);
   if (p) alias[name] = p; // monorepo: use source; standalone: fall through to npm

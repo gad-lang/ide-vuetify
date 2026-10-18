@@ -5,6 +5,7 @@ import { computed, defineComponent, inject, ref } from "vue";
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VDialog, VProgressLinear, VSpacer, VSwitch, VTextField } from "./vuetify";
 import DirTree from "./DirTree";
 import { IdeControllerKey } from "./controller";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "./messages";
 
 export default defineComponent({
   name: "UrlImportDialog",
@@ -19,6 +20,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const ctx = inject(IdeControllerKey)!;
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const url = ref("");
     const extract = ref(true);
     const busy = ref(false);
@@ -49,12 +51,12 @@ export default defineComponent({
         maxWidth="520"
       >
         <VCard>
-          <VCardTitle>Import from URL</VCardTitle>
+          <VCardTitle>{w.value.importFromUrl}</VCardTitle>
           <VCardText>
             <VTextField
               modelValue={url.value}
               {...{ "onUpdate:modelValue": (v: string) => (url.value = v) }}
-              label="URL"
+              label={w.value.url}
               placeholder="https://example.com/file.gad"
               density="compact"
               variant="outlined"
@@ -66,7 +68,7 @@ export default defineComponent({
               <VSwitch
                 modelValue={extract.value}
                 {...{ "onUpdate:modelValue": (v: boolean | null) => (extract.value = !!v) }}
-                label="Extract archive (ZIP / TAR / TAR.GZ)"
+                label={w.value.extractArchive}
                 density="compact"
                 hideDetails
                 class="mt-2"
@@ -77,14 +79,14 @@ export default defineComponent({
             <div class="d-flex align-center mt-2" style={{ gap: "4px" }}>
               <VTextField
                 modelValue={targetDir.value || "/ (root)"}
-                label="Target folder"
+                label={w.value.targetFolder}
                 density="compact"
                 variant="outlined"
                 readonly
                 hideDetails
                 onClick={() => (pickDir.value = !pickDir.value)}
               />
-              <VBtn size="small" variant="text" icon="mdi-folder-search-outline" title="Choose folder"
+              <VBtn size="small" variant="text" icon="mdi-folder-search-outline" title={w.value.chooseFolder}
                 onClick={() => (pickDir.value = !pickDir.value)} />
             </div>
             {pickDir.value && (
@@ -112,8 +114,8 @@ export default defineComponent({
           </VCardText>
           <VCardActions>
             <VSpacer />
-            <VBtn onClick={() => emit("update:modelValue", false)}>Cancel</VBtn>
-            <VBtn color="primary" loading={busy.value} disabled={!url.value.trim()} onClick={doImport}>Import</VBtn>
+            <VBtn onClick={() => emit("update:modelValue", false)}>{w.value.cancel}</VBtn>
+            <VBtn color="primary" loading={busy.value} disabled={!url.value.trim()} onClick={doImport}>{w.value.importAction}</VBtn>
           </VCardActions>
         </VCard>
       </VDialog>

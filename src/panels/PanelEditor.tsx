@@ -3,10 +3,11 @@
 // run-profile selector — only where code runs (runMode) —, plus the
 // debugger step controls while paused). An image file is shown instead of
 // edited.
-import { defineComponent, inject } from "vue";
+import { computed, defineComponent, inject } from "vue";
 import GadEditor from "../GadEditor";
 import { VBtn, VDivider, VList, VListItem, VListSubheader, VMenu } from "../vuetify";
 import { IdeControllerKey } from "../controller";
+import { DEFAULT_MESSAGES, IdeMessagesKey } from "../messages";
 import type { GadEditorView } from "../codemirror";
 import type { RunProfile } from "../api";
 
@@ -17,6 +18,7 @@ export default defineComponent({
   name: "PanelEditor",
   setup() {
     const ctx = inject(IdeControllerKey)!;
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const has = () => !!ctx.openPath.value;
 
     const iconBtn = (icon: string, title: string, onClick: () => void, opts: { disabled?: boolean; color?: string } = {}) => (
@@ -41,7 +43,7 @@ export default defineComponent({
                   <span class="editor-tab-name">{truncate(baseName(t.path), ctx.tabNameMax.value)}</span>
                   <span
                     class={["editor-tab-close", { "editor-tab-close--dirty": dirty }]}
-                    title="Close"
+                    title={w.value.close}
                     onClick={(e: MouseEvent) => { e.stopPropagation(); ctx.closeTab(i); }}
                   />
                 </div>
@@ -52,21 +54,21 @@ export default defineComponent({
         <div class="pnl-toolbar">
           {ctx.canEdit.value && (
             <>
-              {iconBtn("mdi-content-save-outline", "Save", () => ctx.save(), { disabled: !has() || ctx.isImage.value })}
-              {iconBtn("mdi-auto-fix", "Format", () => ctx.format(), { disabled: !has() || ctx.isImage.value })}
+              {iconBtn("mdi-content-save-outline", w.value.save, () => ctx.save(), { disabled: !has() || ctx.isImage.value })}
+              {iconBtn("mdi-auto-fix", w.value.format, () => ctx.format(), { disabled: !has() || ctx.isImage.value })}
             </>
           )}
-          {iconBtn("mdi-refresh", "Reload from disk", () => ctx.reload(), { disabled: !has() })}
+          {iconBtn("mdi-refresh", w.value.reloadFromDisk, () => ctx.reload(), { disabled: !has() })}
           {ctx.canEdit.value && (
             <>
-              {iconBtn("mdi-undo", "Undo", () => ctx.undo(), { disabled: !has() || ctx.isImage.value })}
-              {iconBtn("mdi-redo", "Redo", () => ctx.redo(), { disabled: !has() || ctx.isImage.value })}
+              {iconBtn("mdi-undo", w.value.undo, () => ctx.undo(), { disabled: !has() || ctx.isImage.value })}
+              {iconBtn("mdi-redo", w.value.redo, () => ctx.redo(), { disabled: !has() || ctx.isImage.value })}
             </>
           )}
           {/* Run, Debug and the profile selector: only where code runs (runMode). */}
           {ctx.canRun.value && <VDivider vertical class="mx-1" />}
-          {ctx.canRun.value && iconBtn("mdi-play", "Run", () => ctx.runActive(), { disabled: !has(), color: "success" })}
-          {ctx.canDebug.value && iconBtn(ctx.session.value ? "mdi-restart" : "mdi-bug", ctx.session.value ? "Restart" : "Debug",
+          {ctx.canRun.value && iconBtn("mdi-play", w.value.run, () => ctx.runActive(), { disabled: !has(), color: "success" })}
+          {ctx.canDebug.value && iconBtn(ctx.session.value ? "mdi-restart" : "mdi-bug", ctx.session.value ? w.value.restart : w.value.debug,
             () => ctx.debugActive(), { disabled: !has(), color: "warning" })}
           {/* Run/debug profile selector ("…" menu). */}
           {ctx.canRun.value && <VMenu location="bottom start">
@@ -78,8 +80,8 @@ export default defineComponent({
               ),
               default: () => (
                 <VList density="compact" minWidth="220">
-                  <VListItem title="Current file" active={ctx.activeProfile.value === null} onClick={() => (ctx.activeProfile.value = null)} />
-                  {ctx.runProfiles.value.length > 0 && <VListSubheader>Profiles</VListSubheader>}
+                  <VListItem title={w.value.currentFile} active={ctx.activeProfile.value === null} onClick={() => (ctx.activeProfile.value = null)} />
+                  {ctx.runProfiles.value.length > 0 && <VListSubheader>{w.value.profiles}</VListSubheader>}
                   {ctx.runProfiles.value.map((p: RunProfile) => (
                     <VListItem
                       key={p.name}
@@ -90,13 +92,13 @@ export default defineComponent({
                     >
                       {{
                         append: () => (
-                          <VBtn size="x-small" variant="text" icon="mdi-delete-outline" title="Delete profile"
+                          <VBtn size="x-small" variant="text" icon="mdi-delete-outline" title={w.value.deleteProfile}
                             onClick={(e: Event) => { e.stopPropagation(); ctx.deleteProfile(p.name); }} />
                         ),
                       }}
                     </VListItem>
                   ))}
-                  <VListItem title="New profile…" prependIcon="mdi-plus" onClick={() => (ctx.profileDialog.value = true)} />
+                  <VListItem title={w.value.newProfile} prependIcon="mdi-plus" onClick={() => (ctx.profileDialog.value = true)} />
                 </VList>
               ),
             }}
@@ -105,10 +107,10 @@ export default defineComponent({
           {ctx.stopped.value && (
             <>
               <VDivider vertical class="mx-1" />
-              {iconBtn("mdi-play-outline", "Continue", () => ctx.debugCmd("continue"), { disabled: ctx.busy.value })}
-              {iconBtn("mdi-debug-step-over", "Step Over", () => ctx.debugCmd("next"), { disabled: ctx.busy.value })}
-              {iconBtn("mdi-debug-step-into", "Step In", () => ctx.debugCmd("stepIn"), { disabled: ctx.busy.value })}
-              {iconBtn("mdi-debug-step-out", "Step Out", () => ctx.debugCmd("stepOut"), { disabled: ctx.busy.value })}
+              {iconBtn("mdi-play-outline", w.value.continueRun, () => ctx.debugCmd("continue"), { disabled: ctx.busy.value })}
+              {iconBtn("mdi-debug-step-over", w.value.stepOver, () => ctx.debugCmd("next"), { disabled: ctx.busy.value })}
+              {iconBtn("mdi-debug-step-into", w.value.stepIn, () => ctx.debugCmd("stepIn"), { disabled: ctx.busy.value })}
+              {iconBtn("mdi-debug-step-out", w.value.stepOut, () => ctx.debugCmd("stepOut"), { disabled: ctx.busy.value })}
             </>
           )}
 
@@ -122,7 +124,7 @@ export default defineComponent({
             // an image: shown whole, its aspect ratio kept
             <div class="gad-ide__image">
               {ctx.imageUrl(ctx.openPath.value) ? <img src={ctx.imageUrl(ctx.openPath.value)} alt={ctx.openPath.value} />
-                : <span class="text-medium-emphasis">No preview of images here.</span>}
+                : <span class="text-medium-emphasis">{w.value.noImagePreview}</span>}
             </div>
           ) : has() ? (
             <GadEditor
@@ -147,16 +149,16 @@ export default defineComponent({
               onReady={(v: GadEditorView) => ctx.registerEditor(v)}
             />
           ) : (
-            <div class="pa-4 text-medium-emphasis">Select or create a file to begin.</div>
+            <div class="pa-4 text-medium-emphasis">{w.value.selectOrCreate}</div>
           )}
         </div>
         {/* Thin status bar: the open file's full path, and font-size controls. */}
         <div class="editor-statusbar">
-          <span class="editor-statusbar-path" title={ctx.openPath.value}>{ctx.openPath.value || "(no file)"}</span>
+          <span class="editor-statusbar-path" title={ctx.openPath.value}>{ctx.openPath.value || w.value.noFile}</span>
           <span class="editor-statusbar-font">
-            <button class="fs-btn" title="Decrease font size" onClick={() => ctx.decFont()}>A−</button>
+            <button class="fs-btn" title={w.value.decreaseFont} onClick={() => ctx.decFont()}>A−</button>
             <span class="fs-val">{ctx.fontSize.value}px</span>
-            <button class="fs-btn" title="Increase font size" onClick={() => ctx.incFont()}>A+</button>
+            <button class="fs-btn" title={w.value.increaseFont} onClick={() => ctx.incFont()}>A+</button>
           </span>
         </div>
       </div>

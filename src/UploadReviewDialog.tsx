@@ -8,6 +8,7 @@ import {
 } from "./vuetify";
 import DirTree from "./DirTree";
 import { IdeControllerKey } from "./controller";
+import { DEFAULT_MESSAGES, fmt, IdeMessagesKey } from "./messages";
 import { readBase64, readUploaded, type RawFile } from "./upload";
 import type { UploadedFile } from "./api";
 
@@ -27,6 +28,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const ctx = inject(IdeControllerKey)!;
+    const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const targetDir = ref("");
     const name = ref("");
     const extract = ref(true);
@@ -89,14 +91,14 @@ export default defineComponent({
       >
         <VCard>
           <VCardTitle>
-            {single.value ? "Upload file" : `Upload ${props.raw.length} files`}
+            {single.value ? w.value.uploadFile : fmt(w.value.uploadNFiles, props.raw.length)}
           </VCardTitle>
           <VCardText>
             {single.value ? (
               <VTextField
                 modelValue={name.value}
                 {...{ "onUpdate:modelValue": (v: string) => (name.value = v) }}
-                label="Destination name"
+                label={w.value.destinationName}
                 density="compact"
                 variant="outlined"
                 hideDetails
@@ -113,7 +115,7 @@ export default defineComponent({
               <VSwitch
                 modelValue={extract.value}
                 {...{ "onUpdate:modelValue": (v: boolean | null) => (extract.value = !!v) }}
-                label={`Extract archive (${archiveOf.value.toUpperCase()})`}
+                label={fmt(w.value.extractArchiveOf, archiveOf.value.toUpperCase())}
                 density="compact"
                 hideDetails
                 color="primary"
@@ -125,14 +127,14 @@ export default defineComponent({
             <div class="d-flex align-center" style={{ gap: "4px" }}>
               <VTextField
                 modelValue={targetDir.value || "/ (root)"}
-                label="Target folder"
+                label={w.value.targetFolder}
                 density="compact"
                 variant="outlined"
                 readonly
                 hideDetails
                 onClick={() => (pickDir.value = !pickDir.value)}
               />
-              <VBtn size="small" variant="text" icon="mdi-folder-search-outline" title="Choose folder"
+              <VBtn size="small" variant="text" icon="mdi-folder-search-outline" title={w.value.chooseFolder}
                 onClick={() => (pickDir.value = !pickDir.value)} />
             </div>
             {pickDir.value && (
@@ -146,8 +148,8 @@ export default defineComponent({
                 modelValue={replace.value}
                 {...{ "onUpdate:modelValue": (v: boolean | null) => (replace.value = !!v) }}
                 label={collisions.value.length === 1
-                  ? `"${collisions.value[0]}" already exists — replace it`
-                  : `${collisions.value.length} files already exist — replace them`}
+                  ? fmt(w.value.replaceOne, collisions.value[0])
+                  : fmt(w.value.replaceMany, collisions.value.length)}
                 density="compact"
                 hideDetails
                 color="error"
@@ -157,9 +159,9 @@ export default defineComponent({
           </VCardText>
           <VCardActions>
             <VSpacer />
-            <VBtn onClick={() => emit("update:modelValue", false)}>Cancel</VBtn>
+            <VBtn onClick={() => emit("update:modelValue", false)}>{w.value.cancel}</VBtn>
             <VBtn color="primary" loading={busy.value} disabled={blocked.value || (single.value && !name.value.trim())} onClick={confirm}>
-              Upload
+              {w.value.upload}
             </VBtn>
           </VCardActions>
         </VCard>
