@@ -95,6 +95,12 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
         type: PropType<string[]>;
         default: () => never[];
     };
+    /** The Settings' tabs shown (panels, formatter, transpile, template) —
+     * those of the context; none: all. */
+    settingsTabs: {
+        type: PropType<string[]>;
+        default: () => never[];
+    };
     /** Buttons of the host app in the IDE's header, at its right after the
      * panels' (Changes): their icon, their title (and label, when given),
      * what their click does — a host's "back into the page", say. */
@@ -205,6 +211,12 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
         type: PropType<string[]>;
         default: () => never[];
     };
+    /** The Settings' tabs shown (panels, formatter, transpile, template) —
+     * those of the context; none: all. */
+    settingsTabs: {
+        type: PropType<string[]>;
+        default: () => never[];
+    };
     /** Buttons of the host app in the IDE's header, at its right after the
      * panels' (Changes): their icon, their title (and label, when given),
      * what their click does — a host's "back into the page", say. */
@@ -242,6 +254,7 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
     fileTypes: FileTypeHandler[];
     extraPanels: ExtraPanel[];
     openPanels: string[];
+    settingsTabs: string[];
     headerActions: HeaderAction[];
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

@@ -132,6 +132,9 @@ export default defineComponent({
      * default layout, in this order — with panels [], an IDE of them alone
      * (only Git and Changes: a repository's). */
     openPanels: { type: Array as PropType<string[]>, default: () => [] },
+    /** The Settings' tabs shown (panels, formatter, transpile, template) —
+     * those of the context; none: all. */
+    settingsTabs: { type: Array as PropType<string[]>, default: () => [] },
     /** Buttons of the host app in the IDE's header, at its right after the
      * panels' (Changes): their icon, their title (and label, when given),
      * what their click does — a host's "back into the page", say. */
@@ -590,6 +593,7 @@ export default defineComponent({
           config={props.config}
           panels={panelToggles.value}
           onTogglePanel={togglePanel}
+          tabs={props.settingsTabs}
           onSave={saveConfig}
         />
 

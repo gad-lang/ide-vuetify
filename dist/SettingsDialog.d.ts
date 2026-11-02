@@ -21,6 +21,11 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
         type: PropType<(id: string, visible: boolean) => void>;
         required: true;
     };
+    /** the tabs shown (panels, formatter, transpile, template); none: all */
+    tabs: {
+        type: PropType<string[]>;
+        default: () => never[];
+    };
 }>, () => import("vue/jsx-runtime").JSX.Element, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
     "update:modelValue": (_v: boolean) => true;
     save: (_next: Record<string, unknown>) => true;
@@ -41,10 +46,16 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
         type: PropType<(id: string, visible: boolean) => void>;
         required: true;
     };
+    /** the tabs shown (panels, formatter, transpile, template); none: all */
+    tabs: {
+        type: PropType<string[]>;
+        default: () => never[];
+    };
 }>> & Readonly<{
     "onUpdate:modelValue"?: ((_v: boolean) => any) | undefined;
     onSave?: ((_next: Record<string, unknown>) => any) | undefined;
 }>, {
     panels: PanelToggle[];
+    tabs: string[];
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

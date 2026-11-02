@@ -30,6 +30,8 @@ export default defineComponent({
     config: { type: Object as PropType<Record<string, unknown>>, required: true },
     panels: { type: Array as PropType<PanelToggle[]>, default: () => [] },
     onTogglePanel: { type: Function as PropType<(id: string, visible: boolean) => void>, required: true },
+    /** the tabs shown (panels, formatter, transpile, template); none: all */
+    tabs: { type: Array as PropType<string[]>, default: () => [] },
   },
   emits: {
     "update:modelValue": (_v: boolean) => true,
@@ -37,7 +39,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const w = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
-    const tab = ref("panels");
+    const has = (t: string) => !props.tabs.length || props.tabs.includes(t);
+    const tab = ref(props.tabs[0] ?? "panels");
     const rec = (k: string): Record<string, unknown> => (props.config[k] as Record<string, unknown>) || {};
 
     const fmt = rec("fmt");
@@ -110,10 +113,10 @@ export default defineComponent({
         <VCard>
           <VCardTitle>{w.value.settings}</VCardTitle>
           <VTabs modelValue={tab.value} {...{ "onUpdate:modelValue": (v: unknown) => (tab.value = v as string) }}>
-            <VTab value="panels">{w.value.panels}</VTab>
-            <VTab value="formatter">{w.value.formatter}</VTab>
-            <VTab value="transpile">{w.value.transpile}</VTab>
-            <VTab value="template">{w.value.template}</VTab>
+            {has("panels") && <VTab value="panels">{w.value.panels}</VTab>}
+            {has("formatter") && <VTab value="formatter">{w.value.formatter}</VTab>}
+            {has("transpile") && <VTab value="transpile">{w.value.transpile}</VTab>}
+            {has("template") && <VTab value="template">{w.value.template}</VTab>}
           </VTabs>
           <VCardText>
             <VWindow modelValue={tab.value} {...{ "onUpdate:modelValue": (v: unknown) => (tab.value = v as string) }}>
