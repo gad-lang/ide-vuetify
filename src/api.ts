@@ -166,6 +166,12 @@ export function createHttpIdeApi(base = "") {
   return {
     /** the workspace's repository (Workspace.git) */
     git,
+    /** gitFor is the repository of a folder of the workspace (one of
+     * gitRepos): the Changes and Git panels on it. */
+    gitFor: (repo: string): IdeGitApi => (repo ? createHttpGitApi(u("api/ide/"), repo) : git),
+    /** gitRepos are the repositories of the workspace: "" when it is in
+     * one, then its folders that are one. */
+    gitRepos: () => jsonFetch<{ repos: string[] }>("GET", u("api/ide/git/repos")).then((r) => r.repos || []),
     workspace: () => jsonFetch<Workspace>("GET", u("api/ide/workspace")),
     tree: (hidden = false) =>
       jsonFetch<TreeNode>("GET", u("api/ide/tree") + (hidden ? "?hidden=true" : "")),
@@ -261,13 +267,19 @@ export const ideApi = createHttpIdeApi();
  * `gad ide` server) or a fully in-browser one (WASM + a LocalStorage
  * filesystem).
  */
-export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload" | "git" | "symbols"> & {
+export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload" | "git" | "gitFor" | "gitRepos" | "symbols"> & {
   /** symbols is the structure of a source (the Structure panel); without it,
    * the panel says there is none. */
   symbols?: (source: string, path?: string, sourceType?: string) => Promise<OutlineSym[]>;
   /** git is the workspace's repository, when it is in one (Workspace.git):
    * the Changes and Git panels. */
   git?: IdeGitApi;
+  /** gitFor is the repository of a folder of the workspace; without it,
+   * the panels are on git's only. */
+  gitFor?: (repo: string) => IdeGitApi;
+  /** gitRepos are the repositories of the workspace ("" its own, then its
+   * folders that are one); without it, git's only. */
+  gitRepos?: () => Promise<string[]>;
   /** upload writes files uploaded (Workspace.import); without it, only their
    * text is written, file by file. */
   upload?: (files: UploadedFile[]) => Promise<{ paths: string[] }>;

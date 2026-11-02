@@ -25,6 +25,11 @@ export interface IdeOwnMessages {
   expand: string;
   /** the title of the button that brings a panel expanded back */
   restore: string;
+  /** the selector of the repository of the Changes and Git panels (a
+   * workspace with several: its own, its folders that are one). */
+  repository: string;
+  /** the repository of the workspace itself, in that selector. */
+  workspaceRepository: string;
   /** title of the panel of the files. */
   explorer: string;
   /** title of the panel of the editor. */
@@ -219,6 +224,8 @@ export const DEFAULT_IDE_OWN_MESSAGES: IdeOwnMessages = {
   settings: "Settings",
   expand: "Expand",
   restore: "Restore",
+  repository: "Repository",
+  workspaceRepository: "The workspace",
   explorer: "Explorer",
   editor: "Editor",
   structure: "Structure",
@@ -319,6 +326,8 @@ export const IDE_OWN_MESSAGES_PT_BR: IdeOwnMessages = {
   settings: "Configurações",
   expand: "Expandir",
   restore: "Restaurar",
+  repository: "Repositório",
+  workspaceRepository: "O espaço de trabalho",
   explorer: "Explorador",
   editor: "Editor",
   structure: "Estrutura",
