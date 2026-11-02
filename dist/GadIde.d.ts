@@ -88,6 +88,13 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
         type: PropType<ExtraPanel[]>;
         default: () => never[];
     };
+    /** Panels of the host (or the IDE's: "changes", "git") open in the
+     * default layout, in this order — with panels [], an IDE of them alone
+     * (only Git and Changes: a repository's). */
+    openPanels: {
+        type: PropType<string[]>;
+        default: () => never[];
+    };
     /** Buttons of the host app in the IDE's header, at its right after the
      * panels' (Changes): their icon, their title (and label, when given),
      * what their click does — a host's "back into the page", say. */
@@ -191,6 +198,13 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
         type: PropType<ExtraPanel[]>;
         default: () => never[];
     };
+    /** Panels of the host (or the IDE's: "changes", "git") open in the
+     * default layout, in this order — with panels [], an IDE of them alone
+     * (only Git and Changes: a repository's). */
+    openPanels: {
+        type: PropType<string[]>;
+        default: () => never[];
+    };
     /** Buttons of the host app in the IDE's header, at its right after the
      * panels' (Changes): their icon, their title (and label, when given),
      * what their click does — a host's "back into the page", say. */
@@ -227,6 +241,7 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
     tabNameMax: number;
     fileTypes: FileTypeHandler[];
     extraPanels: ExtraPanel[];
+    openPanels: string[];
     headerActions: HeaderAction[];
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

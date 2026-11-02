@@ -128,6 +128,10 @@ export default defineComponent({
      * each with an expand/collapse button, and a button in the Editor's
      * toolbar that opens it (toolbarButton). */
     extraPanels: { type: Array as PropType<ExtraPanel[]>, default: () => [] },
+    /** Panels of the host (or the IDE's: "changes", "git") open in the
+     * default layout, in this order — with panels [], an IDE of them alone
+     * (only Git and Changes: a repository's). */
+    openPanels: { type: Array as PropType<string[]>, default: () => [] },
     /** Buttons of the host app in the IDE's header, at its right after the
      * panels' (Changes): their icon, their title (and label, when given),
      * what their click does — a host's "back into the page", say. */
@@ -250,6 +254,11 @@ export default defineComponent({
       // (the Preview and the Structure too: closed, by their strips)
       for (const p of panelDefs.value)
         if (p.id !== "docs" && p.id !== "structure" && !extraDefs.value.some((x) => x.id === p.id)) addPanel(api, p);
+      // those asked to be open (openPanels)
+      for (const id of props.openPanels) {
+        const def = extraDefs.value.find((x) => x.id === id);
+        if (def && !api.getPanel(id)) addPanel(api, def);
+      }
     }
     // dropUnknown takes out of a restored layout the panels this IDE has not.
     function dropUnknown(api: DockviewApi) {

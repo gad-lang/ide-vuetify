@@ -1,7 +1,7 @@
 var xi = Object.defineProperty;
 var yi = (e, a, l) => a in e ? xi(e, a, { enumerable: !0, configurable: !0, writable: !0, value: l }) : e[a] = l;
 var fe = (e, a, l) => yi(e, typeof a != "symbol" ? a + "" : a, l);
-import { computed as y, ref as v, shallowRef as ka, reactive as Se, watch as L, onScopeDispose as Pi, defineComponent as N, createVNode as i, createTextVNode as S, Fragment as xe, inject as E, mergeProps as Z, onMounted as He, onBeforeUnmount as ze, h as ie, isVNode as bi, provide as oa } from "vue";
+import { computed as y, ref as v, shallowRef as ka, reactive as Se, watch as T, onScopeDispose as Pi, defineComponent as N, createVNode as i, createTextVNode as S, Fragment as xe, inject as E, mergeProps as Z, onMounted as He, onBeforeUnmount as ze, h as ie, isVNode as bi, provide as oa } from "vue";
 import { themeDark as Gi, themeLight as Zi, DockviewVue as Ai } from "dockview-vue";
 import { DEFAULT_GIT_MESSAGES as Mi, useWords as Bi, useGitMessages as ki, ChangesPanel as ji, GitPanel as Di, useStoredSize as da, ResizeHandle as ra, createHttpGitApi as et } from "@gad-lang/git-vuetify";
 import { ChangesPanel as Bo, DiffBrowser as ko, DiffMergeView as jo, GIT_I18N_MESSAGES as Do, GIT_I18N_NAMESPACE as Ho, GIT_MESSAGES_PT_BR as zo, GitPanel as No, LANGUAGES as Wo, ResizeHandle as Eo, createHttpGitApi as wo, languageExtensions as Ro, languageOf as Vo, renamedTo as Lo, statusColor as To, treePath as Yo, unchangedContent as Fo, useStoredSize as Uo } from "@gad-lang/git-vuetify";
@@ -809,7 +809,7 @@ function Kl(e, a, l, t = {}) {
   function A(d) {
     return z.value.has(d);
   }
-  const m = ka(null), M = Se(/* @__PURE__ */ new Set()), b = v([]), W = v(-1), T = y(() => {
+  const m = ka(null), M = Se(/* @__PURE__ */ new Set()), b = v([]), W = v(-1), Y = y(() => {
     var d;
     return ((d = b.value[W.value]) == null ? void 0 : d.path) ?? "";
   }), F = y({
@@ -830,7 +830,7 @@ function Kl(e, a, l, t = {}) {
   }), te = v(!1);
   async function q() {
     m.value = await o.tree(te.value);
-    const d = T.value.split("/");
+    const d = Y.value.split("/");
     for (let I = 1; I < d.length; I++) M.add(d.slice(0, I).join("/"));
   }
   async function Ue() {
@@ -869,13 +869,13 @@ function Kl(e, a, l, t = {}) {
     !f.value || d.content === d.saved || (await o.write(d.path, d.content), d.saved = d.content);
   }
   const he = () => Promise.all(b.value.map(Ne));
-  L(F, (d) => {
+  T(F, (d) => {
     if (be.value !== !0 || !f.value) return;
     const I = b.value[W.value];
     I && (o.write(I.path, d), I.saved = d);
   });
   let Ie = null;
-  L(
+  T(
     be,
     (d) => {
       Ie && (clearInterval(Ie), Ie = null), typeof d == "number" && d > 0 && (Ie = setInterval(() => void he(), d));
@@ -885,8 +885,8 @@ function Kl(e, a, l, t = {}) {
     Ie && clearInterval(Ie);
   });
   function Ge() {
-    const d = T.value.lastIndexOf("/");
-    return d === -1 ? "" : T.value.slice(0, d + 1);
+    const d = Y.value.lastIndexOf("/");
+    return d === -1 ? "" : Y.value.slice(0, d + 1);
   }
   function Ze(d) {
     for (const I of (d == null ? void 0 : d.children) ?? []) {
@@ -913,22 +913,22 @@ function Kl(e, a, l, t = {}) {
     const d = await We(g().newFolder, g().folderName, "folder");
     d && (await o.mkdir(Ge() + d), await q());
   }
-  async function Y() {
-    const d = T.value;
+  async function V() {
+    const d = Y.value;
     if (!d || !await c(g().deleteFile, Te(g().deleteConfirm, d))) return;
     await o.del(d);
     const I = b.value.findIndex((C) => C.path === d);
     I >= 0 && Xe(I), await q();
   }
   async function J() {
-    const d = T.value;
+    const d = Y.value;
     if (!d) return;
     const I = d.lastIndexOf("/"), C = I === -1 ? "" : d.slice(0, I + 1), D = await We(g().rename, g().newName, d.slice(I + 1));
     !D || C + D === d || (await o.rename(d, C + D), pe(d, C + D), await q());
   }
   const U = v(null);
   async function ge() {
-    const d = T.value;
+    const d = Y.value;
     if (!d) return;
     const I = await new Promise((D) => U.value = { path: d, resolve: D });
     if (U.value = null, I === null) return;
@@ -1002,7 +1002,7 @@ ${g().toDir}: ${R(I)}`)) return;
   const pa = (d) => {
     const I = ht(d);
     return I === "gadx" ? "gadx" : I === "gadt" ? "gadTemplate" : "gad";
-  }, Et = (d, I) => o.diagnose(d, I), ne = v(!1), _e = v(null), Ra = () => ({ source: F.value, path: T.value, args: [] });
+  }, Et = (d, I) => o.diagnose(d, I), ne = v(!1), _e = v(null), Ra = () => ({ source: F.value, path: Y.value, args: [] });
   async function Va(d) {
     const I = d ?? Ra();
     ne.value = !0;
@@ -1065,10 +1065,10 @@ ${g().toDir}: ${R(I)}`)) return;
     var d;
     (d = ma.value) == null || d.redo();
   }
-  const La = v(""), Xt = y(() => Le(T.value)), fa = v(0), Qt = (d) => o.rawUrl ? o.rawUrl(d) + (fa.value ? "&v=" + fa.value : "") : "", Ta = v("none");
+  const La = v(""), Xt = y(() => Le(Y.value)), fa = v(0), Qt = (d) => o.rawUrl ? o.rawUrl(d) + (fa.value ? "&v=" + fa.value : "") : "", Ta = v("none");
   let Ya = 0;
   async function Fa() {
-    const d = ++Ya, I = Ct(T.value);
+    const d = ++Ya, I = Ct(Y.value);
     let C;
     if (I === "gad" && F.value.trim()) {
       const D = await o.doc(F.value);
@@ -1109,14 +1109,14 @@ ${g().toDir}: ${R(I)}`)) return;
     });
   }
   const $t = y({
-    get: () => Ce(T.value),
-    set: (d) => qe(T.value, d)
+    get: () => Ce(Y.value),
+    set: (d) => qe(Y.value, d)
   }), Sa = v({ line: 0, seq: 0 });
   function Ja(d) {
     Sa.value = { line: d, seq: Sa.value.seq + 1 };
   }
   async function ei(d, I) {
-    d && d !== T.value && await le(d), Ja(I);
+    d && d !== Y.value && await le(d), Ja(I);
   }
   const Xa = v(null);
   function ai(d, I) {
@@ -1180,11 +1180,11 @@ ${g().toDir}: ${R(I)}`)) return;
       expr: d,
       session: me.value ?? void 0,
       source: F.value,
-      path: T.value,
+      path: Y.value,
       sourceType: _a.value
     });
     return I.ok ? I.inspect ?? null : null;
-  }, _a = y(() => pa(T.value)), $e = y(() => {
+  }, _a = y(() => pa(Y.value)), $e = y(() => {
     var d;
     return ((d = t.getRunProfiles) == null ? void 0 : d.call(t)) ?? [];
   }), ea = y(() => {
@@ -1196,7 +1196,7 @@ ${g().toDir}: ${R(I)}`)) return;
   }), Ii = y(() => ea.value === "run" || ea.value === "debug"), gi = y(() => ea.value === "debug");
   async function qa() {
     const d = ya.value;
-    return d ? { source: d.path === T.value ? F.value : (await o.read(d.path)).content, path: d.path, args: d.args, tagEncode: d.tagEncode } : { source: F.value, path: T.value, args: [] };
+    return d ? { source: d.path === Y.value ? F.value : (await o.read(d.path)).content, path: d.path, args: d.args, tagEncode: d.tagEncode } : { source: F.value, path: Y.value, args: [] };
   }
   async function pi() {
     await Va(await qa());
@@ -1231,7 +1231,7 @@ ${g().toDir}: ${R(I)}`)) return;
     // tree
     tree: m,
     rows: Pe,
-    openPath: T,
+    openPath: Y,
     source: F,
     isExpanded: ee,
     toggleDir: Qe,
@@ -1250,7 +1250,7 @@ ${g().toDir}: ${R(I)}`)) return;
     toggleHidden: Ue,
     newFile: p,
     newDir: B,
-    removeOpen: Y,
+    removeOpen: V,
     reset: Ht,
     canReset: zt,
     upload: ga,
@@ -1455,7 +1455,7 @@ const P = _i, Fe = Ki, Pt = Cl, oe = tl, de = nl, re = ll, se = il, ke = pl, _l 
     emit: a
   }) {
     const l = E(_), t = E(O, y(() => Q)), n = v(""), o = v(""), s = v(!0), g = v(!1), u = v(!1), r = v(!1), h = y(() => e.raw.length === 1), f = y(() => h.value ? l.archiveKind(o.value) : void 0);
-    L(() => e.modelValue, (G) => {
+    T(() => e.modelValue, (G) => {
       G && (n.value = e.initialDir, o.value = h.value ? ln(e.raw[0].path) : "", s.value = !0, g.value = !1, u.value = !1);
     });
     const x = y(() => h.value ? f.value && s.value ? [] : [rt(n.value, o.value)] : e.raw.map((G) => rt(n.value, G.path))), j = y(() => x.value.filter((G) => l.pathExists(G))), w = y(() => j.value.length > 0 && !g.value);
@@ -1861,9 +1861,9 @@ const un = /* @__PURE__ */ N({
         },
         breakpoints: e.breakpointGutter
       }), e.breakpoints.length && t.setBreakpoints(e.breakpoints), e.debugLine && t.setDebugLine(e.debugLine, e.debugColumn), a("ready", t);
-    }), ze(() => t == null ? void 0 : t.destroy()), L(() => e.modelValue, (s) => {
+    }), ze(() => t == null ? void 0 : t.destroy()), T(() => e.modelValue, (s) => {
       t && !n && s !== t.getValue() && t.setValue(s);
-    }), L([() => e.path, () => e.language, () => e.customExtension], () => t == null ? void 0 : t.setLanguage(o(), e.diagnose, e.customExtension)), L(() => e.dark, (s) => t == null ? void 0 : t.setDark(s)), L(() => e.readonly, (s) => t == null ? void 0 : t.setReadonly(s)), L(() => e.fontSize, (s) => t == null ? void 0 : t.setFontSize(s)), L(() => e.breakpoints, (s) => t == null ? void 0 : t.setBreakpoints(s ?? [])), L([() => e.debugLine, () => e.debugColumn], ([s, g]) => t == null ? void 0 : t.setDebugLine(s ?? 0, g ?? 1)), L(() => e.gotoSeq, () => {
+    }), T([() => e.path, () => e.language, () => e.customExtension], () => t == null ? void 0 : t.setLanguage(o(), e.diagnose, e.customExtension)), T(() => e.dark, (s) => t == null ? void 0 : t.setDark(s)), T(() => e.readonly, (s) => t == null ? void 0 : t.setReadonly(s)), T(() => e.fontSize, (s) => t == null ? void 0 : t.setFontSize(s)), T(() => e.breakpoints, (s) => t == null ? void 0 : t.setBreakpoints(s ?? [])), T([() => e.debugLine, () => e.debugColumn], ([s, g]) => t == null ? void 0 : t.setDebugLine(s ?? 0, g ?? 1)), T(() => e.gotoSeq, () => {
       e.gotoLine && (t == null || t.gotoLine(e.gotoLine));
     }), () => i("div", {
       ref: l,
@@ -2335,7 +2335,7 @@ const Cn = {
     const g = async () => {
       await e.refreshDoc(), await s();
     };
-    He(g), ze(() => clearTimeout(o)), L(() => e.openPath.value, g), L(() => e.source.value, () => {
+    He(g), ze(() => clearTimeout(o)), T(() => e.openPath.value, g), T(() => e.source.value, () => {
       e.docKind.value === "gad" && (clearTimeout(o), o = setTimeout(s, 500));
     });
     const u = (r) => {
@@ -2483,7 +2483,7 @@ const Pn = N({
     const s = () => {
       clearTimeout(n), n = setTimeout(o, 400);
     };
-    return He(o), ze(() => clearTimeout(n)), L(() => e.openPath.value, o), L(() => e.source.value, s), () => i("div", {
+    return He(o), ze(() => clearTimeout(n)), T(() => e.openPath.value, o), T(() => e.source.value, s), () => i("div", {
       class: "pnl"
     }, [i("div", {
       class: "pnl-head"
@@ -2604,7 +2604,7 @@ const Pn = N({
     emit: a
   }) {
     const l = E(O, y(() => Q)), t = v(e.initial.condition ?? ""), n = v(!!e.initial.disabled);
-    L(() => e.modelValue, (s) => {
+    T(() => e.modelValue, (s) => {
       s && (t.value = e.initial.condition ?? "", n.value = !!e.initial.disabled);
     });
     function o() {
@@ -2712,11 +2712,11 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
         ...g
       };
       H.value === "" ? delete W.start_delimiter : W.start_delimiter = H.value, G.value === "" ? delete W.end_delimiter : W.end_delimiter = G.value;
-      const T = {
+      const Y = {
         ...e.config,
         fmt: A
       };
-      Object.keys(M).length > 0 ? T.transpile = M : delete T.transpile, Object.keys(W).length > 0 ? T.template = W : delete T.template, a("save", T), a("update:modelValue", !1);
+      Object.keys(M).length > 0 ? Y.transpile = M : delete Y.transpile, Object.keys(W).length > 0 ? Y.template = W : delete Y.template, a("save", Y), a("update:modelValue", !1);
     }
     const z = (A) => ({
       modelValue: A.value,
@@ -2888,7 +2888,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
     emit: a
   }) {
     const l = E(O, y(() => Q)), t = v(""), n = v(e.defaultPath), o = v([]), s = v(""), g = () => /\.gadx$/i.test(n.value);
-    L(() => e.modelValue, (r) => {
+    T(() => e.modelValue, (r) => {
       r && (n.value = e.defaultPath, t.value || (t.value = e.defaultPath.split("/").pop() ?? "profile"));
     });
     function u() {
@@ -2995,7 +2995,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
     emit: a
   }) {
     const l = E(O, y(() => Q)), t = v("");
-    L(() => e.request, (o) => {
+    T(() => e.request, (o) => {
       o && (t.value = o.initial);
     });
     const n = (o) => {
@@ -3230,7 +3230,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
   name: "MoveDialog",
   setup() {
     const e = E(_), a = E(O, y(() => Q)), l = v("");
-    L(() => e.moveReq.value, (n) => {
+    T(() => e.moveReq.value, (n) => {
       n && (l.value = n.path.includes("/") ? n.path.slice(0, n.path.lastIndexOf("/")) : "");
     });
     const t = (n) => {
@@ -3387,7 +3387,7 @@ function Bt(e) {
   e.api.gitRepos && e.api.gitRepos().then((g) => {
     g.length && (a.value = g);
   }).catch(() => {
-  }), L(() => e.openPath.value, () => {
+  }), T(() => e.openPath.value, () => {
     l.value = null;
   });
   const t = y(() => l.value !== null && a.value.includes(l.value) ? l.value : wn(a.value, e.openPath.value) ?? a.value[0] ?? ""), n = y(() => e.api.gitFor ? e.api.gitFor(t.value) : e.api.git);
@@ -3711,6 +3711,13 @@ const kt = /* @__PURE__ */ N({
       type: Array,
       default: () => []
     },
+    /** Panels of the host (or the IDE's: "changes", "git") open in the
+     * default layout, in this order — with panels [], an IDE of them alone
+     * (only Git and Changes: a repository's). */
+    openPanels: {
+      type: Array,
+      default: () => []
+    },
     /** Buttons of the host app in the IDE's header, at its right after the
      * panels' (Changes): their icon, their title (and label, when given),
      * what their click does — a host's "back into the page", say. */
@@ -3750,7 +3757,7 @@ const kt = /* @__PURE__ */ N({
       fileTypes: e.fileTypes,
       getWords: () => t.value
     });
-    oa(_, n), oa(O, t), L(() => e.fontSize, (c) => {
+    oa(_, n), oa(O, t), T(() => e.fontSize, (c) => {
       c !== n.fontSize.value && n.setFontSize(c);
     });
     let o = null, s = null, g = !1, u = "";
@@ -3781,8 +3788,8 @@ const kt = /* @__PURE__ */ N({
       label: c.label,
       add: (p) => {
         var pe;
-        const B = c.placement ?? "bottom", Y = f.find((Ee) => Ee.id !== c.id && (Ee.placement ?? "bottom") === B && p.getPanel(Ee.id)), J = B === "right" ? "right" : B === "left" ? "left" : "below", U = f.indexOf(c) < f.indexOf(Y) ? "left" : "right", ge = Y ? {
-          referencePanel: Y.id,
+        const B = c.placement ?? "bottom", V = f.find((Ee) => Ee.id !== c.id && (Ee.placement ?? "bottom") === B && p.getPanel(Ee.id)), J = B === "right" ? "right" : B === "left" ? "left" : "below", U = f.indexOf(c) < f.indexOf(V) ? "left" : "right", ge = V ? {
+          referencePanel: V.id,
           direction: B === "bottom" ? U : "within"
         } : p.panels.length ? {
           direction: J
@@ -3794,7 +3801,7 @@ const kt = /* @__PURE__ */ N({
           ...ge ? {
             position: ge
           } : {}
-        }), !Y && B === "bottom" && ((pe = p.getPanel(c.id)) == null || pe.api.setSize({
+        }), !V && B === "bottom" && ((pe = p.getPanel(c.id)) == null || pe.api.setSize({
           height: q(p)
         }));
       }
@@ -3821,6 +3828,10 @@ const kt = /* @__PURE__ */ N({
     }
     function m(c) {
       for (const p of k.value) p.id !== "docs" && p.id !== "structure" && !w.value.some((B) => B.id === p.id) && A(c, p);
+      for (const p of e.openPanels) {
+        const B = w.value.find((V) => V.id === p);
+        B && !c.getPanel(p) && A(c, B);
+      }
     }
     function M(c) {
       for (const p of [...c.panels]) z(p.id) || c.removePanel(p);
@@ -3834,7 +3845,7 @@ const kt = /* @__PURE__ */ N({
         b.value = ((c = o.panels.find((p) => p.api.isMaximized())) == null ? void 0 : c.id) ?? "";
       }
     }
-    function T(c) {
+    function Y(c) {
       const p = o == null ? void 0 : o.getPanel(c);
       p && (p.api.isMaximized() ? p.api.exitMaximized() : p.api.maximize(), W());
     }
@@ -3844,7 +3855,7 @@ const kt = /* @__PURE__ */ N({
         B && B.title !== G(p) && B.api.setTitle(G(p));
       }
     }
-    L(t, () => o && F(o));
+    T(t, () => o && F(o));
     function Pe(c) {
       o = c.api;
       const p = e.layoutConfig;
@@ -3854,18 +3865,18 @@ const kt = /* @__PURE__ */ N({
         o.clear(), m(o);
       }
       W(), u = JSON.stringify(o.toJSON());
-      const B = o.onDidMaximizedGroupChange(() => W()), Y = o.onDidLayoutChange(() => {
+      const B = o.onDidMaximizedGroupChange(() => W()), V = o.onDidLayoutChange(() => {
         if (!o || (W(), g)) return;
         const J = o.toJSON(), U = JSON.stringify(J);
         U !== u && (u = U, a("update:layoutConfig", J));
       });
       s = {
         dispose: () => {
-          B.dispose(), Y.dispose();
+          B.dispose(), V.dispose();
         }
       };
     }
-    L(() => e.layoutConfig, (c) => {
+    T(() => e.layoutConfig, (c) => {
       if (!(!o || !c || JSON.stringify(c) === u)) {
         g = !0;
         try {
@@ -3897,7 +3908,7 @@ const kt = /* @__PURE__ */ N({
     }
     const Je = "gad-ide.left.width";
     function Ia(c) {
-      var Y, J;
+      var V, J;
       if (!o) return;
       const p = k.value.find((U) => U.id === c);
       if (!p || o.getPanel(c)) return;
@@ -3908,16 +3919,16 @@ const kt = /* @__PURE__ */ N({
           U = Number(localStorage.getItem(Je)) || 0;
         } catch {
         }
-        (Y = o.getPanel(c)) == null || Y.api.setSize({
+        (V = o.getPanel(c)) == null || V.api.setSize({
           width: Math.min(Math.max(160, o.width - 300), Math.max(160, U || 260))
         });
       }
       (J = o.getPanel(c)) == null || J.api.setActive();
     }
     function Xe(c) {
-      var Y, J;
+      var V, J;
       if (c === "docs" || c === "explorer" || c === "structure") {
-        const U = (Y = o == null ? void 0 : o.getPanel(c)) == null ? void 0 : Y.api.width, ge = c === "docs" ? Ue : Je;
+        const U = (V = o == null ? void 0 : o.getPanel(c)) == null ? void 0 : V.api.width, ge = c === "docs" ? Ue : Je;
         if (U) try {
           localStorage.setItem(ge, String(Math.round(U)));
         } catch {
@@ -3934,7 +3945,7 @@ const kt = /* @__PURE__ */ N({
     function Qe(c, p) {
       if (o)
         if (p) {
-          const B = k.value.find((Y) => Y.id === c);
+          const B = k.value.find((V) => V.id === c);
           B && !o.getPanel(c) && A(o, B);
         } else {
           const B = o.getPanel(c);
@@ -3953,7 +3964,7 @@ const kt = /* @__PURE__ */ N({
       open: (c) => {
         var B;
         if (!o) return;
-        const p = k.value.find((Y) => Y.id === c);
+        const p = k.value.find((V) => V.id === c);
         p && !o.getPanel(c) && A(o, p), (B = o.getPanel(c)) == null || B.api.setActive();
       }
     };
@@ -3969,7 +3980,7 @@ const kt = /* @__PURE__ */ N({
       onClick: p
     }, {
       default: () => [c.label]
-    }), Ne = y(() => ee.buttons.value.filter((c) => c.bottom && c.strip === "bottom")), he = (c, p = "bottom", B = () => ee.open(c.id), Y = !1) => {
+    }), Ne = y(() => ee.buttons.value.filter((c) => c.bottom && c.strip === "bottom")), he = (c, p = "bottom", B = () => ee.open(c.id), V = !1) => {
       const J = r.has(c.id), U = b.value === c.id, ge = J && !x.has(c.id), pe = p === "right" ? J ? "mdi-chevron-right" : "mdi-chevron-left" : p === "left" ? J ? "mdi-chevron-left" : "mdi-chevron-right" : J ? "mdi-chevron-down" : "mdi-chevron-up";
       return i("span", {
         key: c.id,
@@ -3980,7 +3991,7 @@ const kt = /* @__PURE__ */ N({
           "gad-ide__strip-btn--open": J
         }],
         title: c.label,
-        disabled: Y,
+        disabled: V,
         "data-extra-open": c.id,
         "data-open": J ? "true" : "false",
         onClick: () => J ? Qe(c.id, !1) : B()
@@ -3998,7 +4009,7 @@ const kt = /* @__PURE__ */ N({
         title: U ? t.value.restore : t.value.expand,
         "data-strip-expand": c.id,
         "data-maximized": U ? "true" : "false",
-        onClick: () => T(c.id)
+        onClick: () => Y(c.id)
       }, [i(ae, {
         size: "14",
         icon: U ? "mdi-arrow-collapse" : "mdi-arrow-expand"
@@ -4024,9 +4035,9 @@ const kt = /* @__PURE__ */ N({
       label: c.label,
       visible: r.has(c.id)
     })));
-    L(() => n.docRequest.value, () => {
+    T(() => n.docRequest.value, () => {
       var p, B;
-      const c = k.value.find((Y) => Y.id === "docs");
+      const c = k.value.find((V) => V.id === "docs");
       o && c && !o.getPanel("docs") && (A(o, c), (p = o.getPanel("docs")) == null || p.api.setSize({
         width: le(o)
       })), (B = o == null ? void 0 : o.getPanel("docs")) == null || B.api.setActive();
@@ -4141,7 +4152,7 @@ const kt = /* @__PURE__ */ N({
         "onUpdate:modelValue": (p) => n.urlDialog.value = p
       }, {
         progress: n.uploadProgress.value,
-        onImport: (p, B, Y) => n.uploadUrl(p, B, Y)
+        onImport: (p, B, V) => n.uploadUrl(p, B, V)
       }), null)]);
     };
   }
@@ -4617,9 +4628,9 @@ const jt = /* @__PURE__ */ N({
         r === o && (n.value = !1);
       }
     }
-    L([l, () => e.sourceType], g, {
+    T([l, () => e.sourceType], g, {
       immediate: !0
-    }), L(() => e.revision, () => {
+    }), T(() => e.revision, () => {
       clearTimeout(s), s = setTimeout(g, 250);
     });
     function u() {
@@ -5250,7 +5261,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
     })]);
   }
 });
-async function V(e, a, l) {
+async function L(e, a, l) {
   const t = await fetch(a, {
     method: e,
     headers: l ? { "Content-Type": "application/json" } : void 0,
@@ -5269,45 +5280,45 @@ function $n(e = "") {
     gitFor: (t) => t ? et(a("api/ide/"), t) : l,
     /** gitRepos are the repositories of the workspace: "" when it is in
      * one, then its folders that are one. */
-    gitRepos: () => V("GET", a("api/ide/git/repos")).then((t) => t.repos || []),
-    workspace: () => V("GET", a("api/ide/workspace")),
-    tree: (t = !1) => V("GET", a("api/ide/tree") + (t ? "?hidden=true" : "")),
-    read: (t) => V(
+    gitRepos: () => L("GET", a("api/ide/git/repos")).then((t) => t.repos || []),
+    workspace: () => L("GET", a("api/ide/workspace")),
+    tree: (t = !1) => L("GET", a("api/ide/tree") + (t ? "?hidden=true" : "")),
+    read: (t) => L(
       "GET",
       a("api/ide/file?path=") + encodeURIComponent(t)
     ),
     /** rawUrl is the URL of the file's bytes as they are (an image to show). */
     rawUrl: (t) => a("api/ide/file?raw=1&path=") + encodeURIComponent(t),
-    write: (t, n) => V("PUT", a("api/ide/file"), { path: t, content: n }),
-    mkfile: (t) => V("PUT", a("api/ide/file"), { path: t, content: "" }),
-    del: (t) => V("POST", a("api/ide/delete"), { path: t }),
-    rename: (t, n) => V("POST", a("api/ide/rename"), { path: t, to: n }),
-    mkdir: (t) => V("POST", a("api/ide/mkdir"), { path: t }),
+    write: (t, n) => L("PUT", a("api/ide/file"), { path: t, content: n }),
+    mkfile: (t) => L("PUT", a("api/ide/file"), { path: t, content: "" }),
+    del: (t) => L("POST", a("api/ide/delete"), { path: t }),
+    rename: (t, n) => L("POST", a("api/ide/rename"), { path: t, to: n }),
+    mkdir: (t) => L("POST", a("api/ide/mkdir"), { path: t }),
     /** upload writes files uploaded — text, or bytes (base64) — at their paths. */
-    upload: (t) => V("POST", a("api/ide/upload"), {
+    upload: (t) => L("POST", a("api/ide/upload"), {
       files: t.map((n) => n.bytes ? { path: n.path, bytes: n.bytes } : { path: n.path, content: n.content })
     }),
-    fetchUrl: (t, n) => V("POST", a("api/ide/fetch"), { url: t, path: n }),
-    config: () => V("GET", a("api/ide/config")),
-    saveConfig: (t) => V("PUT", a("api/ide/config"), t),
-    modules: () => V("GET", a("api/ide/modules")),
-    format: (t) => V("POST", a("api/ide/format"), { source: t }),
+    fetchUrl: (t, n) => L("POST", a("api/ide/fetch"), { url: t, path: n }),
+    config: () => L("GET", a("api/ide/config")),
+    saveConfig: (t) => L("PUT", a("api/ide/config"), t),
+    modules: () => L("GET", a("api/ide/modules")),
+    format: (t) => L("POST", a("api/ide/format"), { source: t }),
     /** symbols is the structure of source (`gad symbols`): its declarations as
      * a tree; path (or sourceType) says its dialect. */
-    symbols: (t, n, o) => V("POST", a("api/ide/symbols"), { source: t, path: n, sourceType: o }),
-    transpile: (t, n) => V("POST", a("api/ide/transpile"), { source: t, path: n }),
-    doc: (t) => V("POST", a("api/ide/doc"), { source: t }).then((n) => n.docs || []),
+    symbols: (t, n, o) => L("POST", a("api/ide/symbols"), { source: t, path: n, sourceType: o }),
+    transpile: (t, n) => L("POST", a("api/ide/transpile"), { source: t, path: n }),
+    doc: (t) => L("POST", a("api/ide/doc"), { source: t }).then((n) => n.docs || []),
     /** docGen generates documentation for source in the requested mode. */
-    docGen: (t, n, o) => V("POST", a("api/ide/doc-gen"), { source: t, sourceType: n, mode: o }),
-    eval: (t) => V("POST", a("api/ide/eval"), t),
-    inspect: (t) => V("POST", a("api/ide/inspect"), t),
-    diagnose: (t, n) => V("POST", a("api/ide/diagnose"), { source: t, sourceType: n }).then(
+    docGen: (t, n, o) => L("POST", a("api/ide/doc-gen"), { source: t, sourceType: n, mode: o }),
+    eval: (t) => L("POST", a("api/ide/eval"), t),
+    inspect: (t) => L("POST", a("api/ide/inspect"), t),
+    diagnose: (t, n) => L("POST", a("api/ide/diagnose"), { source: t, sourceType: n }).then(
       (o) => o.diagnostics || []
     ),
-    run: (t) => V("POST", a("api/ide/run"), t),
-    dbgStart: (t) => V("POST", a("api/ide/debug/start"), t),
-    dbgCmd: (t, n) => V("POST", a("api/ide/debug/command"), { session: t, command: n }),
-    dbgEval: (t, n, o) => V("POST", a("api/ide/debug/eval"), {
+    run: (t) => L("POST", a("api/ide/run"), t),
+    dbgStart: (t) => L("POST", a("api/ide/debug/start"), t),
+    dbgCmd: (t, n) => L("POST", a("api/ide/debug/command"), { session: t, command: n }),
+    dbgEval: (t, n, o) => L("POST", a("api/ide/debug/eval"), {
       session: t,
       expr: n,
       repr: o
