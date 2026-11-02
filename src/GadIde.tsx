@@ -203,12 +203,15 @@ export default defineComponent({
         label: x.label,
         add: (a: DockviewApi) => {
           const placement = x.placement ?? "bottom";
-          // another of the same place open: a tab beside it; else the whole
+          // another of the same place open: below, a group beside it — in the
+          // order of the panels (Changes left of Git), the sash between them
+          // their widths —; at a side, a tab beside it; else the whole
           // layout's side (below all, as IntelliJ's tool windows)
           const sibling = extras.find((o) => o.id !== x.id && (o.placement ?? "bottom") === placement && a.getPanel(o.id));
           const direction = placement === "right" ? "right" : placement === "left" ? "left" : "below";
+          const beside = extras.indexOf(x) < extras.indexOf(sibling!) ? ("left" as const) : ("right" as const);
           const position = sibling
-            ? { referencePanel: sibling.id, direction: "within" as const }
+            ? { referencePanel: sibling.id, direction: placement === "bottom" ? beside : ("within" as const) }
             : a.panels.length
               ? { direction }
               : undefined;
