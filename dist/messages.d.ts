@@ -11,6 +11,11 @@ export interface IdeOwnMessages {
     expand: string;
     /** the title of the button that brings a panel expanded back */
     restore: string;
+    /** the selector of the repository of the Changes and Git panels (a
+     * workspace with several: its own, its folders that are one). */
+    repository: string;
+    /** the repository of the workspace itself, in that selector. */
+    workspaceRepository: string;
     /** title of the panel of the files. */
     explorer: string;
     /** title of the panel of the editor. */

@@ -14,6 +14,8 @@ export interface Workspace {
      * (the files changed, compared and edited) and its Git one (the branches,
      * their commits and what each changed) — by api.git. */
     git?: boolean;
+    /** the Changes panel commits (the files chosen; git/commit/new) */
+    gitCommit?: boolean;
 }
 /** IdeGitApi is what the IDE's Changes and Git panels ask of the
  * workspace's repository: @gad-lang/git-vuetify's GitApi. */
@@ -122,6 +124,12 @@ export interface DebugResponse {
 export declare function createHttpIdeApi(base?: string): {
     /** the workspace's repository (Workspace.git) */
     git: GitApi;
+    /** gitFor is the repository of a folder of the workspace (one of
+     * gitRepos): the Changes and Git panels on it. */
+    gitFor: (repo: string) => IdeGitApi;
+    /** gitRepos are the repositories of the workspace: "" when it is in
+     * one, then its folders that are one. */
+    gitRepos: () => Promise<string[]>;
     workspace: () => Promise<Workspace>;
     tree: (hidden?: boolean) => Promise<TreeNode>;
     read: (path: string) => Promise<{
@@ -220,6 +228,12 @@ export declare function createHttpIdeApi(base?: string): {
 export declare const ideApi: {
     /** the workspace's repository (Workspace.git) */
     git: GitApi;
+    /** gitFor is the repository of a folder of the workspace (one of
+     * gitRepos): the Changes and Git panels on it. */
+    gitFor: (repo: string) => IdeGitApi;
+    /** gitRepos are the repositories of the workspace: "" when it is in
+     * one, then its folders that are one. */
+    gitRepos: () => Promise<string[]>;
     workspace: () => Promise<Workspace>;
     tree: (hidden?: boolean) => Promise<TreeNode>;
     read: (path: string) => Promise<{
@@ -321,13 +335,19 @@ export declare const ideApi: {
  * `gad ide` server) or a fully in-browser one (WASM + a LocalStorage
  * filesystem).
  */
-export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload" | "git" | "symbols"> & {
+export type IdeApi = Omit<typeof ideApi, "rawUrl" | "upload" | "git" | "gitFor" | "gitRepos" | "symbols"> & {
     /** symbols is the structure of a source (the Structure panel); without it,
      * the panel says there is none. */
     symbols?: (source: string, path?: string, sourceType?: string) => Promise<OutlineSym[]>;
     /** git is the workspace's repository, when it is in one (Workspace.git):
      * the Changes and Git panels. */
     git?: IdeGitApi;
+    /** gitFor is the repository of a folder of the workspace; without it,
+     * the panels are on git's only. */
+    gitFor?: (repo: string) => IdeGitApi;
+    /** gitRepos are the repositories of the workspace ("" its own, then its
+     * folders that are one); without it, git's only. */
+    gitRepos?: () => Promise<string[]>;
     /** upload writes files uploaded (Workspace.import); without it, only their
      * text is written, file by file. */
     upload?: (files: UploadedFile[]) => Promise<{

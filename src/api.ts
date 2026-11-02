@@ -22,6 +22,8 @@ export interface Workspace {
    * (the files changed, compared and edited) and its Git one (the branches,
    * their commits and what each changed) — by api.git. */
   git?: boolean;
+  /** the Changes panel commits (the files chosen; git/commit/new) */
+  gitCommit?: boolean;
 }
 
 /** IdeGitApi is what the IDE's Changes and Git panels ask of the
