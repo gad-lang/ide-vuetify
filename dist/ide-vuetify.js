@@ -2041,7 +2041,7 @@ const un = /* @__PURE__ */ N({
         class: "fs-btn",
         title: a.value.decreaseFont,
         onClick: () => e.decFont()
-      }, [S("A−")]), i("span", {
+      }, [S("A-")]), i("span", {
         class: "fs-val"
       }, [e.fontSize.value, S("px")]), i("button", {
         class: "fs-btn",

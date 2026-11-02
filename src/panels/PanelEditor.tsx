@@ -156,7 +156,7 @@ export default defineComponent({
         <div class="editor-statusbar">
           <span class="editor-statusbar-path" title={ctx.openPath.value}>{ctx.openPath.value || w.value.noFile}</span>
           <span class="editor-statusbar-font">
-            <button class="fs-btn" title={w.value.decreaseFont} onClick={() => ctx.decFont()}>A−</button>
+            <button class="fs-btn" title={w.value.decreaseFont} onClick={() => ctx.decFont()}>A-</button>
             <span class="fs-val">{ctx.fontSize.value}px</span>
             <button class="fs-btn" title={w.value.increaseFont} onClick={() => ctx.incFont()}>A+</button>
           </span>
