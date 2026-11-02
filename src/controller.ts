@@ -501,6 +501,15 @@ export function createController(
     t.saved = content;
   }
 
+  // filesChanged: the files changed beside the IDE (git: a stash made, put
+  // back) — the tree read again, the tabs not edited too, the Changes panel
+  // looks again
+  async function filesChanged() {
+    await loadTree();
+    await Promise.all(tabs.value.map((t) => refreshFile(t.path).catch(() => undefined)));
+    writes.value++;
+  }
+
   async function reload() {
     const t = tabs.value[active.value];
     if (!t) return;
@@ -736,7 +745,7 @@ export function createController(
   return {
     api,
     dark,
-    writes, refreshFile, workspace,
+    writes, refreshFile, filesChanged, workspace,
     // tree
     tree, rows, openPath, source, isExpanded, toggleDir, openFile,
     tabs, active, activateTab, closeTab, isDirty, autosave,

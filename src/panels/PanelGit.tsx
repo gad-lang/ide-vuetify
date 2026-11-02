@@ -17,7 +17,8 @@ export default defineComponent({
     const m = inject(IdeMessagesKey, computed(() => DEFAULT_MESSAGES));
     const git = useGitRepo(ctx);
     return () => (
-      <GitPanel key={git.repo.value} api={git.api.value} dark={ctx.dark.value} openPath={git.rel(ctx.openPath.value)} messages={m.value}>
+      <GitPanel key={git.repo.value} api={git.api.value} dark={ctx.dark.value} openPath={git.rel(ctx.openPath.value)} messages={m.value}
+        onChanged={() => void ctx.filesChanged()}>
         {{
           actions: () => [
             <RepoSelect git={git} label={m.value.repository} workspace={m.value.workspaceRepository} />,

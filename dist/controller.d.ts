@@ -75,6 +75,7 @@ export declare function createController(rawApi: IdeApi, workspace: Workspace, d
     dark: Ref<boolean, boolean>;
     writes: Ref<number, number>;
     refreshFile: (path: string) => Promise<void>;
+    filesChanged: () => Promise<void>;
     workspace: Workspace;
     tree: import("vue").ShallowRef<TreeNode | null, TreeNode | null>;
     rows: import("vue").ComputedRef<TreeRow[]>;
