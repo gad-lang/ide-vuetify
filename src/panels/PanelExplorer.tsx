@@ -3,6 +3,9 @@
 // be uploaded via a dialog (with a target-folder picker) or dragged and dropped
 // onto a folder row (or the panel background = root). Without onUpload, the
 // upload button, URL import and drag-drop are all omitted.
+// A file or folder of the tree dragged onto a folder (or the background: the
+// root) is moved there (canMove): the folder under the drag lit, a closed one
+// opened after a moment, the move confirmed (from, to) when dropped.
 import { computed, defineComponent, inject, ref } from "vue";
 import { VBtn, VIcon } from "../vuetify";
 import { IdeControllerKey } from "../controller";
@@ -25,6 +28,53 @@ export default defineComponent({
     const reviewOpen = ref(false);
     const rawFiles = ref<RawFile[]>([]);
     const reviewDir = ref("");
+
+    // the move by dragging: the path dragged, the folder it would go into
+    // (null: none — not there, into itself, or where it is)
+    const MIME = "application/x-gad-ide-path";
+    const dragSrc = ref<string | null>(null);
+    const moveDir = ref<string | null>(null);
+    let openTimer: ReturnType<typeof setTimeout> | undefined;
+    let openFor = "";
+    const movable = (src: string, dir: string) =>
+      parentDir(src) !== dir && dir !== src && !dir.startsWith(src + "/");
+    // overMove marks dir as where the drag would drop (a folder row: opened
+    // when held over it)
+    function overMove(e: DragEvent, dir: string, row?: { dir: boolean; path: string }) {
+      const src = dragSrc.value;
+      if (src === null) return false;
+      e.stopPropagation();
+      if (!movable(src, dir)) {
+        moveDir.value = null;
+        return true;
+      }
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+      moveDir.value = dir;
+      if (row?.dir && !ctx.isExpanded(row.path) && openFor !== row.path) {
+        clearTimeout(openTimer);
+        openFor = row.path;
+        openTimer = setTimeout(() => {
+          if (moveDir.value === row.path && !ctx.isExpanded(row.path)) ctx.toggleDir(row.path);
+        }, 700);
+      }
+      return true;
+    }
+    function dropMove(e: DragEvent, dir: string) {
+      const src = dragSrc.value;
+      if (src === null) return false;
+      e.preventDefault();
+      e.stopPropagation();
+      endDrag();
+      if (movable(src, dir)) void ctx.dropMove(src, dir);
+      return true;
+    }
+    function endDrag() {
+      dragSrc.value = null;
+      moveDir.value = null;
+      openFor = "";
+      clearTimeout(openTimer);
+    }
 
     const parentDir = (path: string) => {
       const s = path.lastIndexOf("/");
@@ -91,10 +141,16 @@ export default defineComponent({
           </div>
         </div>
         <div
-          class={["pnl-body", { "pnl-body--drop": ctx.canUpload.value && dropDir.value === "" }]}
-          onDragover={ctx.canUpload.value ? (e: DragEvent) => { e.preventDefault(); dropDir.value = ""; } : undefined}
-          onDragleave={ctx.canUpload.value ? () => (dropDir.value = null) : undefined}
-          onDrop={ctx.canUpload.value ? (e: DragEvent) => { e.preventDefault(); void onDrop(e, ""); } : undefined}
+          class={["pnl-body", { "pnl-body--drop": (ctx.canUpload.value && dropDir.value === "") || moveDir.value === "" }]}
+          onDragover={(e: DragEvent) => {
+            if (overMove(e, "")) return;
+            if (ctx.canUpload.value) { e.preventDefault(); dropDir.value = ""; }
+          }}
+          onDragleave={() => { dropDir.value = null; moveDir.value = null; }}
+          onDrop={(e: DragEvent) => {
+            if (dropMove(e, "")) return;
+            if (ctx.canUpload.value) { e.preventDefault(); void onDrop(e, ""); }
+          }}
         >
           {ctx.rows.value.map((row) => {
             const rowDir = row.node.dir ? row.node.path : parentDir(row.node.path);
@@ -103,12 +159,29 @@ export default defineComponent({
                 key={row.node.path}
                 class={["pnl-row", {
                   "pnl-row--active": row.node.path === ctx.openPath.value,
-                  "pnl-row--drop": ctx.canUpload.value && dropDir.value === rowDir,
+                  "pnl-row--drop": ctx.canUpload.value && dragSrc.value === null && dropDir.value === rowDir,
+                  "pnl-row--movedrop": row.node.dir && moveDir.value === row.node.path,
+                  "pnl-row--dragged": dragSrc.value === row.node.path,
                 }]}
                 style={{ paddingLeft: 6 + row.depth * 14 + "px" }}
+                data-path={row.node.path}
+                draggable={ctx.canMove.value}
+                onDragstart={(e: DragEvent) => {
+                  if (!ctx.canMove.value || !e.dataTransfer) return;
+                  e.dataTransfer.setData(MIME, row.node.path);
+                  e.dataTransfer.effectAllowed = "move";
+                  dragSrc.value = row.node.path;
+                }}
+                onDragend={endDrag}
                 onClick={() => (row.node.dir ? ctx.toggleDir(row.node.path) : ctx.openFile(row.node.path))}
-                onDragover={ctx.canUpload.value ? (e: DragEvent) => { e.preventDefault(); e.stopPropagation(); dropDir.value = rowDir; } : undefined}
-                onDrop={ctx.canUpload.value ? (e: DragEvent) => { e.preventDefault(); e.stopPropagation(); void onDrop(e, rowDir); } : undefined}
+                onDragover={(e: DragEvent) => {
+                  if (overMove(e, rowDir, { dir: row.node.dir, path: row.node.path })) return;
+                  if (ctx.canUpload.value) { e.preventDefault(); e.stopPropagation(); dropDir.value = rowDir; }
+                }}
+                onDrop={(e: DragEvent) => {
+                  if (dropMove(e, rowDir)) return;
+                  if (ctx.canUpload.value) { e.preventDefault(); e.stopPropagation(); void onDrop(e, rowDir); }
+                }}
               >
                 {!row.node.dir && gadFileIconFor(row.node.path) ? (
                   <img
@@ -132,8 +205,11 @@ export default defineComponent({
               </div>
             );
           })}
-          {ctx.canUpload.value && dropDir.value !== null && (
+          {ctx.canUpload.value && dragSrc.value === null && dropDir.value !== null && (
             <div class="pnl-drop-hint">Drop into {dropDir.value || "/ (root)"}</div>
+          )}
+          {moveDir.value !== null && (
+            <div class="pnl-drop-hint" data-move-hint>{w.value.move} → /{moveDir.value}</div>
           )}
         </div>
         <input ref={fileInput} type="file" multiple style={{ display: "none" }} onChange={onPick} />

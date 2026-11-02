@@ -135,6 +135,7 @@ export declare function createController(rawApi: IdeApi, workspace: Workspace, d
         path: string;
         resolve: (dir: string | null) => void;
     } | null>;
+    dropMove: (path: string, dir: string) => Promise<void>;
     canExtract: import("vue").ComputedRef<boolean>;
     canEdit: import("vue").ComputedRef<boolean>;
     promptReq: Ref<{

@@ -364,6 +364,15 @@
   outline: 1px dashed rgb(var(--v-theme-primary));
   outline-offset: -1px;
 }
+/* a move by dragging: the folder it goes into lit, the row dragged faded */
+.pnl-row--movedrop {
+  background: rgba(var(--v-theme-primary), 0.22);
+  outline: 1px solid rgb(var(--v-theme-primary));
+  outline-offset: -1px;
+}
+.pnl-row--dragged {
+  opacity: 0.5;
+}
 
 /* Editor tabs + status bar */
 .editor-tabs {

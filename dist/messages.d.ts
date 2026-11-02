@@ -84,6 +84,10 @@ export interface IdeOwnMessages {
     renameOpenFile: string;
     /** title of the button that moves the file open. */
     moveOpenFile: string;
+    /** a drag onto a folder of the Explorer: the confirm's title, its from and to */
+    dropMoveTitle: string;
+    fromDir: string;
+    toDir: string;
     /** title of the button that deletes the file open. */
     deleteOpenFile: string;
     /** title of the button that hides the hidden files. */

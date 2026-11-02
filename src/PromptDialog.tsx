@@ -69,7 +69,7 @@ export const ConfirmDialog = defineComponent({
       >
         <VCard>
           <VCardTitle>{props.request?.title}</VCardTitle>
-          <VCardText>{props.request?.message}</VCardText>
+          <VCardText style="white-space: pre-line">{props.request?.message}</VCardText>
           <VCardActions>
             <VSpacer />
             <VBtn onClick={() => answer(false)}>{w.value.cancel}</VBtn>

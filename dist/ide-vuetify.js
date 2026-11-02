@@ -1,26 +1,26 @@
-var Si = Object.defineProperty;
-var xi = (e, a, l) => a in e ? Si(e, a, { enumerable: !0, configurable: !0, writable: !0, value: l }) : e[a] = l;
-var ve = (e, a, l) => xi(e, typeof a != "symbol" ? a + "" : a, l);
-import { computed as x, ref as v, shallowRef as ka, reactive as Se, watch as R, onScopeDispose as yi, defineComponent as H, createVNode as i, createTextVNode as S, Fragment as xe, inject as D, mergeProps as b, onMounted as He, onBeforeUnmount as De, h as ie, isVNode as Pi, provide as oa } from "vue";
-import { themeDark as bi, themeLight as Gi, DockviewVue as Zi } from "dockview-vue";
-import { DEFAULT_GIT_MESSAGES as Ai, useWords as Mi, useGitMessages as Bi, ChangesPanel as ki, GitPanel as ji, useStoredSize as da, ResizeHandle as ra, createHttpGitApi as et } from "@gad-lang/git-vuetify";
-import { ChangesPanel as Mo, DiffBrowser as Bo, DiffMergeView as ko, GIT_I18N_MESSAGES as jo, GIT_I18N_NAMESPACE as Ho, GIT_MESSAGES_PT_BR as Do, GitPanel as zo, LANGUAGES as No, ResizeHandle as Wo, createHttpGitApi as wo, languageExtensions as Eo, languageOf as Ro, renamedTo as Vo, statusColor as Lo, treePath as Yo, unchangedContent as To, useStoredSize as Fo } from "@gad-lang/git-vuetify";
-import { StateField as It, RangeSet as at, StateEffect as Da, Compartment as aa, EditorState as ba } from "@codemirror/state";
-import { gutter as Hi, EditorView as je, GutterMarker as Di, hoverTooltip as zi, Decoration as Ye, keymap as Ni } from "@codemirror/view";
-import { indentWithTab as Wi, defaultKeymap as wi, undo as Ei, redo as Ri } from "@codemirror/commands";
+var xi = Object.defineProperty;
+var yi = (e, a, l) => a in e ? xi(e, a, { enumerable: !0, configurable: !0, writable: !0, value: l }) : e[a] = l;
+var fe = (e, a, l) => yi(e, typeof a != "symbol" ? a + "" : a, l);
+import { computed as y, ref as v, shallowRef as ka, reactive as Se, watch as L, onScopeDispose as Pi, defineComponent as N, createVNode as i, createTextVNode as S, Fragment as xe, inject as E, mergeProps as Z, onMounted as He, onBeforeUnmount as ze, h as ie, isVNode as bi, provide as oa } from "vue";
+import { themeDark as Gi, themeLight as Zi, DockviewVue as Ai } from "dockview-vue";
+import { DEFAULT_GIT_MESSAGES as Mi, useWords as Bi, useGitMessages as ki, ChangesPanel as ji, GitPanel as Di, useStoredSize as da, ResizeHandle as ra, createHttpGitApi as et } from "@gad-lang/git-vuetify";
+import { ChangesPanel as Bo, DiffBrowser as ko, DiffMergeView as jo, GIT_I18N_MESSAGES as Do, GIT_I18N_NAMESPACE as Ho, GIT_MESSAGES_PT_BR as zo, GitPanel as No, LANGUAGES as Wo, ResizeHandle as Eo, createHttpGitApi as wo, languageExtensions as Ro, languageOf as Vo, renamedTo as Lo, statusColor as To, treePath as Yo, unchangedContent as Fo, useStoredSize as Uo } from "@gad-lang/git-vuetify";
+import { StateField as It, RangeSet as at, StateEffect as Ha, Compartment as aa, EditorState as ba } from "@codemirror/state";
+import { gutter as Hi, EditorView as De, GutterMarker as zi, hoverTooltip as Ni, Decoration as Ye, keymap as Wi } from "@codemirror/view";
+import { indentWithTab as Ei, defaultKeymap as wi, undo as Ri, redo as Vi } from "@codemirror/commands";
 import { oneDark as tt } from "@codemirror/theme-one-dark";
-import { StreamLanguage as Vi } from "@codemirror/language";
-import { basicSetup as Li } from "codemirror";
+import { StreamLanguage as Li } from "@codemirror/language";
+import { basicSetup as Ti } from "codemirror";
 import { gad as Ga } from "@gad-lang/codemirror-gad";
 import { json as Yi } from "@codemirror/lang-json";
-import { html as Ti } from "@codemirror/lang-html";
-import { css as Fi } from "@codemirror/lang-css";
+import { html as Fi } from "@codemirror/lang-html";
+import { css as Ui } from "@codemirror/lang-css";
 import { javascript as ta } from "@codemirror/lang-javascript";
-import { markdown as Ui } from "@codemirror/lang-markdown";
-import { yaml as Ji } from "@codemirror/legacy-modes/mode/yaml";
+import { markdown as Ji } from "@codemirror/lang-markdown";
+import { yaml as Xi } from "@codemirror/legacy-modes/mode/yaml";
 import ye from "prismjs";
-import { registerGad as Xi, registerGadTemplate as Qi } from "@gad-lang/prism-gad";
-import { VSelect as Oi, VBtn as Ki, VTabs as _i, VTab as qi, VTextField as $i, VDialog as el, VCard as al, VCardTitle as tl, VCardText as il, VCardActions as ll, VSpacer as nl, VDivider as ol, VMenu as dl, VList as rl, VListItem as sl, VListSubheader as ul, VIcon as cl, VSwitch as Il, VCheckbox as gl, VWindow as pl, VWindowItem as ml, VCombobox as vl, VProgressLinear as fl, VBtnToggle as hl } from "vuetify/components";
+import { registerGad as Qi, registerGadTemplate as Oi } from "@gad-lang/prism-gad";
+import { VSelect as Ki, VBtn as _i, VTabs as qi, VTab as $i, VTextField as el, VDialog as al, VCard as tl, VCardTitle as il, VCardText as ll, VCardActions as nl, VSpacer as ol, VDivider as dl, VMenu as rl, VList as sl, VListItem as ul, VListSubheader as cl, VIcon as Il, VSwitch as gl, VCheckbox as pl, VWindow as ml, VWindowItem as vl, VCombobox as fl, VProgressLinear as hl, VBtnToggle as Cl } from "vuetify/components";
 const za = {
   preview: "Preview",
   settings: "Settings",
@@ -62,6 +62,9 @@ const za = {
   importFromUrl: "Import from URL",
   renameOpenFile: "Rename open file",
   moveOpenFile: "Move open file",
+  dropMoveTitle: "Move?",
+  fromDir: "From",
+  toDir: "To",
   deleteOpenFile: "Delete open file",
   hideHidden: "Hide hidden files",
   showHidden: "Show hidden files",
@@ -161,6 +164,9 @@ const za = {
   importFromUrl: "Importar de URL",
   renameOpenFile: "Renomear o arquivo aberto",
   moveOpenFile: "Mover o arquivo aberto",
+  dropMoveTitle: "Mover?",
+  fromDir: "De",
+  toDir: "Para",
   deleteOpenFile: "Excluir o arquivo aberto",
   hideHidden: "Ocultar arquivos ocultos",
   showHidden: "Mostrar arquivos ocultos",
@@ -219,25 +225,25 @@ const za = {
   resetConfirm: "Descartar todas as suas alterações e restaurar os exemplos?",
   replaceOne: '"%s" já existe — substituí-lo',
   replaceMany: "%d arquivos já existem — substituí-los"
-}, X = { ...Ai, ...za }, Cl = "gadIde", So = {
+}, Q = { ...Mi, ...za }, Sl = "gadIde", xo = {
   en: { gadIde: za },
   pt: { gadIde: gt }
-}, Q = Symbol("gad-ide-messages");
-function Sl(e) {
-  const a = Mi(Cl, { en: za, pt: gt }, e), l = Bi(e);
-  return x(() => ({ ...l.value, ...a.value }));
+}, O = Symbol("gad-ide-messages");
+function xl(e) {
+  const a = Bi(Sl, { en: za, pt: gt }, e), l = ki(e);
+  return y(() => ({ ...l.value, ...a.value }));
 }
-const Le = (e, ...a) => {
+const Te = (e, ...a) => {
   let l = 0;
   return e.replace(/%[sd]/g, () => String(a[l++] ?? ""));
-}, pt = Da.define(), mt = Da.define();
-class xl extends Di {
+}, pt = Ha.define(), mt = Ha.define();
+class yl extends zi {
   toDOM() {
     const a = document.createElement("span");
     return a.className = "cm-bp-dot", a.textContent = "●", a;
   }
 }
-const ja = new xl(), sa = It.define({
+const ja = new yl(), sa = It.define({
   create() {
     return at.empty;
   },
@@ -253,23 +259,23 @@ const ja = new xl(), sa = It.define({
     return e;
   }
 });
-function yl(e) {
+function Pl(e) {
   const a = [], l = e.state.field(sa).iter();
   for (; l.value; )
     a.push(e.state.doc.lineAt(l.from).number), l.next();
   return a.sort((t, n) => t - n);
 }
-function Pl(e, a) {
+function bl(e, a) {
   e.dispatch({ effects: pt.of(a) });
 }
-function bl(e, a) {
+function Gl(e, a) {
   let l = !1;
   return e.state.field(sa).between(a, a, () => {
     l = !0;
   }), l;
 }
-function Gl(e, a) {
-  const l = (t) => e(yl(t));
+function Zl(e, a) {
+  const l = (t) => e(Pl(t));
   return [
     sa,
     Hi({
@@ -280,20 +286,20 @@ function Gl(e, a) {
         // A single click toggles the breakpoint: it adds one on an empty line and
         // removes it when the line already has one.
         mousedown(t, n) {
-          return t.dispatch({ effects: mt.of({ pos: n.from, on: !bl(t, n.from) }) }), l(t), !0;
+          return t.dispatch({ effects: mt.of({ pos: n.from, on: !Gl(t, n.from) }) }), l(t), !0;
         },
         contextmenu(t, n, o) {
           return a ? (o.preventDefault(), a(t.state.doc.lineAt(n.from).number), !0) : !1;
         }
       }
     }),
-    je.baseTheme({
+    De.baseTheme({
       ".cm-breakpoint-gutter": { width: "1.1em", cursor: "pointer" },
       ".cm-breakpoint-gutter .cm-bp-dot": { color: "#e5484d", paddingLeft: "2px" }
     })
   ];
 }
-const vt = Da.define(), Zl = Ye.line({ class: "cm-debug-line" }), Al = Ye.mark({ class: "cm-debug-node" }), ia = (e) => /[A-Za-z0-9_]/.test(e);
+const vt = Ha.define(), Al = Ye.line({ class: "cm-debug-line" }), Ml = Ye.mark({ class: "cm-debug-node" }), ia = (e) => /[A-Za-z0-9_]/.test(e);
 function ft(e, a) {
   let l = Math.min(Math.max(a, 0), e.length);
   if (l >= e.length || !ia(e[l]))
@@ -304,26 +310,26 @@ function ft(e, a) {
   for (; n < e.length && ia(e[n]); ) n++;
   return n <= t ? null : { start: t, end: n, word: e.slice(t, n) };
 }
-function Ml(e, a) {
+function Bl(e, a) {
   if (!a || a.line < 1 || a.line > e.lines) return Ye.none;
-  const l = e.line(a.line), t = [Zl.range(l.from)], n = ft(l.text, a.col - 1);
-  return n && t.push(Al.range(l.from + n.start, l.from + n.end)), Ye.set(t, !0);
+  const l = e.line(a.line), t = [Al.range(l.from)], n = ft(l.text, a.col - 1);
+  return n && t.push(Ml.range(l.from + n.start, l.from + n.end)), Ye.set(t, !0);
 }
-const Bl = It.define({
+const kl = It.define({
   create() {
     return Ye.none;
   },
   update(e, a) {
     e = e.map(a.changes);
-    for (const l of a.effects) l.is(vt) && (e = Ml(a.state.doc, l.value));
+    for (const l of a.effects) l.is(vt) && (e = Bl(a.state.doc, l.value));
     return e;
   },
-  provide: (e) => je.decorations.from(e)
+  provide: (e) => De.decorations.from(e)
 });
-function kl(e, a) {
+function jl(e, a) {
   return [
-    Bl,
-    zi((l, t) => {
+    kl,
+    Ni((l, t) => {
       const n = l.state.doc.lineAt(t), o = ft(n.text, t - n.from);
       if (!o) return null;
       const s = e().get(o.word);
@@ -332,20 +338,20 @@ function kl(e, a) {
         end: n.from + o.end,
         above: !0,
         create() {
-          const p = document.createElement("div");
-          p.className = "cm-locals-tooltip";
+          const g = document.createElement("div");
+          g.className = "cm-locals-tooltip";
           const u = document.createElement("span");
           u.textContent = `${o.word}: ${s.type} = ${s.value}`;
           const r = document.createElement("button");
-          return r.className = "cm-locals-tooltip-copy", r.title = "Copy value", r.textContent = "⎘", r.onclick = (f) => {
-            var I;
-            f.stopPropagation(), (I = navigator.clipboard) == null || I.writeText(s.value).catch(() => {
+          return r.className = "cm-locals-tooltip-copy", r.title = "Copy value", r.textContent = "⎘", r.onclick = (h) => {
+            var f;
+            h.stopPropagation(), (f = navigator.clipboard) == null || f.writeText(s.value).catch(() => {
             });
-          }, p.append(u, r), { dom: p };
+          }, g.append(u, r), { dom: g };
         }
       } : null;
     }),
-    je.baseTheme({
+    De.baseTheme({
       ".cm-debug-line": { backgroundColor: "rgba(255, 200, 0, 0.18)" },
       ".cm-debug-node": {
         backgroundColor: "rgba(255, 160, 0, 0.45)",
@@ -425,12 +431,12 @@ function it(e, a, l) {
     case "json":
       return Yi();
     case "yaml":
-      return Vi.define(Ji);
+      return Li.define(Xi);
     case "html":
-      return Ti();
+      return Fi();
     case "css":
     case "scss":
-      return Fi();
+      return Ui();
     case "javascript":
       return ta();
     case "typescript":
@@ -440,33 +446,33 @@ function it(e, a, l) {
     case "tsx":
       return ta({ jsx: !0, typescript: !0 });
     case "markdown":
-      return Ui();
+      return Ji();
     default:
       return [];
   }
 }
 function lt(e) {
-  return je.theme({ "&": { fontSize: e + "px" } });
+  return De.theme({ "&": { fontSize: e + "px" } });
 }
-class jl {
+class Dl {
   constructor(a) {
-    ve(this, "view");
-    ve(this, "langComp", new aa());
-    ve(this, "themeComp", new aa());
-    ve(this, "roComp", new aa());
-    ve(this, "fontComp", new aa());
-    ve(this, "opts");
+    fe(this, "view");
+    fe(this, "langComp", new aa());
+    fe(this, "themeComp", new aa());
+    fe(this, "roComp", new aa());
+    fe(this, "fontComp", new aa());
+    fe(this, "opts");
     this.opts = a;
     const l = ba.create({
       doc: a.doc,
       extensions: [
-        Li,
-        Ni.of([Wi, ...wi]),
+        Ti,
+        Wi.of([Ei, ...wi]),
         this.langComp.of(a.customExtension ? a.customExtension() : it(a.language, a.diagnose)),
         this.themeComp.of(a.dark ? tt : []),
         this.roComp.of(ba.readOnly.of(!!a.readonly)),
         this.fontComp.of(lt(a.fontSize ?? 13)),
-        a.breakpoints === !1 ? [] : Gl(
+        a.breakpoints === !1 ? [] : Zl(
           (t) => {
             var n;
             return (n = a.onBreakpointsChange) == null ? void 0 : n.call(a, t);
@@ -476,17 +482,17 @@ class jl {
             return (n = a.onBreakpointContext) == null ? void 0 : n.call(a, t);
           }
         ),
-        kl(() => {
+        jl(() => {
           var t;
           return ((t = a.getLocals) == null ? void 0 : t.call(a)) ?? /* @__PURE__ */ new Map();
         }),
-        je.updateListener.of((t) => {
+        De.updateListener.of((t) => {
           var n;
           t.docChanged && ((n = a.onChange) == null || n.call(a, t.state.doc.toString()));
         })
       ]
     });
-    this.view = new je({ state: l, parent: a.parent });
+    this.view = new De({ state: l, parent: a.parent });
   }
   getValue() {
     return this.view.state.doc.toString();
@@ -509,17 +515,17 @@ class jl {
     this.view.dispatch({ effects: this.roComp.reconfigure(ba.readOnly.of(a)) });
   }
   setBreakpoints(a) {
-    Pl(this.view, a);
+    bl(this.view, a);
   }
   /** setDebugLine highlights the paused line (1-based), or clears it with 0. */
   setDebugLine(a, l = 1) {
     this.view.dispatch({ effects: vt.of(a >= 1 ? { line: a, col: l } : null) });
   }
   undo() {
-    Ei(this.view), this.view.focus();
+    Ri(this.view), this.view.focus();
   }
   redo() {
-    Ri(this.view), this.view.focus();
+    Vi(this.view), this.view.focus();
   }
   /** gotoLine moves the cursor to a 1-based line and scrolls it into view. */
   gotoLine(a, l = 1) {
@@ -532,12 +538,12 @@ class jl {
     this.view.destroy();
   }
 }
-Xi(ye);
 Qi(ye);
+Oi(ye);
 function ua(e) {
   return e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-function Re(e) {
+function Ve(e) {
   let a = ua(e);
   return a = a.replace(/`([^`]+)`/g, "<code>$1</code>"), a = a.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>"), a = a.replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>"), a;
 }
@@ -545,37 +551,37 @@ function Hl(e) {
   const a = e.split(`
 `);
   let l = "", t = [], n = [], o = [];
-  const s = (f) => f.trim().replace(/^\|/, "").replace(new RegExp("(?<!\\\\)\\|$"), "").split(new RegExp("(?<!\\\\)\\|")).map((I) => I.trim().replace(/\\\|/g, "|")), p = () => {
+  const s = (h) => h.trim().replace(/^\|/, "").replace(new RegExp("(?<!\\\\)\\|$"), "").split(new RegExp("(?<!\\\\)\\|")).map((f) => f.trim().replace(/\\\|/g, "|")), g = () => {
     if (!o.length) return;
-    const f = o;
-    if (o = [], f.length < 2 || !/^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(f[1])) {
-      t.push(...f);
+    const h = o;
+    if (o = [], h.length < 2 || !/^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(h[1])) {
+      t.push(...h);
       return;
     }
-    const I = (h, G) => "<tr>" + s(h).map((w) => `<${G}>${Re(w)}</${G}>`).join("") + "</tr>";
-    l += "<table><thead>" + I(f[0], "th") + "</thead><tbody>" + f.slice(2).map((h) => I(h, "td")).join("") + "</tbody></table>";
+    const f = (x, j) => "<tr>" + s(x).map((w) => `<${j}>${Ve(w)}</${j}>`).join("") + "</tr>";
+    l += "<table><thead>" + f(h[0], "th") + "</thead><tbody>" + h.slice(2).map((x) => f(x, "td")).join("") + "</tbody></table>";
   }, u = () => {
-    t.length && (l += "<p>" + Re(t.join(" ")) + "</p>", t = []);
+    t.length && (l += "<p>" + Ve(t.join(" ")) + "</p>", t = []);
   }, r = () => {
-    n.length && (l += "<ul>" + n.map((f) => "<li>" + Re(f) + "</li>").join("") + "</ul>", n = []);
+    n.length && (l += "<ul>" + n.map((h) => "<li>" + Ve(h) + "</li>").join("") + "</ul>", n = []);
   };
-  for (const f of a) {
-    const I = f.trimEnd(), h = /^(#{1,6})\s+(.*)$/.exec(I), G = /^\s*[-*]\s+(.*)$/.exec(I), w = /^\s*>\s?(.*)$/.exec(I);
-    if (/^\s*\|/.test(I)) {
-      u(), r(), o.push(I);
+  for (const h of a) {
+    const f = h.trimEnd(), x = /^(#{1,6})\s+(.*)$/.exec(f), j = /^\s*[-*]\s+(.*)$/.exec(f), w = /^\s*>\s?(.*)$/.exec(f);
+    if (/^\s*\|/.test(f)) {
+      u(), r(), o.push(f);
       continue;
     }
-    if (p(), I.trim() === "")
+    if (g(), f.trim() === "")
       u(), r();
-    else if (h) {
+    else if (x) {
       u(), r();
-      const j = h[1].length;
-      let P = h[2], M = "";
-      const z = /\s*\{data-src-pos="(\d+,\d+)"\}\s*$/.exec(P);
-      z && (M = ` data-src-pos="${z[1]}"`, P = P.slice(0, z.index)), l += `<h${j}${M}>${Re(P)}</h${j}>`;
-    } else G ? (u(), n.push(G[1])) : n.length && /^\s+\S/.test(f) ? n[n.length - 1] += " " + I.trim() : w ? (u(), r(), l += "<blockquote>" + Re(w[1]) + "</blockquote>") : (r(), t.push(I));
+      const H = x[1].length;
+      let G = x[2], k = "";
+      const z = /\s*\{data-src-pos="(\d+,\d+)"\}\s*$/.exec(G);
+      z && (k = ` data-src-pos="${z[1]}"`, G = G.slice(0, z.index)), l += `<h${H}${k}>${Ve(G)}</h${H}>`;
+    } else j ? (u(), n.push(j[1])) : n.length && /^\s+\S/.test(h) ? n[n.length - 1] += " " + f.trim() : w ? (u(), r(), l += "<blockquote>" + Ve(w[1]) + "</blockquote>") : (r(), t.push(f));
   }
-  return p(), u(), r(), l;
+  return g(), u(), r(), l;
 }
 function Na(e) {
   const a = e.split("```");
@@ -586,25 +592,25 @@ function Na(e) {
       const s = n.indexOf(`
 `);
       if (s >= 0) {
-        const h = n.slice(0, s).trim();
-        /^[a-zA-Z][\w-]*$/.test(h) && (o = h.toLowerCase(), n = n.slice(s + 1));
+        const x = n.slice(0, s).trim();
+        /^[a-zA-Z][\w-]*$/.test(x) && (o = x.toLowerCase(), n = n.slice(s + 1));
       }
       n = n.replace(/\n$/, "");
-      const p = ye.languages[o] || ye.languages.gad, u = n.split(`
+      const g = ye.languages[o] || ye.languages.gad, u = n.split(`
 `);
-      let r = "", f = [];
-      const I = () => {
-        if (!f.length) return;
-        const h = f.join(`
+      let r = "", h = [];
+      const f = () => {
+        if (!h.length) return;
+        const x = h.join(`
 `);
-        r += p ? ye.highlight(h, p, o) : ua(h), r && !r.endsWith(`
+        r += g ? ye.highlight(x, g, o) : ua(x), r && !r.endsWith(`
 `) && (r += `
-`), f = [];
+`), h = [];
       };
-      for (const h of u)
-        h.startsWith(">>> ") ? (I(), r += `<span class="doc-result">${ua(h)}</span>
-`) : f.push(h);
-      I(), r = r.replace(/\n$/, ""), l += `<pre class="doc-code language-${o}"><code>${r}</code></pre>`;
+      for (const x of u)
+        x.startsWith(">>> ") ? (f(), r += `<span class="doc-result">${ua(x)}</span>
+`) : h.push(x);
+      f(), r = r.replace(/\n$/, ""), l += `<pre class="doc-code language-${o}"><code>${r}</code></pre>`;
     } else
       l += Hl(a[t]);
   return l;
@@ -613,7 +619,7 @@ function nt(e) {
   return e.length ? e.map((a) => (a.kind === "root" ? "" : `<h4>${ua(a.title || a.kind)}</h4>`) + Na(a.content)).join(`
 `) : '<p class="text-medium-emphasis">No documentation comments in this file.</p>';
 }
-const Dl = ["png", "jpg", "jpeg", "gif", "webp", "svg", "avif", "bmp", "ico"];
+const zl = ["png", "jpg", "jpeg", "gif", "webp", "svg", "avif", "bmp", "ico"];
 function Ct(e) {
   const a = /\.([^./]+)$/.exec(e.toLowerCase());
   switch (a == null ? void 0 : a[1]) {
@@ -628,11 +634,11 @@ function Ct(e) {
     case "gadx":
       return "gad";
     default:
-      return a && Dl.includes(a[1]) ? "image" : "none";
+      return a && zl.includes(a[1]) ? "image" : "none";
   }
 }
-const Ve = (e) => Ct(e) === "image", zl = '<p class="text-medium-emphasis">No documentation for this kind of file.</p>';
-function Nl(e, a) {
+const Le = (e) => Ct(e) === "image", Nl = '<p class="text-medium-emphasis">No documentation for this kind of file.</p>';
+function Wl(e, a) {
   switch (e) {
     case "html":
       return a;
@@ -641,7 +647,7 @@ function Nl(e, a) {
     case "image":
       return "";
     default:
-      return zl;
+      return Nl;
   }
 }
 function St(e) {
@@ -650,7 +656,7 @@ function St(e) {
     file: a
   }));
 }
-async function Wl(e) {
+async function El(e) {
   var t;
   const a = [];
   for (const n of Array.from(e.items)) {
@@ -663,7 +669,7 @@ async function Wl(e) {
 }
 async function xt(e, a, l) {
   if (e.isFile) {
-    l.push({ path: a + e.name, file: await Vl(e) });
+    l.push({ path: a + e.name, file: await Ll(e) });
     return;
   }
   const t = await Yl(e);
@@ -677,27 +683,27 @@ function wl(e) {
     return !1;
   }
 }
-function El(e) {
+function Rl(e) {
   let a = "";
   for (let l = 0; l < e.length; l += 32768) a += String.fromCharCode(...e.subarray(l, l + 32768));
   return btoa(a);
 }
 function yt(e, a) {
-  return wl(a) ? { path: e, content: new TextDecoder().decode(a) } : { path: e, content: "", bytes: El(a) };
+  return wl(a) ? { path: e, content: new TextDecoder().decode(a) } : { path: e, content: "", bytes: Rl(a) };
 }
 async function ot(e, a) {
   return yt(e, new Uint8Array(await a.arrayBuffer()));
 }
-async function Rl(e) {
+async function Vl(e) {
   const a = new Uint8Array(await e.arrayBuffer());
   let l = "";
   for (let t = 0; t < a.length; t++) l += String.fromCharCode(a[t]);
   return btoa(l);
 }
-function Vl(e) {
+function Ll(e) {
   return new Promise((a, l) => e.file(a, l));
 }
-async function Ll(e, a) {
+async function Tl(e, a) {
   const l = Number(e.headers.get("Content-Length") || 0);
   if (!e.body)
     return a(l ? 100 : -1), new Uint8Array(await e.arrayBuffer());
@@ -709,9 +715,9 @@ async function Ll(e, a) {
     r && (n.push(r), o += r.length, l && a(Math.min(100, Math.round(o / l * 100))));
   }
   const s = new Uint8Array(o);
-  let p = 0;
+  let g = 0;
   for (const u of n)
-    s.set(u, p), p += u.length;
+    s.set(u, g), g += u.length;
   return a(100), s;
 }
 function Yl(e) {
@@ -724,7 +730,7 @@ function Yl(e) {
     o();
   });
 }
-const Tl = [
+const Fl = [
   { extensions: ["gad"], icon: "mdi-language-go", language: "gad" },
   { extensions: ["gadt"], icon: "mdi-file-code-outline", language: "gadt" },
   { extensions: ["gadx"], icon: "mdi-xml", language: "gadx" },
@@ -738,23 +744,23 @@ const Tl = [
   { extensions: ["jsx"], icon: "mdi-language-javascript", language: "jsx" },
   { extensions: ["tsx"], icon: "mdi-language-typescript", language: "tsx" },
   { extensions: ["md", "mdx", "markdown"], icon: "mdi-language-markdown-outline", language: "markdown" }
-], Fl = "mdi-file-outline";
-function Ul(e) {
+], Ul = "mdi-file-outline";
+function Jl(e) {
   const a = e.lastIndexOf("/"), l = a === -1 ? e : e.slice(a + 1), t = l.lastIndexOf(".");
   return t === -1 ? "" : l.slice(t + 1).toLowerCase();
 }
-class Jl {
+class Xl {
   constructor(a = []) {
-    ve(this, "byExt", /* @__PURE__ */ new Map());
-    for (const l of [...Tl, ...a])
+    fe(this, "byExt", /* @__PURE__ */ new Map());
+    for (const l of [...Fl, ...a])
       for (const t of l.extensions) this.byExt.set(t.toLowerCase(), l);
   }
   handlerFor(a) {
-    return this.byExt.get(Ul(a));
+    return this.byExt.get(Jl(a));
   }
   iconFor(a) {
     var l;
-    return ((l = this.handlerFor(a)) == null ? void 0 : l.icon) ?? Fl;
+    return ((l = this.handlerFor(a)) == null ? void 0 : l.icon) ?? Ul;
   }
   /** languageFor returns the built-in EditorLanguage for a path, or "text" when
    * the handler has none / a custom extension factory (see extensionFor). */
@@ -771,232 +777,242 @@ class Jl {
     return typeof l == "function" ? l : void 0;
   }
 }
-const _ = Symbol("gad-ide-controller"), Xl = /* @__PURE__ */ new Set(["write", "mkfile", "mkdir", "del", "rename", "upload", "fetchUrl"]);
-function Ql(e, a) {
+const _ = Symbol("gad-ide-controller"), Ql = /* @__PURE__ */ new Set(["write", "mkfile", "mkdir", "del", "rename", "upload", "fetchUrl"]);
+function Ol(e, a) {
   return new Proxy(e, {
     get(l, t, n) {
       const o = Reflect.get(l, t, n);
-      return typeof o != "function" || !Xl.has(String(t)) ? o : (...s) => {
-        const p = o.apply(l, s);
-        return Promise.resolve(p).then(a, a), p;
+      return typeof o != "function" || !Ql.has(String(t)) ? o : (...s) => {
+        const g = o.apply(l, s);
+        return Promise.resolve(g).then(a, a), g;
       };
     }
   });
 }
-function Ol(e, a, l, t = {}) {
-  const n = v(0), o = Ql(e, () => n.value++), s = t.onReset, p = () => {
+function Kl(e, a, l, t = {}) {
+  const n = v(0), o = Ol(e, () => n.value++), s = t.onReset, g = () => {
     var d;
-    return ((d = t.getWords) == null ? void 0 : d.call(t)) ?? X;
-  }, u = x(() => {
+    return ((d = t.getWords) == null ? void 0 : d.call(t)) ?? Q;
+  }, u = y(() => {
     var d;
     return ((d = t.getReadonly) == null ? void 0 : d.call(t)) ?? !1;
-  }), r = (d) => x(() => {
-    var g;
-    return !u.value && (((g = a.actions) == null ? void 0 : g[d]) ?? !0);
-  }), f = r("create"), I = r("edit"), h = r("rename"), G = r("move"), w = r("delete"), j = x(() => r("import").value && !!o.upload), P = new Jl(t.fileTypes), M = (d) => P.iconFor(d), z = x(() => {
-    const d = /* @__PURE__ */ new Set(), g = (C) => {
-      for (const k of (C == null ? void 0 : C.children) ?? [])
-        k.dir ? g(k) : d.add(k.path);
+  }), r = (d) => y(() => {
+    var I;
+    return !u.value && (((I = a.actions) == null ? void 0 : I[d]) ?? !0);
+  }), h = r("create"), f = r("edit"), x = r("rename"), j = r("move"), w = r("delete"), H = y(() => r("import").value && !!o.upload), G = new Xl(t.fileTypes), k = (d) => G.iconFor(d), z = y(() => {
+    const d = /* @__PURE__ */ new Set(), I = (C) => {
+      for (const D of (C == null ? void 0 : C.children) ?? [])
+        D.dir ? I(D) : d.add(D.path);
     };
-    return g(B.value), d;
+    return I(m.value), d;
   });
-  function Z(d) {
+  function A(d) {
     return z.value.has(d);
   }
-  const B = ka(null), J = Se(/* @__PURE__ */ new Set()), N = v([]), W = v(-1), V = x(() => {
+  const m = ka(null), M = Se(/* @__PURE__ */ new Set()), b = v([]), W = v(-1), T = y(() => {
     var d;
-    return ((d = N.value[W.value]) == null ? void 0 : d.path) ?? "";
-  }), T = x({
+    return ((d = b.value[W.value]) == null ? void 0 : d.path) ?? "";
+  }), F = y({
     get: () => {
       var d;
-      return ((d = N.value[W.value]) == null ? void 0 : d.content) ?? "";
+      return ((d = b.value[W.value]) == null ? void 0 : d.content) ?? "";
     },
     set: (d) => {
-      const g = N.value[W.value];
-      g && (g.content = d);
+      const I = b.value[W.value];
+      I && (I.content = d);
     }
-  }), Pe = x(() => {
-    const d = [], g = (C, k) => {
-      for (const Y of C.children ?? [])
-        d.push({ node: Y, depth: k }), Y.dir && J.has(Y.path) && g(Y, k + 1);
+  }), Pe = y(() => {
+    const d = [], I = (C, D) => {
+      for (const R of C.children ?? [])
+        d.push({ node: R, depth: D }), R.dir && M.has(R.path) && I(R, D + 1);
     };
-    return B.value && g(B.value, 0), d;
+    return m.value && I(m.value, 0), d;
   }), te = v(!1);
   async function q() {
-    B.value = await o.tree(te.value);
-    const d = V.value.split("/");
-    for (let g = 1; g < d.length; g++) J.add(d.slice(0, g).join("/"));
+    m.value = await o.tree(te.value);
+    const d = T.value.split("/");
+    for (let I = 1; I < d.length; I++) M.add(d.slice(0, I).join("/"));
   }
-  async function Fe() {
+  async function Ue() {
     te.value = !te.value, await q();
   }
   async function le(d) {
-    const g = N.value.findIndex((k) => k.path === d);
-    if (g >= 0) {
-      W.value = g;
+    const I = b.value.findIndex((D) => D.path === d);
+    if (I >= 0) {
+      W.value = I;
       return;
     }
-    const C = Ve(d) ? "" : (await o.read(d)).content;
-    N.value.push({ path: d, content: C, saved: C }), W.value = N.value.length - 1;
+    const C = Le(d) ? "" : (await o.read(d)).content;
+    b.value.push({ path: d, content: C, saved: C }), W.value = b.value.length - 1;
   }
-  const Ue = (d) => {
-    const g = N.value.find((C) => C.path === d);
-    return !!g && g.content !== g.saved;
+  const Je = (d) => {
+    const I = b.value.find((C) => C.path === d);
+    return !!I && I.content !== I.saved;
   };
   function Ia(d) {
-    d >= 0 && d < N.value.length && (W.value = d);
-  }
-  function Je(d) {
-    d < 0 || d >= N.value.length || (N.value.splice(d, 1), W.value >= N.value.length ? W.value = N.value.length - 1 : W.value > d && W.value--);
+    d >= 0 && d < b.value.length && (W.value = d);
   }
   function Xe(d) {
-    J.has(d) ? J.delete(d) : J.add(d);
+    d < 0 || d >= b.value.length || (b.value.splice(d, 1), W.value >= b.value.length ? W.value = b.value.length - 1 : W.value > d && W.value--);
   }
-  function $(d) {
-    return J.has(d);
+  function Qe(d) {
+    M.has(d) ? M.delete(d) : M.add(d);
   }
-  const be = x(() => {
+  function ee(d) {
+    return M.has(d);
+  }
+  const be = y(() => {
     var d;
     return ((d = t.getAutosave) == null ? void 0 : d.call(t)) ?? !1;
   });
-  async function ze(d) {
-    !I.value || d.content === d.saved || (await o.write(d.path, d.content), d.saved = d.content);
+  async function Ne(d) {
+    !f.value || d.content === d.saved || (await o.write(d.path, d.content), d.saved = d.content);
   }
-  const fe = () => Promise.all(N.value.map(ze));
-  R(T, (d) => {
-    if (be.value !== !0 || !I.value) return;
-    const g = N.value[W.value];
-    g && (o.write(g.path, d), g.saved = d);
+  const he = () => Promise.all(b.value.map(Ne));
+  L(F, (d) => {
+    if (be.value !== !0 || !f.value) return;
+    const I = b.value[W.value];
+    I && (o.write(I.path, d), I.saved = d);
   });
   let Ie = null;
-  R(
+  L(
     be,
     (d) => {
-      Ie && (clearInterval(Ie), Ie = null), typeof d == "number" && d > 0 && (Ie = setInterval(() => void fe(), d));
+      Ie && (clearInterval(Ie), Ie = null), typeof d == "number" && d > 0 && (Ie = setInterval(() => void he(), d));
     },
     { immediate: !0 }
-  ), yi(() => {
+  ), Pi(() => {
     Ie && clearInterval(Ie);
   });
   function Ge() {
-    const d = V.value.lastIndexOf("/");
-    return d === -1 ? "" : V.value.slice(0, d + 1);
+    const d = T.value.lastIndexOf("/");
+    return d === -1 ? "" : T.value.slice(0, d + 1);
   }
   function Ze(d) {
-    for (const g of (d == null ? void 0 : d.children) ?? []) {
-      if (!g.dir) return g.path;
-      const C = Ze(g);
+    for (const I of (d == null ? void 0 : d.children) ?? []) {
+      if (!I.dir) return I.path;
+      const C = Ze(I);
       if (C) return C;
     }
     return null;
   }
-  const Qe = v(null), Oe = v(null);
-  function Ne(d, g, C = "") {
-    return new Promise((k) => Qe.value = { title: d, label: g, initial: C, resolve: k });
+  const Oe = v(null), Ke = v(null);
+  function We(d, I, C = "") {
+    return new Promise((D) => Oe.value = { title: d, label: I, initial: C, resolve: D });
   }
-  function c(d, g) {
-    return new Promise((C) => Oe.value = { title: d, message: g, resolve: C });
+  function c(d, I) {
+    return new Promise((C) => Ke.value = { title: d, message: I, resolve: C });
   }
-  async function m() {
-    const d = await Ne(p().newFile, p().fileNamePrompt, "untitled.gad");
+  async function p() {
+    const d = await We(g().newFile, g().fileNamePrompt, "untitled.gad");
     if (!d) return;
-    const g = Ge() + d;
-    await o.mkfile(g), await q(), await le(g);
+    const I = Ge() + d;
+    await o.mkfile(I), await q(), await le(I);
   }
-  async function A() {
-    const d = await Ne(p().newFolder, p().folderName, "folder");
+  async function B() {
+    const d = await We(g().newFolder, g().folderName, "folder");
     d && (await o.mkdir(Ge() + d), await q());
   }
-  async function L() {
-    const d = V.value;
-    if (!d || !await c(p().deleteFile, Le(p().deleteConfirm, d))) return;
+  async function Y() {
+    const d = T.value;
+    if (!d || !await c(g().deleteFile, Te(g().deleteConfirm, d))) return;
     await o.del(d);
-    const g = N.value.findIndex((C) => C.path === d);
-    g >= 0 && Je(g), await q();
+    const I = b.value.findIndex((C) => C.path === d);
+    I >= 0 && Xe(I), await q();
   }
-  async function U() {
-    const d = V.value;
+  async function J() {
+    const d = T.value;
     if (!d) return;
-    const g = d.lastIndexOf("/"), C = g === -1 ? "" : d.slice(0, g + 1), k = await Ne(p().rename, p().newName, d.slice(g + 1));
-    !k || C + k === d || (await o.rename(d, C + k), he(d, C + k), await q());
+    const I = d.lastIndexOf("/"), C = I === -1 ? "" : d.slice(0, I + 1), D = await We(g().rename, g().newName, d.slice(I + 1));
+    !D || C + D === d || (await o.rename(d, C + D), pe(d, C + D), await q());
   }
-  const F = v(null);
+  const U = v(null);
   async function ge() {
-    const d = V.value;
+    const d = T.value;
     if (!d) return;
-    const g = await new Promise((k) => F.value = { path: d, resolve: k });
-    if (F.value = null, g === null) return;
-    const C = (g ? g.replace(/\/$/, "") + "/" : "") + d.slice(d.lastIndexOf("/") + 1);
-    C !== d && (await o.rename(d, C), he(d, C), await q());
+    const I = await new Promise((D) => U.value = { path: d, resolve: D });
+    if (U.value = null, I === null) return;
+    const C = (I ? I.replace(/\/$/, "") + "/" : "") + d.slice(d.lastIndexOf("/") + 1);
+    C !== d && (await o.rename(d, C), pe(d, C), await q());
   }
-  function he(d, g) {
-    const C = N.value.find((k) => k.path === d);
-    C && (C.path = g);
+  function pe(d, I) {
+    for (const C of b.value)
+      C.path === d ? C.path = I : C.path.startsWith(d + "/") && (C.path = I + C.path.slice(d.length));
   }
-  async function We() {
-    if (!s || !await c(p().resetWorkspace, p().resetConfirm)) return;
-    await s(), N.value = [], W.value = -1, await q();
-    const d = Ze(B.value);
+  async function Ee(d, I) {
+    const C = d.slice(d.lastIndexOf("/") + 1), D = d.includes("/") ? d.slice(0, d.lastIndexOf("/")) : "";
+    if (!j.value || D === I || I === d || I.startsWith(d + "/")) return;
+    const R = (Be) => "/" + Be;
+    if (!await c(g().dropMoveTitle, `${C}
+${g().fromDir}: ${R(D)}
+${g().toDir}: ${R(I)}`)) return;
+    const X = (I ? I + "/" : "") + C;
+    await o.rename(d, X), pe(d, X), await q();
+  }
+  async function Ht() {
+    if (!s || !await c(g().resetWorkspace, g().resetConfirm)) return;
+    await s(), b.value = [], W.value = -1, await q();
+    const d = Ze(m.value);
     d && await le(d);
   }
-  const Dt = x(() => !!s);
-  async function ga(d, g) {
+  const zt = y(() => !!s);
+  async function ga(d, I) {
     if (!d.length) return;
-    const C = (g ?? Ge().replace(/\/$/, "")).replace(/\/$/, ""), k = C ? C + "/" : "", Y = d.map((O) => ({ ...O, path: k + O.path }));
-    if (t.onUpload) await t.onUpload(Y, C);
-    else if (j.value)
-      for (const O of Y) O.archive || await o.upload([O]);
-    else for (const O of Y) !O.archive && !O.bytes && await o.write(O.path, O.content);
+    const C = (I ?? Ge().replace(/\/$/, "")).replace(/\/$/, ""), D = C ? C + "/" : "", R = d.map((X) => ({ ...X, path: D + X.path }));
+    if (t.onUpload) await t.onUpload(R, C);
+    else if (H.value)
+      for (const X of R) X.archive || await o.upload([X]);
+    else for (const X of R) !X.archive && !X.bytes && await o.write(X.path, X.content);
     await q();
-    const ee = Y.find((O) => !O.archive);
-    ee && await le(ee.path);
+    const $ = R.find((X) => !X.archive);
+    $ && await le($.path);
   }
-  const zt = v(!1), Ae = v(0);
-  function Ea(d) {
-    const g = d.toLowerCase();
-    if (g.endsWith(".zip")) return "zip";
-    if (g.endsWith(".tar.gz") || g.endsWith(".tgz")) return "tar.gz";
-    if (g.endsWith(".tar")) return "tar";
+  const Nt = v(!1), Ae = v(0);
+  function wa(d) {
+    const I = d.toLowerCase();
+    if (I.endsWith(".zip")) return "zip";
+    if (I.endsWith(".tar.gz") || I.endsWith(".tgz")) return "tar.gz";
+    if (I.endsWith(".tar")) return "tar";
   }
-  async function Nt(d, g, C = "") {
-    if (Ae.value = 0, j.value && !t.onUpload) {
+  async function Wt(d, I, C = "") {
+    if (Ae.value = 0, H.value && !t.onUpload) {
       Ae.value = -1;
       try {
-        const k = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), Y = C.replace(/\/$/, ""), ee = (Y ? Y + "/" : "") + k;
-        await o.fetchUrl(d, ee), await q(), await le(ee);
+        const D = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), R = C.replace(/\/$/, ""), $ = (R ? R + "/" : "") + D;
+        await o.fetchUrl(d, $), await q(), await le($);
       } finally {
         Ae.value = 0;
       }
       return;
     }
     try {
-      const k = await fetch(d);
-      if (!k.ok) throw new Error(`${d}: HTTP ${k.status}`);
-      const Y = await Ll(k, (ea) => Ae.value = ea), ee = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), O = Ea(ee);
-      if (g && O) {
-        let ea = "";
-        for (let Pa = 0; Pa < Y.length; Pa++) ea += String.fromCharCode(Y[Pa]);
-        await ga([{ path: ee, content: "", archive: O, bytes: btoa(ea) }], C);
+      const D = await fetch(d);
+      if (!D.ok) throw new Error(`${d}: HTTP ${D.status}`);
+      const R = await Tl(D, (Be) => Ae.value = Be), $ = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), X = wa($);
+      if (I && X) {
+        let Be = "";
+        for (let Pa = 0; Pa < R.length; Pa++) Be += String.fromCharCode(R[Pa]);
+        await ga([{ path: $, content: "", archive: X, bytes: btoa(Be) }], C);
       } else
-        await ga([yt(ee, Y)], C);
+        await ga([yt($, R)], C);
     } finally {
       Ae.value = 0;
     }
   }
   const pa = (d) => {
-    const g = ht(d);
-    return g === "gadx" ? "gadx" : g === "gadt" ? "gadTemplate" : "gad";
-  }, Wt = (d, g) => o.diagnose(d, g), ne = v(!1), Ke = v(null), Ra = () => ({ source: T.value, path: V.value, args: [] });
+    const I = ht(d);
+    return I === "gadx" ? "gadx" : I === "gadt" ? "gadTemplate" : "gad";
+  }, Et = (d, I) => o.diagnose(d, I), ne = v(!1), _e = v(null), Ra = () => ({ source: F.value, path: T.value, args: [] });
   async function Va(d) {
-    const g = d ?? Ra();
+    const I = d ?? Ra();
     ne.value = !0;
     try {
-      Ke.value = await o.run({
-        source: g.source,
-        path: g.path,
-        sourceType: pa(g.path),
-        args: g.args,
-        tagEncode: g.tagEncode || void 0
+      _e.value = await o.run({
+        source: I.source,
+        path: I.path,
+        sourceType: pa(I.path),
+        args: I.args,
+        tagEncode: I.tagEncode || void 0
       });
     } finally {
       ne.value = !1;
@@ -1005,137 +1021,137 @@ function Ol(e, a, l, t = {}) {
   async function wt() {
     ne.value = !0;
     try {
-      const d = await o.format(T.value);
-      d.ok ? T.value = d.source : Ke.value = { ok: !1, stdout: "", stderr: "", result: "", diagnostics: d.diagnostics };
+      const d = await o.format(F.value);
+      d.ok ? F.value = d.source : _e.value = { ok: !1, stdout: "", stderr: "", result: "", diagnostics: d.diagnostics };
     } finally {
       ne.value = !1;
     }
   }
   const ma = ka(null);
-  function Et(d) {
+  function Rt(d) {
     ma.value = d;
   }
-  async function Rt() {
-    const d = N.value[W.value];
-    !d || Ve(d.path) || !I.value || (await o.write(d.path, d.content), d.saved = d.content);
+  async function Vt() {
+    const d = b.value[W.value];
+    !d || Le(d.path) || !f.value || (await o.write(d.path, d.content), d.saved = d.content);
   }
-  async function Vt(d) {
-    const g = N.value.find((k) => k.path === d);
-    if (!g || g.content !== g.saved || Ve(d)) return;
+  async function Lt(d) {
+    const I = b.value.find((D) => D.path === d);
+    if (!I || I.content !== I.saved || Le(d)) return;
     const C = (await o.read(d)).content;
-    g.content === g.saved && (g.content = C, g.saved = C);
+    I.content === I.saved && (I.content = C, I.saved = C);
   }
-  async function Lt() {
-    const d = N.value[W.value];
+  async function Tt() {
+    const d = b.value[W.value];
     if (!d) return;
-    if (Ve(d.path)) {
+    if (Le(d.path)) {
       fa.value++;
       return;
     }
-    const g = (await o.read(d.path)).content;
-    d.content = g, d.saved = g;
+    const I = (await o.read(d.path)).content;
+    d.content = I, d.saved = I;
   }
   const we = v(t.initialFontSize ?? 13);
   function va(d) {
-    var g;
-    we.value = Math.max(8, Math.min(32, Math.round(d))), (g = t.onFontSize) == null || g.call(t, we.value);
+    var I;
+    we.value = Math.max(8, Math.min(32, Math.round(d))), (I = t.onFontSize) == null || I.call(t, we.value);
   }
-  const Yt = () => va(we.value + 1), Tt = () => va(we.value - 1);
-  function Ft() {
+  const Yt = () => va(we.value + 1), Ft = () => va(we.value - 1);
+  function Ut() {
     var d;
     (d = ma.value) == null || d.undo();
   }
-  function Ut() {
+  function Jt() {
     var d;
     (d = ma.value) == null || d.redo();
   }
-  const La = v(""), Jt = x(() => Ve(V.value)), fa = v(0), Xt = (d) => o.rawUrl ? o.rawUrl(d) + (fa.value ? "&v=" + fa.value : "") : "", Ya = v("none");
-  let Ta = 0;
+  const La = v(""), Xt = y(() => Le(T.value)), fa = v(0), Qt = (d) => o.rawUrl ? o.rawUrl(d) + (fa.value ? "&v=" + fa.value : "") : "", Ta = v("none");
+  let Ya = 0;
   async function Fa() {
-    const d = ++Ta, g = Ct(V.value);
+    const d = ++Ya, I = Ct(T.value);
     let C;
-    if (g === "gad" && T.value.trim()) {
-      const k = await o.doc(T.value);
-      C = nt(k);
-    } else g === "gad" ? C = nt([]) : C = Nl(g, T.value);
-    d === Ta && (Ya.value = g, La.value = C);
+    if (I === "gad" && F.value.trim()) {
+      const D = await o.doc(F.value);
+      C = nt(D);
+    } else I === "gad" ? C = nt([]) : C = Wl(I, F.value);
+    d === Ya && (Ta.value = I, La.value = C);
   }
-  const pe = v(null), me = v(null), ha = v(""), Ca = Se({}), Me = Se({});
+  const me = v(null), ve = v(null), ha = v(""), Ca = Se({}), Me = Se({});
   function Ce(d) {
     return d && Ca[d] || [];
   }
   function Ua(d) {
     return d && Me[d] || {};
   }
-  function Qt() {
+  function Ot() {
     const d = {};
-    for (const [g, C] of Object.entries(Ca)) C.length && (d[g] = C);
+    for (const [I, C] of Object.entries(Ca)) C.length && (d[I] = C);
     return d;
   }
-  function _e(d, g) {
-    const C = [...new Set(g)].sort((Y, ee) => Y - ee);
+  function qe(d, I) {
+    const C = [...new Set(I)].sort((R, $) => R - $);
     Ca[d] = C;
-    const k = Me[d];
-    if (k)
-      for (const Y of Object.keys(k)) C.includes(Number(Y)) || delete k[Number(Y)];
+    const D = Me[d];
+    if (D)
+      for (const R of Object.keys(D)) C.includes(Number(R)) || delete D[Number(R)];
   }
-  function Ot(d, g, C) {
-    Me[d] || (Me[d] = {}), Me[d][g] = { ...Me[d][g] || {}, ...C }, Ce(d).includes(g) || _e(d, [...Ce(d), g]);
+  function Kt(d, I, C) {
+    Me[d] || (Me[d] = {}), Me[d][I] = { ...Me[d][I] || {}, ...C }, Ce(d).includes(I) || qe(d, [...Ce(d), I]);
   }
-  function Kt(d, g) {
-    _e(d, Ce(d).filter((C) => C !== g));
+  function _t(d, I) {
+    qe(d, Ce(d).filter((C) => C !== I));
   }
-  function _t(d) {
-    const g = Ua(d);
+  function qt(d) {
+    const I = Ua(d);
     return Ce(d).map((C) => {
-      var k, Y;
-      return { line: C, disabled: (k = g[C]) == null ? void 0 : k.disabled, condition: (Y = g[C]) == null ? void 0 : Y.condition };
+      var D, R;
+      return { line: C, disabled: (D = I[C]) == null ? void 0 : D.disabled, condition: (R = I[C]) == null ? void 0 : R.condition };
     });
   }
-  const qt = x({
-    get: () => Ce(V.value),
-    set: (d) => _e(V.value, d)
+  const $t = y({
+    get: () => Ce(T.value),
+    set: (d) => qe(T.value, d)
   }), Sa = v({ line: 0, seq: 0 });
   function Ja(d) {
     Sa.value = { line: d, seq: Sa.value.seq + 1 };
   }
-  async function $t(d, g) {
-    d && d !== V.value && await le(d), Ja(g);
+  async function ei(d, I) {
+    d && d !== T.value && await le(d), Ja(I);
   }
   const Xa = v(null);
-  function ei(d, g) {
-    Xa.value = { path: d, line: g };
+  function ai(d, I) {
+    Xa.value = { path: d, line: I };
   }
-  const ai = x(() => {
+  const ti = y(() => {
     var d;
-    return ((d = me.value) == null ? void 0 : d.state) === "stopped" ? me.value.line ?? 0 : 0;
-  }), ti = x(() => {
+    return ((d = ve.value) == null ? void 0 : d.state) === "stopped" ? ve.value.line ?? 0 : 0;
+  }), ii = y(() => {
     var d;
-    return ((d = me.value) == null ? void 0 : d.column) ?? 1;
-  }), ii = x(() => {
+    return ((d = ve.value) == null ? void 0 : d.column) ?? 1;
+  }), li = y(() => {
     var d;
-    return ((d = me.value) == null ? void 0 : d.state) === "stopped";
-  }), li = x(() => {
-    var g;
+    return ((d = ve.value) == null ? void 0 : d.state) === "stopped";
+  }), ni = y(() => {
+    var I;
     const d = /* @__PURE__ */ new Map();
-    for (const C of ((g = me.value) == null ? void 0 : g.locals) ?? []) d.set(C.name, C);
+    for (const C of ((I = ve.value) == null ? void 0 : I.locals) ?? []) d.set(C.name, C);
     return d;
-  }), ni = () => li.value;
+  }), oi = () => ni.value;
   function Qa(d) {
-    me.value = d, d.output && (ha.value += d.output), d.state === "terminated" || d.state === "error" ? pe.value = null : d.session && (pe.value = d.session);
+    ve.value = d, d.output && (ha.value += d.output), d.state === "terminated" || d.state === "error" ? me.value = null : d.session && (me.value = d.session);
   }
   async function Oa(d) {
-    const g = d ?? Ra();
-    ne.value = !0, ha.value = "", me.value = null, Ke.value = null;
+    const I = d ?? Ra();
+    ne.value = !0, ha.value = "", ve.value = null, _e.value = null;
     try {
       Qa(
         await o.dbgStart({
-          source: g.source,
-          path: g.path,
-          sourceType: pa(g.path),
-          args: g.args,
-          breakpoints: Ce(g.path),
-          breakpointSpecs: _t(g.path),
+          source: I.source,
+          path: I.path,
+          sourceType: pa(I.path),
+          args: I.args,
+          breakpoints: Ce(I.path),
+          breakpointSpecs: qt(I.path),
           stopOnEntry: !1
         })
       );
@@ -1143,191 +1159,192 @@ function Ol(e, a, l, t = {}) {
       ne.value = !1;
     }
   }
-  async function oi(d) {
-    if (pe.value) {
+  async function di(d) {
+    if (me.value) {
       ne.value = !0;
       try {
-        Qa(await o.dbgCmd(pe.value, d));
+        Qa(await o.dbgCmd(me.value, d));
       } finally {
         ne.value = !1;
       }
     }
   }
   const xa = v(""), Ka = v("");
-  async function di() {
-    if (!pe.value || !xa.value.trim()) return;
-    const d = await o.dbgEval(pe.value, xa.value, !0);
+  async function ri() {
+    if (!me.value || !xa.value.trim()) return;
+    const d = await o.dbgEval(me.value, xa.value, !0);
     Ka.value = d.ok ? d.value ?? "" : "error: " + (d.error ?? "");
   }
-  const ri = async (d) => {
-    const g = await o.inspect({
+  const si = async (d) => {
+    const I = await o.inspect({
       expr: d,
-      session: pe.value ?? void 0,
-      source: T.value,
-      path: V.value,
+      session: me.value ?? void 0,
+      source: F.value,
+      path: T.value,
       sourceType: _a.value
     });
-    return g.ok ? g.inspect ?? null : null;
-  }, _a = x(() => pa(V.value)), qe = x(() => {
+    return I.ok ? I.inspect ?? null : null;
+  }, _a = y(() => pa(T.value)), $e = y(() => {
     var d;
     return ((d = t.getRunProfiles) == null ? void 0 : d.call(t)) ?? [];
-  }), $e = x(() => {
+  }), ea = y(() => {
     var d;
     return ((d = t.getRunMode) == null ? void 0 : d.call(t)) ?? "debug";
-  }), Ee = v(null), si = v(!1), ya = x(() => qe.value.find((d) => d.name === Ee.value) ?? null), ui = x(() => {
+  }), Re = v(null), ui = v(!1), ya = y(() => $e.value.find((d) => d.name === Re.value) ?? null), ci = y(() => {
     var d;
-    return ((d = ya.value) == null ? void 0 : d.name) ?? p().currentFile;
-  }), ci = x(() => $e.value === "run" || $e.value === "debug"), Ii = x(() => $e.value === "debug");
+    return ((d = ya.value) == null ? void 0 : d.name) ?? g().currentFile;
+  }), Ii = y(() => ea.value === "run" || ea.value === "debug"), gi = y(() => ea.value === "debug");
   async function qa() {
     const d = ya.value;
-    return d ? { source: d.path === V.value ? T.value : (await o.read(d.path)).content, path: d.path, args: d.args, tagEncode: d.tagEncode } : { source: T.value, path: V.value, args: [] };
-  }
-  async function gi() {
-    await Va(await qa());
+    return d ? { source: d.path === T.value ? F.value : (await o.read(d.path)).content, path: d.path, args: d.args, tagEncode: d.tagEncode } : { source: F.value, path: T.value, args: [] };
   }
   async function pi() {
+    await Va(await qa());
+  }
+  async function mi() {
     await Oa(await qa());
   }
-  function mi(d) {
-    var g;
-    (g = t.emitRunProfiles) == null || g.call(t, [...qe.value.filter((C) => C.name !== d.name), d]), Ee.value = d.name;
-  }
   function vi(d) {
-    var g;
-    (g = t.emitRunProfiles) == null || g.call(t, qe.value.filter((C) => C.name !== d)), Ee.value === d && (Ee.value = null);
+    var I;
+    (I = t.emitRunProfiles) == null || I.call(t, [...$e.value.filter((C) => C.name !== d.name), d]), Re.value = d.name;
+  }
+  function fi(d) {
+    var I;
+    (I = t.emitRunProfiles) == null || I.call(t, $e.value.filter((C) => C.name !== d)), Re.value === d && (Re.value = null);
   }
   const $a = v(0);
-  function fi() {
+  function hi() {
     Fa(), $a.value++;
   }
-  const hi = v(!1);
-  async function Ci() {
+  const Ci = v(!1);
+  async function Si() {
     await q();
-    const d = a.openFile || Ze(B.value);
+    const d = a.openFile || Ze(m.value);
     d && await le(d);
   }
   return {
     api: o,
     dark: l,
     writes: n,
-    refreshFile: Vt,
+    refreshFile: Lt,
     workspace: a,
     // tree
-    tree: B,
+    tree: m,
     rows: Pe,
-    openPath: V,
-    source: T,
-    isExpanded: $,
-    toggleDir: Xe,
+    openPath: T,
+    source: F,
+    isExpanded: ee,
+    toggleDir: Qe,
     openFile: le,
-    tabs: N,
+    tabs: b,
     active: W,
     activateTab: Ia,
-    closeTab: Je,
-    isDirty: Ue,
+    closeTab: Xe,
+    isDirty: Je,
     autosave: be,
-    tabNameMax: x(() => {
+    tabNameMax: y(() => {
       var d;
       return ((d = t.getTabNameMax) == null ? void 0 : d.call(t)) ?? 25;
     }),
     showHidden: te,
-    toggleHidden: Fe,
-    newFile: m,
-    newDir: A,
-    removeOpen: L,
-    reset: We,
-    canReset: Dt,
+    toggleHidden: Ue,
+    newFile: p,
+    newDir: B,
+    removeOpen: Y,
+    reset: Ht,
+    canReset: zt,
     upload: ga,
-    uploadUrl: Nt,
-    urlDialog: zt,
+    uploadUrl: Wt,
+    urlDialog: Nt,
     uploadProgress: Ae,
-    pathExists: Z,
-    archiveKind: Ea,
+    pathExists: A,
+    archiveKind: wa,
     readonly: u,
-    fileTypes: P,
-    iconFor: M,
-    canUpload: x(() => (!!t.onUpload || j.value) && !u.value),
-    canCreate: f,
-    canRename: h,
-    canMove: G,
+    fileTypes: G,
+    iconFor: k,
+    canUpload: y(() => (!!t.onUpload || H.value) && !u.value),
+    canCreate: h,
+    canRename: x,
+    canMove: j,
     canDelete: w,
-    renameOpen: U,
+    renameOpen: J,
     moveOpen: ge,
-    moveReq: F,
+    moveReq: U,
+    dropMove: Ee,
     // an archive is extracted only by a host's onUpload
-    canExtract: x(() => !!t.onUpload),
-    canEdit: I,
-    promptReq: Qe,
-    confirmReq: Oe,
-    diagnose: Wt,
+    canExtract: y(() => !!t.onUpload),
+    canEdit: f,
+    promptReq: Oe,
+    confirmReq: Ke,
+    diagnose: Et,
     // run/format/doc
     busy: ne,
-    runRes: Ke,
+    runRes: _e,
     run: Va,
     format: wt,
     docHtml: La,
-    docKind: Ya,
+    docKind: Ta,
     refreshDoc: Fa,
-    isImage: Jt,
-    imageUrl: Xt,
+    isImage: Xt,
+    imageUrl: Qt,
     // editor actions
-    registerEditor: Et,
-    save: Rt,
-    reload: Lt,
-    undo: Ft,
-    redo: Ut,
+    registerEditor: Rt,
+    save: Vt,
+    reload: Tt,
+    undo: Ut,
+    redo: Jt,
     fontSize: we,
     incFont: Yt,
-    decFont: Tt,
+    decFont: Ft,
     setFontSize: va,
     // run/debug profiles + gating
-    runProfiles: qe,
-    runMode: $e,
-    activeProfile: Ee,
-    profileDialog: si,
+    runProfiles: $e,
+    runMode: ea,
+    activeProfile: Re,
+    profileDialog: ui,
     activeProfileObj: ya,
-    runLabel: ui,
-    canRun: ci,
-    canDebug: Ii,
-    runActive: gi,
-    debugActive: pi,
-    addProfile: mi,
-    deleteProfile: vi,
+    runLabel: ci,
+    canRun: Ii,
+    canDebug: gi,
+    runActive: pi,
+    debugActive: mi,
+    addProfile: vi,
+    deleteProfile: fi,
     docRequest: $a,
-    requestDocs: fi,
-    settingsOpen: hi,
+    requestDocs: hi,
+    settingsOpen: Ci,
     // debug
-    session: pe,
-    snap: me,
+    session: me,
+    snap: ve,
     dbgOutput: ha,
-    breakpoints: qt,
-    debugLine: ai,
-    debugColumn: ti,
-    stopped: ii,
-    getLocals: ni,
+    breakpoints: $t,
+    debugLine: ti,
+    debugColumn: ii,
+    stopped: li,
+    getLocals: oi,
     debugStart: Oa,
-    debugCmd: oi,
+    debugCmd: di,
     evalExpr: xa,
     evalOut: Ka,
-    doEval: di,
-    inspectFn: ri,
+    doEval: ri,
+    inspectFn: si,
     dialect: _a,
     // breakpoints
     bpFor: Ce,
     bpMetaFor: Ua,
-    allBreakpoints: Qt,
-    setFileBreakpoints: _e,
-    setBpMeta: Ot,
-    removeBreakpoint: Kt,
+    allBreakpoints: Ot,
+    setFileBreakpoints: qe,
+    setBpMeta: Kt,
+    removeBreakpoint: _t,
     gotoTarget: Sa,
     goto: Ja,
-    gotoFileLine: $t,
+    gotoFileLine: ei,
     bpDialog: Xa,
-    openBpCondition: ei,
-    init: Ci
+    openBpCondition: ai,
+    init: Si
   };
 }
-const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl = vl, ue = el, dt = ol, ae = cl, _l = rl, Za = sl, ql = ul, $l = dl, en = fl, ce = nl, bt = Il, ke = qi, Gt = _i, K = $i, an = pl, la = ml, Zt = /* @__PURE__ */ H({
+const P = _i, Fe = Ki, Pt = Cl, oe = tl, de = nl, re = ll, se = il, ke = pl, _l = fl, ue = al, dt = dl, ae = Il, ql = sl, Za = ul, $l = cl, en = rl, an = hl, ce = ol, bt = gl, je = $i, Gt = qi, K = el, tn = ml, la = vl, Zt = /* @__PURE__ */ N({
   name: "DirRow",
   props: {
     node: {
@@ -1374,7 +1391,7 @@ const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
       }, null))]);
     };
   }
-}), Wa = /* @__PURE__ */ H({
+}), Wa = /* @__PURE__ */ N({
   name: "DirTree",
   props: {
     root: {
@@ -1414,7 +1431,7 @@ const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
       }, null))]);
     };
   }
-}), tn = (e) => e.slice(e.lastIndexOf("/") + 1), rt = (e, a) => e ? e + "/" + a : a, ln = /* @__PURE__ */ H({
+}), ln = (e) => e.slice(e.lastIndexOf("/") + 1), rt = (e, a) => e ? e + "/" + a : a, nn = /* @__PURE__ */ N({
   name: "UploadReviewDialog",
   props: {
     modelValue: {
@@ -1437,40 +1454,40 @@ const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
   setup(e, {
     emit: a
   }) {
-    const l = D(_), t = D(Q, x(() => X)), n = v(""), o = v(""), s = v(!0), p = v(!1), u = v(!1), r = v(!1), f = x(() => e.raw.length === 1), I = x(() => f.value ? l.archiveKind(o.value) : void 0);
-    R(() => e.modelValue, (P) => {
-      P && (n.value = e.initialDir, o.value = f.value ? tn(e.raw[0].path) : "", s.value = !0, p.value = !1, u.value = !1);
+    const l = E(_), t = E(O, y(() => Q)), n = v(""), o = v(""), s = v(!0), g = v(!1), u = v(!1), r = v(!1), h = y(() => e.raw.length === 1), f = y(() => h.value ? l.archiveKind(o.value) : void 0);
+    L(() => e.modelValue, (G) => {
+      G && (n.value = e.initialDir, o.value = h.value ? ln(e.raw[0].path) : "", s.value = !0, g.value = !1, u.value = !1);
     });
-    const h = x(() => f.value ? I.value && s.value ? [] : [rt(n.value, o.value)] : e.raw.map((P) => rt(n.value, P.path))), G = x(() => h.value.filter((P) => l.pathExists(P))), w = x(() => G.value.length > 0 && !p.value);
-    async function j() {
+    const x = y(() => h.value ? f.value && s.value ? [] : [rt(n.value, o.value)] : e.raw.map((G) => rt(n.value, G.path))), j = y(() => x.value.filter((G) => l.pathExists(G))), w = y(() => j.value.length > 0 && !g.value);
+    async function H() {
       r.value = !0;
       try {
-        let P;
-        f.value && I.value && s.value ? P = [{
+        let G;
+        h.value && f.value && s.value ? G = [{
           path: o.value,
           content: "",
-          archive: I.value,
-          bytes: await Rl(e.raw[0].file)
-        }] : f.value ? P = [await ot(o.value, e.raw[0].file)] : P = await Promise.all(e.raw.map((M) => ot(M.path, M.file))), a("confirm", P, n.value), a("update:modelValue", !1);
+          archive: f.value,
+          bytes: await Vl(e.raw[0].file)
+        }] : h.value ? G = [await ot(o.value, e.raw[0].file)] : G = await Promise.all(e.raw.map((k) => ot(k.path, k.file))), a("confirm", G, n.value), a("update:modelValue", !1);
       } finally {
         r.value = !1;
       }
     }
-    return () => i(ue, b({
+    return () => i(ue, Z({
       modelValue: e.modelValue
     }, {
-      "onUpdate:modelValue": (P) => a("update:modelValue", P)
+      "onUpdate:modelValue": (G) => a("update:modelValue", G)
     }, {
       maxWidth: "520"
     }), {
       default: () => [i(oe, null, {
         default: () => [i(se, null, {
-          default: () => [f.value ? t.value.uploadFile : Le(t.value.uploadNFiles, e.raw.length)]
+          default: () => [h.value ? t.value.uploadFile : Te(t.value.uploadNFiles, e.raw.length)]
         }), i(re, null, {
-          default: () => [f.value ? i(K, b({
+          default: () => [h.value ? i(K, Z({
             modelValue: o.value
           }, {
-            "onUpdate:modelValue": (P) => o.value = P
+            "onUpdate:modelValue": (G) => o.value = G
           }, {
             label: t.value.destinationName,
             density: "compact",
@@ -1479,17 +1496,17 @@ const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
             class: "mb-2"
           }), null) : i("div", {
             class: "text-caption mb-2"
-          }, [e.raw.slice(0, 6).map((P) => i("div", {
+          }, [e.raw.slice(0, 6).map((G) => i("div", {
             class: "pnl-ellipsis",
-            key: P.path
-          }, [P.path])), e.raw.length > 6 && i("div", {
+            key: G.path
+          }, [G.path])), e.raw.length > 6 && i("div", {
             class: "text-medium-emphasis"
-          }, [S("…and "), e.raw.length - 6, S(" more")])]), f.value && I.value && i(bt, b({
+          }, [S("…and "), e.raw.length - 6, S(" more")])]), h.value && f.value && i(bt, Z({
             modelValue: s.value
           }, {
-            "onUpdate:modelValue": (P) => s.value = !!P
+            "onUpdate:modelValue": (G) => s.value = !!G
           }, {
-            label: Le(t.value.extractArchiveOf, I.value.toUpperCase()),
+            label: Te(t.value.extractArchiveOf, f.value.toUpperCase()),
             density: "compact",
             hideDetails: !0,
             color: "primary",
@@ -1507,7 +1524,7 @@ const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
             readonly: !0,
             hideDetails: !0,
             onClick: () => u.value = !u.value
-          }, null), i(y, {
+          }, null), i(P, {
             size: "small",
             variant: "text",
             icon: "mdi-folder-search-outline",
@@ -1518,30 +1535,30 @@ const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
           }, [i(Wa, {
             root: l.tree.value,
             selected: n.value,
-            onSelect: (P) => {
-              n.value = P, u.value = !1;
+            onSelect: (G) => {
+              n.value = G, u.value = !1;
             }
-          }, null)]), G.value.length > 0 && i(Be, b({
-            modelValue: p.value
+          }, null)]), j.value.length > 0 && i(ke, Z({
+            modelValue: g.value
           }, {
-            "onUpdate:modelValue": (P) => p.value = !!P
+            "onUpdate:modelValue": (G) => g.value = !!G
           }, {
-            label: G.value.length === 1 ? Le(t.value.replaceOne, G.value[0]) : Le(t.value.replaceMany, G.value.length),
+            label: j.value.length === 1 ? Te(t.value.replaceOne, j.value[0]) : Te(t.value.replaceMany, j.value.length),
             density: "compact",
             hideDetails: !0,
             color: "error",
             class: "mt-2"
           }), null)]
         }), i(de, null, {
-          default: () => [i(ce, null, null), i(y, {
+          default: () => [i(ce, null, null), i(P, {
             onClick: () => a("update:modelValue", !1)
           }, {
             default: () => [t.value.cancel]
-          }), i(y, {
+          }), i(P, {
             color: "primary",
             loading: r.value,
-            disabled: w.value || f.value && !o.value.trim(),
-            onClick: j
+            disabled: w.value || h.value && !o.value.trim(),
+            onClick: H
           }, {
             default: () => [t.value.upload]
           })]
@@ -1549,30 +1566,46 @@ const y = Ki, Te = Oi, Pt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
       })]
     });
   }
-}), nn = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjRDk3NzA2OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNGRUYzQzc7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgIDwvc3R5bGU+CiAgICA8L2RlZnM+CgogICAgPCEtLSBDSElGUkVTICh0b3BvLCB5PTApIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNCIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8cmVjdCB4PSI5IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8IS0tIE9SRUxIQVMgTEFURVJBSVMgLS0+CiAgICA8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPHJlY3QgeD0iMTIiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBDQUJFw4dBIEFGVU5JTEFEQSBQQVJBIEJBSVhPIChmb2NpbmhvIGRlIGdhemVsYSwgeT00IC0+IDE2KSAtLT4KICAgIDxyZWN0IHg9IjMiIHk9IjQiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSB0b3BvIGxhcmdvIChvbGhvcykgLS0+CiAgICA8cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjgiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gYWZ1bmlsYSAxIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIGZvY2luaG8gLS0+CgogICAgPHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjgiIGhlaWdodD0iNiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSIxMSIgd2lkdGg9IjYiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBMSVNUUkEgRkFDSUFMIENFTlRSQUwgLS0+CiAgICA8cmVjdCB4PSI3IiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgY2xhc3M9ImZ1ci1saWdodCIgLz4KICAgIDxyZWN0IHg9IjciIHk9IjE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIE5hcml6IC0tPgoKICAgIDwhLS0gT0xIT1MgR0lHQU5URVMgKEVzdGlsbyBNYXNjb3RlIGRvIEdvKSAtLT4KICAgIDwhLS0gT2xobyBFc3F1ZXJkbyAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBjbGFzcz0iZXllLXdoaXRlIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CgogICAgPCEtLSBPbGhvIERpcmVpdG8gLS0+CiAgICA8cmVjdCB4PSI5IiB5PSI2IiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+Cjwvc3ZnPgo=", on = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjMDZCNkQ0OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNFMEY3RkE7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgICAgICAuYmFkZ2UtcmVkICAgeyBmaWxsOiAjRTUzOTM1OyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBnbHlwaCAqLwogICAgICAgICAgICAuYmFkZ2Utd2hpdGUgeyBmaWxsOiAjRkZGRkZGOyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBvdXRsaW5lL2dhcCAqLwogICAgICAgIDwvc3R5bGU+CiAgICA8L2RlZnM+CgogICAgPCEtLSBDSElGUkVTICh0b3BvLCB5PTApIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNCIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8cmVjdCB4PSI5IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8IS0tIE9SRUxIQVMgTEFURVJBSVMgLS0+CiAgICA8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPHJlY3QgeD0iMTIiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBDQUJFw4dBIEFGVU5JTEFEQSBQQVJBIEJBSVhPIChmb2NpbmhvIGRlIGdhemVsYSwgeT00IC0+IDE2KSAtLT4KICAgIDxyZWN0IHg9IjMiIHk9IjQiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSB0b3BvIGxhcmdvIChvbGhvcykgLS0+CiAgICA8cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjgiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gYWZ1bmlsYSAxIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIGZvY2luaG8gLS0+CgogICAgPHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjgiIGhlaWdodD0iNiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSIxMSIgd2lkdGg9IjYiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBMSVNUUkEgRkFDSUFMIENFTlRSQUwgLS0+CiAgICA8cmVjdCB4PSI3IiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgY2xhc3M9ImZ1ci1saWdodCIgLz4KICAgIDxyZWN0IHg9IjciIHk9IjE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIE5hcml6IC0tPgoKICAgIDwhLS0gT0xIT1MgR0lHQU5URVMgKEVzdGlsbyBNYXNjb3RlIGRvIEdvKSAtLT4KICAgIDwhLS0gT2xobyBFc3F1ZXJkbyAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBjbGFzcz0iZXllLXdoaXRlIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CgogICAgPCEtLSBPbGhvIERpcmVpdG8gLS0+CiAgICA8cmVjdCB4PSI5IiB5PSI2IiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CiAgPCEtLSBHQURUICh0ZW1wbGF0ZSkgYmFkZ2U6IHJlZCAieyIgKyB3aGl0ZSBib3JkZXIvZ2FwICgxcHg7IDJweCBsZWZ0KSwgYm90dG9tLXJpZ2h0LiAtLT4KICA8cmVjdCB4PSIxMiIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMSIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEyIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMiIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEyIiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEzIiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTQiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxNCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTUiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTUiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxNSIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTQiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEzIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjExIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxNSIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjE0IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjEyIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjE1IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjEzIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgPHJlY3QgeD0iMTMiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxNCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjEzIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+Cjwvc3ZnPgo=", dn = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjMDZCNkQ0OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNFMEY3RkE7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgICAgICAuYmFkZ2UtcmVkICAgeyBmaWxsOiAjRTUzOTM1OyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBnbHlwaCAqLwogICAgICAgICAgICAuYmFkZ2Utd2hpdGUgeyBmaWxsOiAjRkZGRkZGOyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBvdXRsaW5lL2dhcCAqLwogICAgICAgIDwvc3R5bGU+CiAgICA8L2RlZnM+CgogICAgPCEtLSBDSElGUkVTICh0b3BvLCB5PTApIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNCIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8cmVjdCB4PSI5IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8IS0tIE9SRUxIQVMgTEFURVJBSVMgLS0+CiAgICA8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPHJlY3QgeD0iMTIiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBDQUJFw4dBIEFGVU5JTEFEQSBQQVJBIEJBSVhPIChmb2NpbmhvIGRlIGdhemVsYSwgeT00IC0+IDE2KSAtLT4KICAgIDxyZWN0IHg9IjMiIHk9IjQiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSB0b3BvIGxhcmdvIChvbGhvcykgLS0+CiAgICA8cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjgiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gYWZ1bmlsYSAxIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIGZvY2luaG8gLS0+CgogICAgPHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjgiIGhlaWdodD0iNiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSIxMSIgd2lkdGg9IjYiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBMSVNUUkEgRkFDSUFMIENFTlRSQUwgLS0+CiAgICA8cmVjdCB4PSI3IiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgY2xhc3M9ImZ1ci1saWdodCIgLz4KICAgIDxyZWN0IHg9IjciIHk9IjE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIE5hcml6IC0tPgoKICAgIDwhLS0gT0xIT1MgR0lHQU5URVMgKEVzdGlsbyBNYXNjb3RlIGRvIEdvKSAtLT4KICAgIDwhLS0gT2xobyBFc3F1ZXJkbyAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBjbGFzcz0iZXllLXdoaXRlIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CgogICAgPCEtLSBPbGhvIERpcmVpdG8gLS0+CiAgICA8cmVjdCB4PSI5IiB5PSI2IiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CiAgICA8IS0tIEdBRFggKHB1ZykgYmFkZ2U6IDFweCByZWQgQCArIDFweCB3aGl0ZSBib3JkZXIvZ2FwLCBib3R0b20tcmlnaHQuIC0tPgogICAgPHJlY3QgeD0iOSIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEzIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTMiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTQiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTUiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNSIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTUiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTMiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTQiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgo8L3N2Zz4K", rn = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjRDk3NzA2OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNGRUYzQzc7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgICAgICAudGVzdC1yZWQgICB7IGZpbGw6ICNEQjU4NjA7IH0gLyogdGVzdCBiYWRnZSBsZWZ0ICovCiAgICAgICAgICAgIC50ZXN0LWdyZWVuIHsgZmlsbDogIzU5QTg2OTsgfSAvKiB0ZXN0IGJhZGdlIHJpZ2h0ICovCiAgICAgICAgICAgIC50ZXN0LXdoaXRlIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiB0ZXN0IGJhZGdlIGRpYW1vbmQvZ2FwICovCiAgICAgICAgPC9zdHlsZT4KICAgIDwvZGVmcz4KCiAgICA8IS0tIENISUZSRVMgKHRvcG8sIHk9MCkgLS0+CiAgICA8cmVjdCB4PSI1IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMyIgY2xhc3M9Imhvcm4tc2lsdmVyIiAvPgoKICAgIDxyZWN0IHg9IjkiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjQiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMyIgY2xhc3M9Imhvcm4tc2lsdmVyIiAvPgoKICAgIDwhLS0gT1JFTEhBUyBMQVRFUkFJUyAtLT4KICAgIDxyZWN0IHg9IjEiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIyIiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KCiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjMiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KCiAgICA8IS0tIENBQkXDh0EgQUZVTklMQURBIFBBUkEgQkFJWE8gKGZvY2luaG8gZGUgZ2F6ZWxhLCB5PTQgLT4gMTYpIC0tPgogICAgPHJlY3QgeD0iMyIgeT0iNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjciIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIHRvcG8gbGFyZ28gKG9saG9zKSAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjExIiB3aWR0aD0iOCIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSBhZnVuaWxhIDEgLS0+CiAgICA8cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjYiIGhlaWdodD0iMyIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gZm9jaW5obyAtLT4KCiAgICA8cmVjdCB4PSI0IiB5PSI1IiB3aWR0aD0iOCIgaGVpZ2h0PSI2IiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjExIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KICAgIDxyZWN0IHg9IjYiIHk9IjEzIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KCiAgICA8IS0tIExJU1RSQSBGQUNJQUwgQ0VOVFJBTCAtLT4KICAgIDxyZWN0IHg9IjciIHk9IjUiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwIiBjbGFzcz0iZnVyLWxpZ2h0IiAvPgogICAgPHJlY3QgeD0iNyIgeT0iMTQiIHdpZHRoPSIyIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYXNlLWRhcmsiIC8+IDwhLS0gTmFyaXogLS0+CgogICAgPCEtLSBPTEhPUyBHSUdBTlRFUyAoRXN0aWxvIE1hc2NvdGUgZG8gR28pIC0tPgogICAgPCEtLSBPbGhvIEVzcXVlcmRvIC0tPgogICAgPHJlY3QgeD0iNCIgeT0iNiIgd2lkdGg9IjMiIGhlaWdodD0iMyIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIFB1cGlsYSAtLT4KCiAgICA8IS0tIE9saG8gRGlyZWl0byAtLT4KICAgIDxyZWN0IHg9IjkiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNiIgd2lkdGg9IjIiIGhlaWdodD0iMiIgY2xhc3M9ImV5ZS13aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjEwIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIFB1cGlsYSAtLT4KICAgIDwhLS0gVGVzdCBiYWRnZTogY3Jpc3AgcGl4ZWwgZGlhbW9uZCAocmVkIHw8IC8gZ3JlZW4gPnwpLCAxcHggd2hpdGUgYm9yZGVyK2dhcC4gLS0+CiAgICA8cmVjdCB4PSI1IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjYiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjciIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI3IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI4IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTMiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjYiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjciIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iNyIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iNyIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtcmVkIi8+CiAgICA8cmVjdCB4PSI4IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iOSIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtcmVkIi8+CiAgICA8cmVjdCB4PSI5IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjExIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1ncmVlbiIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1ncmVlbiIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KPC9zdmc+Cg==";
+}), on = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjRDk3NzA2OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNGRUYzQzc7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgIDwvc3R5bGU+CiAgICA8L2RlZnM+CgogICAgPCEtLSBDSElGUkVTICh0b3BvLCB5PTApIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNCIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8cmVjdCB4PSI5IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8IS0tIE9SRUxIQVMgTEFURVJBSVMgLS0+CiAgICA8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPHJlY3QgeD0iMTIiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBDQUJFw4dBIEFGVU5JTEFEQSBQQVJBIEJBSVhPIChmb2NpbmhvIGRlIGdhemVsYSwgeT00IC0+IDE2KSAtLT4KICAgIDxyZWN0IHg9IjMiIHk9IjQiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSB0b3BvIGxhcmdvIChvbGhvcykgLS0+CiAgICA8cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjgiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gYWZ1bmlsYSAxIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIGZvY2luaG8gLS0+CgogICAgPHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjgiIGhlaWdodD0iNiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSIxMSIgd2lkdGg9IjYiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBMSVNUUkEgRkFDSUFMIENFTlRSQUwgLS0+CiAgICA8cmVjdCB4PSI3IiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgY2xhc3M9ImZ1ci1saWdodCIgLz4KICAgIDxyZWN0IHg9IjciIHk9IjE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIE5hcml6IC0tPgoKICAgIDwhLS0gT0xIT1MgR0lHQU5URVMgKEVzdGlsbyBNYXNjb3RlIGRvIEdvKSAtLT4KICAgIDwhLS0gT2xobyBFc3F1ZXJkbyAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBjbGFzcz0iZXllLXdoaXRlIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CgogICAgPCEtLSBPbGhvIERpcmVpdG8gLS0+CiAgICA8cmVjdCB4PSI5IiB5PSI2IiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+Cjwvc3ZnPgo=", dn = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjMDZCNkQ0OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNFMEY3RkE7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgICAgICAuYmFkZ2UtcmVkICAgeyBmaWxsOiAjRTUzOTM1OyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBnbHlwaCAqLwogICAgICAgICAgICAuYmFkZ2Utd2hpdGUgeyBmaWxsOiAjRkZGRkZGOyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBvdXRsaW5lL2dhcCAqLwogICAgICAgIDwvc3R5bGU+CiAgICA8L2RlZnM+CgogICAgPCEtLSBDSElGUkVTICh0b3BvLCB5PTApIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNCIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8cmVjdCB4PSI5IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8IS0tIE9SRUxIQVMgTEFURVJBSVMgLS0+CiAgICA8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPHJlY3QgeD0iMTIiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBDQUJFw4dBIEFGVU5JTEFEQSBQQVJBIEJBSVhPIChmb2NpbmhvIGRlIGdhemVsYSwgeT00IC0+IDE2KSAtLT4KICAgIDxyZWN0IHg9IjMiIHk9IjQiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSB0b3BvIGxhcmdvIChvbGhvcykgLS0+CiAgICA8cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjgiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gYWZ1bmlsYSAxIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIGZvY2luaG8gLS0+CgogICAgPHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjgiIGhlaWdodD0iNiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSIxMSIgd2lkdGg9IjYiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBMSVNUUkEgRkFDSUFMIENFTlRSQUwgLS0+CiAgICA8cmVjdCB4PSI3IiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgY2xhc3M9ImZ1ci1saWdodCIgLz4KICAgIDxyZWN0IHg9IjciIHk9IjE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIE5hcml6IC0tPgoKICAgIDwhLS0gT0xIT1MgR0lHQU5URVMgKEVzdGlsbyBNYXNjb3RlIGRvIEdvKSAtLT4KICAgIDwhLS0gT2xobyBFc3F1ZXJkbyAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBjbGFzcz0iZXllLXdoaXRlIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CgogICAgPCEtLSBPbGhvIERpcmVpdG8gLS0+CiAgICA8cmVjdCB4PSI5IiB5PSI2IiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CiAgPCEtLSBHQURUICh0ZW1wbGF0ZSkgYmFkZ2U6IHJlZCAieyIgKyB3aGl0ZSBib3JkZXIvZ2FwICgxcHg7IDJweCBsZWZ0KSwgYm90dG9tLXJpZ2h0LiAtLT4KICA8cmVjdCB4PSIxMiIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMSIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEyIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMiIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEyIiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEzIiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTIiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTQiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxNCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTUiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTUiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxNSIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjE0IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTQiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjEzIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgPHJlY3QgeD0iMTEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogIDxyZWN0IHg9IjExIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxMyIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxNSIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjE0IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjEyIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjE1IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjEzIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgPHJlY3QgeD0iMTMiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICA8cmVjdCB4PSIxNCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogIDxyZWN0IHg9IjEzIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+Cjwvc3ZnPgo=", rn = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjMDZCNkQ0OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNFMEY3RkE7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgICAgICAuYmFkZ2UtcmVkICAgeyBmaWxsOiAjRTUzOTM1OyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBnbHlwaCAqLwogICAgICAgICAgICAuYmFkZ2Utd2hpdGUgeyBmaWxsOiAjRkZGRkZGOyB9IC8qIEdBRFQvR0FEWCBiYWRnZSBvdXRsaW5lL2dhcCAqLwogICAgICAgIDwvc3R5bGU+CiAgICA8L2RlZnM+CgogICAgPCEtLSBDSElGUkVTICh0b3BvLCB5PTApIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNCIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8cmVjdCB4PSI5IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjMiIGNsYXNzPSJob3JuLXNpbHZlciIgLz4KCiAgICA8IS0tIE9SRUxIQVMgTEFURVJBSVMgLS0+CiAgICA8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPHJlY3QgeD0iMTIiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjIiIGhlaWdodD0iMSIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBDQUJFw4dBIEFGVU5JTEFEQSBQQVJBIEJBSVhPIChmb2NpbmhvIGRlIGdhemVsYSwgeT00IC0+IDE2KSAtLT4KICAgIDxyZWN0IHg9IjMiIHk9IjQiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSB0b3BvIGxhcmdvIChvbGhvcykgLS0+CiAgICA8cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjgiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gYWZ1bmlsYSAxIC0tPgogICAgPHJlY3QgeD0iNSIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIGZvY2luaG8gLS0+CgogICAgPHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjgiIGhlaWdodD0iNiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSIxMSIgd2lkdGg9IjYiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMiIgY2xhc3M9ImZ1ci1vcmFuZ2UiIC8+CgogICAgPCEtLSBMSVNUUkEgRkFDSUFMIENFTlRSQUwgLS0+CiAgICA8cmVjdCB4PSI3IiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgY2xhc3M9ImZ1ci1saWdodCIgLz4KICAgIDxyZWN0IHg9IjciIHk9IjE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIE5hcml6IC0tPgoKICAgIDwhLS0gT0xIT1MgR0lHQU5URVMgKEVzdGlsbyBNYXNjb3RlIGRvIEdvKSAtLT4KICAgIDwhLS0gT2xobyBFc3F1ZXJkbyAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBjbGFzcz0iZXllLXdoaXRlIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CgogICAgPCEtLSBPbGhvIERpcmVpdG8gLS0+CiAgICA8cmVjdCB4PSI5IiB5PSI2IiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhc2UtZGFyayIgLz4gPCEtLSBQdXBpbGEgLS0+CiAgICA8IS0tIEdBRFggKHB1ZykgYmFkZ2U6IDFweCByZWQgQCArIDFweCB3aGl0ZSBib3JkZXIvZ2FwLCBib3R0b20tcmlnaHQuIC0tPgogICAgPHJlY3QgeD0iOSIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEzIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTMiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTQiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTUiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNSIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTUiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2Utd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTMiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgogICAgPHJlY3QgeD0iMTQiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFkZ2UtcmVkIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYWRnZS1yZWQiLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9ImJhZGdlLXJlZCIvPgo8L3N2Zz4K", sn = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPgogICAgPGRlZnM+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICAuYmFzZS1kYXJrICB7IGZpbGw6ICMwRDFCMkE7IH0gLyogQ29udG9ybm9zIGdyb3Nzb3MgcGFyYSBnYXJhbnRpciBjb250cmFzdGUgKi8KICAgICAgICAgICAgLmZ1ci1vcmFuZ2UgeyBmaWxsOiAjRDk3NzA2OyB9IC8qIFBlbGUgcHJpbmNpcGFsIGRhIGdhemVsYSAqLwogICAgICAgICAgICAuZnVyLWxpZ2h0ICB7IGZpbGw6ICNGRUYzQzc7IH0gLyogRmFpeGEgY2VudHJhbCBlIG9yZWxoYXMgKi8KICAgICAgICAgICAgLmhvcm4tc2lsdmVyeyBmaWxsOiAjQkRDM0M3OyB9IC8qIENoaWZyZXMgY2xhcm9zIGUgdmlzw612ZWlzICovCiAgICAgICAgICAgIC5leWUtd2hpdGUgIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiBPbGhvcyBncmFuZGVzIGVzdGlsbyBHbyAqLwogICAgICAgICAgICAudGVzdC1yZWQgICB7IGZpbGw6ICNEQjU4NjA7IH0gLyogdGVzdCBiYWRnZSBsZWZ0ICovCiAgICAgICAgICAgIC50ZXN0LWdyZWVuIHsgZmlsbDogIzU5QTg2OTsgfSAvKiB0ZXN0IGJhZGdlIHJpZ2h0ICovCiAgICAgICAgICAgIC50ZXN0LXdoaXRlIHsgZmlsbDogI0ZGRkZGRjsgfSAvKiB0ZXN0IGJhZGdlIGRpYW1vbmQvZ2FwICovCiAgICAgICAgPC9zdHlsZT4KICAgIDwvZGVmcz4KCiAgICA8IS0tIENISUZSRVMgKHRvcG8sIHk9MCkgLS0+CiAgICA8cmVjdCB4PSI1IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI0IiBjbGFzcz0iYmFzZS1kYXJrIiAvPgogICAgPHJlY3QgeD0iNSIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMyIgY2xhc3M9Imhvcm4tc2lsdmVyIiAvPgoKICAgIDxyZWN0IHg9IjkiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjQiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMyIgY2xhc3M9Imhvcm4tc2lsdmVyIiAvPgoKICAgIDwhLS0gT1JFTEhBUyBMQVRFUkFJUyAtLT4KICAgIDxyZWN0IHg9IjEiIHk9IjUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIyIiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KCiAgICA8cmVjdCB4PSIxMiIgeT0iNSIgd2lkdGg9IjMiIGhlaWdodD0iMiIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KCiAgICA8IS0tIENBQkXDh0EgQUZVTklMQURBIFBBUkEgQkFJWE8gKGZvY2luaG8gZGUgZ2F6ZWxhLCB5PTQgLT4gMTYpIC0tPgogICAgPHJlY3QgeD0iMyIgeT0iNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjciIGNsYXNzPSJiYXNlLWRhcmsiIC8+ICA8IS0tIHRvcG8gbGFyZ28gKG9saG9zKSAtLT4KICAgIDxyZWN0IHg9IjQiIHk9IjExIiB3aWR0aD0iOCIgaGVpZ2h0PSIyIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiAgPCEtLSBhZnVuaWxhIDEgLS0+CiAgICA8cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjYiIGhlaWdodD0iMyIgY2xhc3M9ImJhc2UtZGFyayIgLz4gIDwhLS0gZm9jaW5obyAtLT4KCiAgICA8cmVjdCB4PSI0IiB5PSI1IiB3aWR0aD0iOCIgaGVpZ2h0PSI2IiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KICAgIDxyZWN0IHg9IjUiIHk9IjExIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KICAgIDxyZWN0IHg9IjYiIHk9IjEzIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBjbGFzcz0iZnVyLW9yYW5nZSIgLz4KCiAgICA8IS0tIExJU1RSQSBGQUNJQUwgQ0VOVFJBTCAtLT4KICAgIDxyZWN0IHg9IjciIHk9IjUiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwIiBjbGFzcz0iZnVyLWxpZ2h0IiAvPgogICAgPHJlY3QgeD0iNyIgeT0iMTQiIHdpZHRoPSIyIiBoZWlnaHQ9IjEiIGNsYXNzPSJiYXNlLWRhcmsiIC8+IDwhLS0gTmFyaXogLS0+CgogICAgPCEtLSBPTEhPUyBHSUdBTlRFUyAoRXN0aWxvIE1hc2NvdGUgZG8gR28pIC0tPgogICAgPCEtLSBPbGhvIEVzcXVlcmRvIC0tPgogICAgPHJlY3QgeD0iNCIgeT0iNiIgd2lkdGg9IjMiIGhlaWdodD0iMyIgY2xhc3M9ImJhc2UtZGFyayIgLz4KICAgIDxyZWN0IHg9IjQiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGNsYXNzPSJleWUtd2hpdGUiIC8+CiAgICA8cmVjdCB4PSI1IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIFB1cGlsYSAtLT4KCiAgICA8IS0tIE9saG8gRGlyZWl0byAtLT4KICAgIDxyZWN0IHg9IjkiIHk9IjYiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGNsYXNzPSJiYXNlLWRhcmsiIC8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNiIgd2lkdGg9IjIiIGhlaWdodD0iMiIgY2xhc3M9ImV5ZS13aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjEwIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0iYmFzZS1kYXJrIiAvPiA8IS0tIFB1cGlsYSAtLT4KICAgIDwhLS0gVGVzdCBiYWRnZTogY3Jpc3AgcGl4ZWwgZGlhbW9uZCAocmVkIHw8IC8gZ3JlZW4gPnwpLCAxcHggd2hpdGUgYm9yZGVyK2dhcC4gLS0+CiAgICA8cmVjdCB4PSI1IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjYiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI2IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjciIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI3IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI4IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSI5IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEwIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMCIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC13aGl0ZSIvPgogICAgPHJlY3QgeD0iMTMiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXdoaXRlIi8+CiAgICA8cmVjdCB4PSIxNCIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3Qtd2hpdGUiLz4KICAgIDxyZWN0IHg9IjYiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjciIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iNyIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iNyIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtcmVkIi8+CiAgICA8cmVjdCB4PSI4IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjgiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LXJlZCIvPgogICAgPHJlY3QgeD0iOSIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtcmVkIi8+CiAgICA8cmVjdCB4PSI5IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjkiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1yZWQiLz4KICAgIDxyZWN0IHg9IjExIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1ncmVlbiIvPgogICAgPHJlY3QgeD0iMTEiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMSIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjExIiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjEyIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBjbGFzcz0idGVzdC1ncmVlbiIvPgogICAgPHJlY3QgeD0iMTIiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMiIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGNsYXNzPSJ0ZXN0LWdyZWVuIi8+CiAgICA8cmVjdCB4PSIxMyIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjEzIiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KICAgIDxyZWN0IHg9IjE0IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgY2xhc3M9InRlc3QtZ3JlZW4iLz4KPC9zdmc+Cg==";
 function st(e) {
   const a = e.toLowerCase();
-  if (a.endsWith("_test.gad")) return rn;
-  if (a.endsWith(".gadx")) return dn;
-  if (a.endsWith(".gadt")) return on;
-  if (a.endsWith(".gad")) return nn;
+  if (a.endsWith("_test.gad")) return sn;
+  if (a.endsWith(".gadx")) return rn;
+  if (a.endsWith(".gadt")) return dn;
+  if (a.endsWith(".gad")) return on;
 }
-const sn = /* @__PURE__ */ H({
+const un = /* @__PURE__ */ N({
   name: "PanelExplorer",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = v(), t = v(null), n = v(!1), o = v([]), s = v(""), p = (I) => {
-      const h = I.lastIndexOf("/");
-      return h === -1 ? "" : I.slice(0, h);
+    const e = E(_), a = E(O, y(() => Q)), l = v(), t = v(null), n = v(!1), o = v([]), s = v(""), g = "application/x-gad-ide-path", u = v(null), r = v(null);
+    let h, f = "";
+    const x = (m, M) => G(m) !== M && M !== m && !M.startsWith(m + "/");
+    function j(m, M, b) {
+      const W = u.value;
+      return W === null ? !1 : (m.stopPropagation(), x(W, M) ? (m.preventDefault(), m.dataTransfer && (m.dataTransfer.dropEffect = "move"), r.value = M, b != null && b.dir && !e.isExpanded(b.path) && f !== b.path && (clearTimeout(h), f = b.path, h = setTimeout(() => {
+        r.value === b.path && !e.isExpanded(b.path) && e.toggleDir(b.path);
+      }, 700)), !0) : (r.value = null, !0));
+    }
+    function w(m, M) {
+      const b = u.value;
+      return b === null ? !1 : (m.preventDefault(), m.stopPropagation(), H(), x(b, M) && e.dropMove(b, M), !0);
+    }
+    function H() {
+      u.value = null, r.value = null, f = "", clearTimeout(h);
+    }
+    const G = (m) => {
+      const M = m.lastIndexOf("/");
+      return M === -1 ? "" : m.slice(0, M);
     };
-    function u(I, h) {
-      I.length && (o.value = I, s.value = h, n.value = !0);
+    function k(m, M) {
+      m.length && (o.value = m, s.value = M, n.value = !0);
     }
-    async function r(I, h) {
-      t.value = null, !(!e.canUpload.value || !I.dataTransfer) && u(await Wl(I.dataTransfer), h);
+    async function z(m, M) {
+      t.value = null, !(!e.canUpload.value || !m.dataTransfer) && k(await El(m.dataTransfer), M);
     }
-    async function f(I) {
-      const h = I.target, G = St(h.files);
-      h.value = "", u(G, "");
+    async function A(m) {
+      const M = m.target, b = St(M.files);
+      M.value = "", k(b, "");
     }
     return () => i("div", {
       class: "pnl"
@@ -1580,61 +1613,61 @@ const sn = /* @__PURE__ */ H({
       class: "pnl-head"
     }, [i("span", {
       class: "text-caption font-weight-medium"
-    }, [a.value.explorer.toUpperCase()]), i("div", null, [e.canCreate.value && i(xe, null, [i(y, {
+    }, [a.value.explorer.toUpperCase()]), i("div", null, [e.canCreate.value && i(xe, null, [i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-file-plus-outline",
       title: a.value.newFile,
       onClick: () => e.newFile()
-    }, null), i(y, {
+    }, null), i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-folder-plus-outline",
       title: a.value.newFolder,
       onClick: () => e.newDir()
-    }, null)]), e.canUpload.value && i(xe, null, [i(y, {
+    }, null)]), e.canUpload.value && i(xe, null, [i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-upload-outline",
       title: a.value.uploadFiles,
       onClick: () => {
-        var I;
-        return (I = l.value) == null ? void 0 : I.click();
+        var m;
+        return (m = l.value) == null ? void 0 : m.click();
       }
-    }, null), i(y, {
+    }, null), i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-link-variant",
       title: a.value.importFromUrl,
       onClick: () => e.urlDialog.value = !0
-    }, null)]), e.canRename.value && i(y, {
+    }, null)]), e.canRename.value && i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-rename-outline",
       title: a.value.renameOpenFile,
       disabled: !e.openPath.value,
       onClick: () => e.renameOpen()
-    }, null), e.canMove.value && i(y, {
+    }, null), e.canMove.value && i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-file-move-outline",
       title: a.value.moveOpenFile,
       disabled: !e.openPath.value,
       onClick: () => e.moveOpen()
-    }, null), e.canDelete.value && i(y, {
+    }, null), e.canDelete.value && i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-delete-outline",
       title: a.value.deleteOpenFile,
       disabled: !e.openPath.value,
       onClick: () => e.removeOpen()
-    }, null), i(y, {
+    }, null), i(P, {
       size: "x-small",
       variant: "text",
       icon: e.showHidden.value ? "mdi-eye-off-outline" : "mdi-eye-outline",
       title: e.showHidden.value ? a.value.hideHidden : a.value.showHidden,
       onClick: () => e.toggleHidden()
-    }, null), e.canReset.value && e.canEdit.value && i(y, {
+    }, null), e.canReset.value && e.canEdit.value && i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-backup-restore",
@@ -1642,35 +1675,48 @@ const sn = /* @__PURE__ */ H({
       onClick: () => e.reset()
     }, null)])]), i("div", {
       class: ["pnl-body", {
-        "pnl-body--drop": e.canUpload.value && t.value === ""
+        "pnl-body--drop": e.canUpload.value && t.value === "" || r.value === ""
       }],
-      onDragover: e.canUpload.value ? (I) => {
-        I.preventDefault(), t.value = "";
-      } : void 0,
-      onDragleave: e.canUpload.value ? () => t.value = null : void 0,
-      onDrop: e.canUpload.value ? (I) => {
-        I.preventDefault(), r(I, "");
-      } : void 0
-    }, [e.rows.value.map((I) => {
-      const h = I.node.dir ? I.node.path : p(I.node.path);
+      onDragover: (m) => {
+        j(m, "") || e.canUpload.value && (m.preventDefault(), t.value = "");
+      },
+      onDragleave: () => {
+        t.value = null, r.value = null;
+      },
+      onDrop: (m) => {
+        w(m, "") || e.canUpload.value && (m.preventDefault(), z(m, ""));
+      }
+    }, [e.rows.value.map((m) => {
+      const M = m.node.dir ? m.node.path : G(m.node.path);
       return i("div", {
-        key: I.node.path,
+        key: m.node.path,
         class: ["pnl-row", {
-          "pnl-row--active": I.node.path === e.openPath.value,
-          "pnl-row--drop": e.canUpload.value && t.value === h
+          "pnl-row--active": m.node.path === e.openPath.value,
+          "pnl-row--drop": e.canUpload.value && u.value === null && t.value === M,
+          "pnl-row--movedrop": m.node.dir && r.value === m.node.path,
+          "pnl-row--dragged": u.value === m.node.path
         }],
         style: {
-          paddingLeft: 6 + I.depth * 14 + "px"
+          paddingLeft: 6 + m.depth * 14 + "px"
         },
-        onClick: () => I.node.dir ? e.toggleDir(I.node.path) : e.openFile(I.node.path),
-        onDragover: e.canUpload.value ? (G) => {
-          G.preventDefault(), G.stopPropagation(), t.value = h;
-        } : void 0,
-        onDrop: e.canUpload.value ? (G) => {
-          G.preventDefault(), G.stopPropagation(), r(G, h);
-        } : void 0
-      }, [!I.node.dir && st(I.node.path) ? i("img", {
-        src: st(I.node.path),
+        "data-path": m.node.path,
+        draggable: e.canMove.value,
+        onDragstart: (b) => {
+          !e.canMove.value || !b.dataTransfer || (b.dataTransfer.setData(g, m.node.path), b.dataTransfer.effectAllowed = "move", u.value = m.node.path);
+        },
+        onDragend: H,
+        onClick: () => m.node.dir ? e.toggleDir(m.node.path) : e.openFile(m.node.path),
+        onDragover: (b) => {
+          j(b, M, {
+            dir: m.node.dir,
+            path: m.node.path
+          }) || e.canUpload.value && (b.preventDefault(), b.stopPropagation(), t.value = M);
+        },
+        onDrop: (b) => {
+          w(b, M) || e.canUpload.value && (b.preventDefault(), b.stopPropagation(), z(b, M));
+        }
+      }, [!m.node.dir && st(m.node.path) ? i("img", {
+        src: st(m.node.path),
         alt: "",
         width: "16",
         height: "16",
@@ -1683,31 +1729,34 @@ const sn = /* @__PURE__ */ H({
         size: "16",
         class: "mr-1"
       }, {
-        default: () => [I.node.dir ? e.isExpanded(I.node.path) ? "mdi-folder-open-outline" : "mdi-folder-outline" : e.iconFor(I.node.path)]
+        default: () => [m.node.dir ? e.isExpanded(m.node.path) ? "mdi-folder-open-outline" : "mdi-folder-outline" : e.iconFor(m.node.path)]
       }), i("span", {
         class: "pnl-ellipsis"
-      }, [I.node.name])]);
-    }), e.canUpload.value && t.value !== null && i("div", {
+      }, [m.node.name])]);
+    }), e.canUpload.value && u.value === null && t.value !== null && i("div", {
       class: "pnl-drop-hint"
-    }, [S("Drop into "), t.value || "/ (root)"])]), i("input", {
+    }, [S("Drop into "), t.value || "/ (root)"]), r.value !== null && i("div", {
+      class: "pnl-drop-hint",
+      "data-move-hint": !0
+    }, [a.value.move, S(" → /"), r.value])]), i("input", {
       ref: l,
       type: "file",
       multiple: !0,
       style: {
         display: "none"
       },
-      onChange: f
-    }, null), i(ln, b({
+      onChange: A
+    }, null), i(nn, Z({
       modelValue: n.value
     }, {
-      "onUpdate:modelValue": (I) => n.value = I
+      "onUpdate:modelValue": (m) => n.value = m
     }, {
       raw: o.value,
       initialDir: s.value,
-      onConfirm: (I, h) => e.upload(I, h)
+      onConfirm: (m, M) => e.upload(m, M)
     }), null)]);
   }
-}), wa = /* @__PURE__ */ H({
+}), Ea = /* @__PURE__ */ N({
   name: "GadEditor",
   props: {
     path: {
@@ -1792,7 +1841,7 @@ const sn = /* @__PURE__ */ H({
     let t = null, n = !1;
     const o = () => e.language ?? ht(e.path);
     return He(() => {
-      t = new jl({
+      t = new Dl({
         parent: l.value,
         doc: e.modelValue,
         language: o(),
@@ -1807,30 +1856,30 @@ const sn = /* @__PURE__ */ H({
         },
         onBreakpointsChange: (s) => a("update:breakpoints", s),
         onBreakpointContext: (s) => {
-          var p;
-          return (p = e.onBreakpointContext) == null ? void 0 : p.call(e, s);
+          var g;
+          return (g = e.onBreakpointContext) == null ? void 0 : g.call(e, s);
         },
         breakpoints: e.breakpointGutter
       }), e.breakpoints.length && t.setBreakpoints(e.breakpoints), e.debugLine && t.setDebugLine(e.debugLine, e.debugColumn), a("ready", t);
-    }), De(() => t == null ? void 0 : t.destroy()), R(() => e.modelValue, (s) => {
+    }), ze(() => t == null ? void 0 : t.destroy()), L(() => e.modelValue, (s) => {
       t && !n && s !== t.getValue() && t.setValue(s);
-    }), R([() => e.path, () => e.language, () => e.customExtension], () => t == null ? void 0 : t.setLanguage(o(), e.diagnose, e.customExtension)), R(() => e.dark, (s) => t == null ? void 0 : t.setDark(s)), R(() => e.readonly, (s) => t == null ? void 0 : t.setReadonly(s)), R(() => e.fontSize, (s) => t == null ? void 0 : t.setFontSize(s)), R(() => e.breakpoints, (s) => t == null ? void 0 : t.setBreakpoints(s ?? [])), R([() => e.debugLine, () => e.debugColumn], ([s, p]) => t == null ? void 0 : t.setDebugLine(s ?? 0, p ?? 1)), R(() => e.gotoSeq, () => {
+    }), L([() => e.path, () => e.language, () => e.customExtension], () => t == null ? void 0 : t.setLanguage(o(), e.diagnose, e.customExtension)), L(() => e.dark, (s) => t == null ? void 0 : t.setDark(s)), L(() => e.readonly, (s) => t == null ? void 0 : t.setReadonly(s)), L(() => e.fontSize, (s) => t == null ? void 0 : t.setFontSize(s)), L(() => e.breakpoints, (s) => t == null ? void 0 : t.setBreakpoints(s ?? [])), L([() => e.debugLine, () => e.debugColumn], ([s, g]) => t == null ? void 0 : t.setDebugLine(s ?? 0, g ?? 1)), L(() => e.gotoSeq, () => {
       e.gotoLine && (t == null || t.gotoLine(e.gotoLine));
     }), () => i("div", {
       ref: l,
       class: "gad-editor"
     }, null);
   }
-}), ut = (e) => e.slice(e.lastIndexOf("/") + 1), un = (e, a) => e.length > a ? e.slice(0, a - 1) + "…" : e, cn = /* @__PURE__ */ H({
+}), ut = (e) => e.slice(e.lastIndexOf("/") + 1), cn = (e, a) => e.length > a ? e.slice(0, a - 1) + "…" : e, In = /* @__PURE__ */ N({
   name: "PanelEditor",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = () => !!e.openPath.value, t = (n, o, s, p = {}) => i(y, {
+    const e = E(_), a = E(O, y(() => Q)), l = () => !!e.openPath.value, t = (n, o, s, g = {}) => i(P, {
       size: "small",
       variant: "text",
       icon: n,
       title: o,
-      disabled: p.disabled,
-      color: p.color,
+      disabled: g.disabled,
+      color: g.color,
       onClick: s
     }, null);
     return () => {
@@ -1840,23 +1889,23 @@ const sn = /* @__PURE__ */ H({
       }, [e.tabs.value.length > 0 && i("div", {
         class: "editor-tabs"
       }, [e.tabs.value.map((o, s) => {
-        const p = e.isDirty(o.path);
+        const g = e.isDirty(o.path);
         return i("div", {
           key: o.path,
           class: ["editor-tab", {
             "editor-tab--active": s === e.active.value,
-            "editor-tab--dirty": p
+            "editor-tab--dirty": g
           }],
-          title: ut(o.path) + (p ? " • modified" : ""),
+          title: ut(o.path) + (g ? " • modified" : ""),
           onClick: () => e.activateTab(s),
           onMousedown: (u) => {
             u.button === 1 && (u.preventDefault(), e.closeTab(s));
           }
         }, [i("span", {
           class: "editor-tab-name"
-        }, [un(ut(o.path), e.tabNameMax.value)]), i("span", {
+        }, [cn(ut(o.path), e.tabNameMax.value)]), i("span", {
           class: ["editor-tab-close", {
-            "editor-tab-close--dirty": p
+            "editor-tab-close--dirty": g
           }],
           title: a.value.close,
           onClick: (u) => {
@@ -1884,12 +1933,12 @@ const sn = /* @__PURE__ */ H({
       }), e.canDebug.value && t(e.session.value ? "mdi-restart" : "mdi-bug", e.session.value ? a.value.restart : a.value.debug, () => e.debugActive(), {
         disabled: !l(),
         color: "warning"
-      }), e.canRun.value && i($l, {
+      }), e.canRun.value && i(en, {
         location: "bottom start"
       }, {
         activator: ({
           props: o
-        }) => i(y, b({
+        }) => i(P, Z({
           size: "small",
           variant: "text",
           class: "text-none",
@@ -1898,7 +1947,7 @@ const sn = /* @__PURE__ */ H({
         }, o), {
           default: () => [e.runLabel.value]
         }),
-        default: () => i(_l, {
+        default: () => i(ql, {
           density: "compact",
           minWidth: "220"
         }, {
@@ -1906,7 +1955,7 @@ const sn = /* @__PURE__ */ H({
             title: a.value.currentFile,
             active: e.activeProfile.value === null,
             onClick: () => e.activeProfile.value = null
-          }, null), e.runProfiles.value.length > 0 && i(ql, null, {
+          }, null), e.runProfiles.value.length > 0 && i($l, null, {
             default: () => [a.value.profiles]
           }), e.runProfiles.value.map((o) => i(Za, {
             key: o.name,
@@ -1915,7 +1964,7 @@ const sn = /* @__PURE__ */ H({
             active: e.activeProfile.value === o.name,
             onClick: () => e.activeProfile.value = o.name
           }, {
-            append: () => i(y, {
+            append: () => i(P, {
               size: "x-small",
               variant: "text",
               icon: "mdi-delete-outline",
@@ -1955,7 +2004,7 @@ const sn = /* @__PURE__ */ H({
         }, null) : i("span", {
           class: "text-medium-emphasis"
         }, [a.value.noImagePreview])])
-      ) : l() ? i(wa, b({
+      ) : l() ? i(Ea, Z({
         key: e.openPath.value + (e.canDebug.value ? ":debug" : ""),
         modelValue: e.source.value
       }, {
@@ -2001,10 +2050,10 @@ const sn = /* @__PURE__ */ H({
       }, [S("A+")])])])]);
     };
   }
-}), In = /* @__PURE__ */ H({
+}), gn = /* @__PURE__ */ N({
   name: "PanelCallStack",
   setup() {
-    const e = D(_);
+    const e = E(_);
     return () => {
       var a, l, t;
       return i("div", {
@@ -2022,7 +2071,7 @@ const sn = /* @__PURE__ */ H({
       }, [S("(not paused)")])])])]);
     };
   }
-}), At = /* @__PURE__ */ H({
+}), At = /* @__PURE__ */ N({
   name: "InspectorNode",
   props: {
     inspect: {
@@ -2060,7 +2109,7 @@ const sn = /* @__PURE__ */ H({
   },
   setup(e) {
     const a = v(!1), l = v(!1), t = v(null), n = v(e.type), o = v(e.value), s = v(e.expandable);
-    async function p() {
+    async function g() {
       l.value = !0;
       const r = await e.inspect(e.expr);
       if (l.value = !1, !r) {
@@ -2070,10 +2119,10 @@ const sn = /* @__PURE__ */ H({
       n.value = r.type, o.value = r.value, s.value = r.expandable, t.value = r.entries ?? [];
     }
     async function u() {
-      s.value && (t.value === null && await p(), a.value = !a.value);
+      s.value && (t.value === null && await g(), a.value = !a.value);
     }
     return He(() => {
-      e.root && p();
+      e.root && g();
     }), () => i("div", {
       class: "ins-node"
     }, [i("div", {
@@ -2103,14 +2152,14 @@ const sn = /* @__PURE__ */ H({
       depth: e.depth + 1
     }, null)) : null]);
   }
-}), gn = /* @__PURE__ */ H({
+}), pn = /* @__PURE__ */ N({
   name: "PanelLocals",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = v(!1), t = v(""), n = v(""), o = (s, p) => {
-      s.trim() && (t.value = s, n.value = p, l.value = !0);
+    const e = E(_), a = E(O, y(() => Q)), l = v(!1), t = v(""), n = v(""), o = (s, g) => {
+      s.trim() && (t.value = s, n.value = g, l.value = !0);
     };
     return () => {
-      var s, p, u;
+      var s, g, u;
       return i("div", {
         class: "pnl"
       }, [i("div", {
@@ -2120,7 +2169,7 @@ const sn = /* @__PURE__ */ H({
         style: {
           gap: "4px"
         }
-      }, [i(K, b({
+      }, [i(K, Z({
         modelValue: e.evalExpr.value
       }, {
         "onUpdate:modelValue": (r) => e.evalExpr.value = r
@@ -2130,14 +2179,14 @@ const sn = /* @__PURE__ */ H({
         variant: "outlined",
         hideDetails: !0,
         onKeyup: (r) => r.key === "Enter" && e.doEval()
-      }), null), i(y, {
+      }), null), i(P, {
         size: "small",
         variant: "tonal",
         disabled: !e.stopped.value,
         onClick: () => e.doEval()
       }, {
         default: () => [S("Eval")]
-      }), i(y, {
+      }), i(P, {
         size: "x-small",
         variant: "text",
         icon: "mdi-file-tree-outline",
@@ -2150,22 +2199,22 @@ const sn = /* @__PURE__ */ H({
         class: "text-caption text-medium-emphasis mt-2 mb-1"
       }, [a.value.locals.toUpperCase()]), i("ul", {
         class: "pnl-list"
-      }, [(((s = e.snap.value) == null ? void 0 : s.locals) ?? []).map((r, f) => i("li", {
-        key: f,
+      }, [(((s = e.snap.value) == null ? void 0 : s.locals) ?? []).map((r, h) => i("li", {
+        key: h,
         class: "pnl-local"
       }, [i("span", {
         class: "pnl-ellipsis"
       }, [r.name, S(" = "), r.value, S(" "), i("span", {
         class: "text-medium-emphasis"
-      }, [S("("), r.type, S(")")])]), i(y, {
+      }, [S("("), r.type, S(")")])]), i(P, {
         size: "x-small",
         variant: "text",
         icon: "mdi-file-tree-outline",
         title: a.value.inspectValue,
         onClick: () => o(r.name, r.name)
-      }, null)])), !((u = (p = e.snap.value) == null ? void 0 : p.locals) != null && u.length) && i("li", {
+      }, null)])), !((u = (g = e.snap.value) == null ? void 0 : g.locals) != null && u.length) && i("li", {
         class: "text-medium-emphasis"
-      }, [S("(none)")])])]), i(ue, b({
+      }, [S("(none)")])])]), i(ue, Z({
         modelValue: l.value
       }, {
         "onUpdate:modelValue": (r) => l.value = r
@@ -2192,7 +2241,7 @@ const sn = /* @__PURE__ */ H({
               root: !0
             }, null)]
           }), i(de, null, {
-            default: () => [i(ce, null, null), i(y, {
+            default: () => [i(ce, null, null), i(P, {
               onClick: () => l.value = !1
             }, {
               default: () => [a.value.close]
@@ -2202,10 +2251,10 @@ const sn = /* @__PURE__ */ H({
       })]);
     };
   }
-}), pn = /* @__PURE__ */ H({
+}), mn = /* @__PURE__ */ N({
   name: "PanelOutput",
   setup() {
-    const e = D(_), a = D(Q, x(() => X));
+    const e = E(_), a = E(O, y(() => Q));
     return () => {
       var t;
       const l = e.runRes.value;
@@ -2233,48 +2282,48 @@ const sn = /* @__PURE__ */ H({
     };
   }
 });
-function mn(e) {
+function vn(e) {
   const a = e.replace(/^\/+/, ""), l = a.lastIndexOf("/");
   return l === -1 ? "" : a.slice(0, l);
 }
-function Ha(e, a) {
+function Da(e, a) {
   const l = e.replace(/\/+$/, "") + "/" + a.replace(/^\/+/, ""), t = /^([a-z][a-z0-9+.-]*:\/\/|\/\/|\/)/i.exec(l), n = t ? t[1] : "", o = [];
   for (const s of l.slice(n.length).split("/"))
     s === "" || s === "." || (s === ".." ? o.pop() : o.push(s));
   return n + o.join("/");
 }
-function vn(e, a, l) {
-  return !e || e.startsWith("#") || e.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(e) ? null : e.startsWith("/") ? Ha(a, e) : Ha(l, e);
+function fn(e, a, l) {
+  return !e || e.startsWith("#") || e.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(e) ? null : e.startsWith("/") ? Da(a, e) : Da(l, e);
 }
 function ca(e, a, l) {
   if (!e || typeof DOMParser > "u") return e;
-  const t = l ? l(a) : "doc", n = mn(a), o = n ? Ha(t, n) : t, s = new DOMParser().parseFromString(e, "text/html");
-  for (const p of ["src", "href"])
-    s.querySelectorAll(`[${p}]`).forEach((u) => {
-      const r = vn(u.getAttribute(p) ?? "", t, o);
-      r !== null && u.setAttribute(p, r);
+  const t = l ? l(a) : "doc", n = vn(a), o = n ? Da(t, n) : t, s = new DOMParser().parseFromString(e, "text/html");
+  for (const g of ["src", "href"])
+    s.querySelectorAll(`[${g}]`).forEach((u) => {
+      const r = fn(u.getAttribute(g) ?? "", t, o);
+      r !== null && u.setAttribute(g, r);
     });
   return s.body.innerHTML;
 }
-function fn(e) {
+function hn(e) {
   return e.endsWith(".gadx") ? "gadx" : e.endsWith(".gadt") ? "gadTemplate" : "gad";
 }
-const hn = {
+const Cn = {
   gad: "DOCS",
   html: "HTML",
   markdown: "MARKDOWN",
   image: "IMAGE",
   none: "PREVIEW"
-}, Cn = /* @__PURE__ */ H({
+}, Sn = /* @__PURE__ */ N({
   name: "PanelDocs",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = v(""), t = v(""), n = v(!1);
+    const e = E(_), a = E(O, y(() => Q)), l = v(""), t = v(""), n = v(!1);
     let o;
     async function s() {
       if (!(e.docKind.value !== "gad" || !e.openPath.value)) {
         n.value = !0;
         try {
-          const r = await e.api.docGen(e.source.value, fn(e.openPath.value), "render-html");
+          const r = await e.api.docGen(e.source.value, hn(e.openPath.value), "render-html");
           l.value = r.ok ? r.html ?? "" : "", t.value = r.ok ? "" : r.error ?? "";
         } catch (r) {
           l.value = "", t.value = r instanceof Error ? r.message : String(r);
@@ -2283,18 +2332,18 @@ const hn = {
         }
       }
     }
-    const p = async () => {
+    const g = async () => {
       await e.refreshDoc(), await s();
     };
-    He(p), De(() => clearTimeout(o)), R(() => e.openPath.value, p), R(() => e.source.value, () => {
+    He(g), ze(() => clearTimeout(o)), L(() => e.openPath.value, g), L(() => e.source.value, () => {
       e.docKind.value === "gad" && (clearTimeout(o), o = setTimeout(s, 500));
     });
     const u = (r) => {
-      var h;
-      const f = (h = r.target.closest("[data-src-pos]")) == null ? void 0 : h.getAttribute("data-src-pos");
-      if (!f) return;
-      const [I] = f.split(",").map(Number);
-      I && e.goto(I);
+      var x;
+      const h = (x = r.target.closest("[data-src-pos]")) == null ? void 0 : x.getAttribute("data-src-pos");
+      if (!h) return;
+      const [f] = h.split(",").map(Number);
+      f && e.goto(f);
     };
     return () => i("div", {
       class: "pnl"
@@ -2302,13 +2351,13 @@ const hn = {
       class: "pnl-head"
     }, [i("span", {
       class: "text-caption font-weight-medium"
-    }, [hn[e.docKind.value]]), i(y, {
+    }, [Cn[e.docKind.value]]), i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-refresh",
       title: a.value.refresh,
       loading: n.value,
-      onClick: p
+      onClick: g
     }, null)]), e.docKind.value === "html" ? i("iframe", {
       class: "pnl-body gad-ide__preview-frame",
       sandbox: "",
@@ -2340,7 +2389,7 @@ const hn = {
       innerHTML: ca(e.docHtml.value, e.openPath.value)
     }, null)]);
   }
-}), Sn = {
+}), xn = {
   class: { icon: "mdi-alpha-c-circle", color: "#3592c4" },
   mixin: { icon: "mdi-alpha-m-circle", color: "#26a69a" },
   type: { icon: "mdi-alpha-t-circle", color: "#9876aa" },
@@ -2357,10 +2406,10 @@ const hn = {
   value: { icon: "mdi-circle-small", color: "#e5932c" },
   overload: { icon: "mdi-function-variant", color: "#c75450" }
 };
-function xn(e) {
-  return Sn[e] ?? { icon: "mdi-tag-outline", color: "currentColor" };
+function yn(e) {
+  return xn[e] ?? { icon: "mdi-tag-outline", color: "currentColor" };
 }
-const yn = H({
+const Pn = N({
   name: "StructureTree",
   props: {
     symbols: { type: Array, default: () => [] },
@@ -2371,7 +2420,7 @@ const yn = H({
   },
   setup(e) {
     const a = Se({}), l = (t, n, o) => {
-      const s = t.children ?? [], p = !a[n], { icon: u, color: r } = xn(t.kind), f = ie(
+      const s = t.children ?? [], g = !a[n], { icon: u, color: r } = yn(t.kind), h = ie(
         "div",
         {
           class: "gad-structure__row",
@@ -2386,8 +2435,8 @@ const yn = H({
             fontSize: "13px"
           },
           onClick: () => {
-            var I;
-            return (I = e.onNavigate) == null ? void 0 : I.call(e, t);
+            var f;
+            return (f = e.onNavigate) == null ? void 0 : f.call(e, t);
           }
         },
         [
@@ -2395,18 +2444,18 @@ const yn = H({
             "span",
             {
               style: { width: "16px", display: "inline-flex", justifyContent: "center", flex: "0 0 16px" },
-              onClick: (I) => {
-                s.length && (I.stopPropagation(), a[n] = p);
+              onClick: (f) => {
+                s.length && (f.stopPropagation(), a[n] = g);
               }
             },
-            s.length > 0 ? [ie(ae, { size: "16" }, () => p ? "mdi-chevron-down" : "mdi-chevron-right")] : []
+            s.length > 0 ? [ie(ae, { size: "16" }, () => g ? "mdi-chevron-down" : "mdi-chevron-right")] : []
           ),
           ie(ae, { size: "16", style: { color: r } }, () => u),
           ie("span", t.name),
           t.detail ? ie("span", { class: "text-medium-emphasis", style: { overflow: "hidden", textOverflow: "ellipsis" } }, t.detail) : null
         ]
       );
-      return ie("div", { key: n }, [f, ...p ? s.map((I, h) => l(I, `${n}/${h}:${I.name}`, o + 1)) : []]);
+      return ie("div", { key: n }, [h, ...g ? s.map((f, x) => l(f, `${n}/${x}:${f.name}`, o + 1)) : []]);
     };
     return () => ie(
       "div",
@@ -2414,19 +2463,19 @@ const yn = H({
       e.symbols.length === 0 ? [ie("div", { class: "text-medium-emphasis", style: { padding: "8px", fontSize: "13px" } }, e.emptyText)] : e.symbols.map((t, n) => l(t, `${n}:${t.name}`, 0))
     );
   }
-}), Pn = /* @__PURE__ */ H({
+}), bn = /* @__PURE__ */ N({
   name: "PanelStructure",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = v([]), t = v("");
+    const e = E(_), a = E(O, y(() => Q)), l = v([]), t = v("");
     let n;
     async function o() {
-      const p = e.api.symbols;
-      if (!p || !e.openPath.value) {
+      const g = e.api.symbols;
+      if (!g || !e.openPath.value) {
         l.value = [];
         return;
       }
       try {
-        l.value = await p(e.source.value, e.openPath.value), t.value = "";
+        l.value = await g(e.source.value, e.openPath.value), t.value = "";
       } catch (u) {
         t.value = u instanceof Error ? u.message : String(u);
       }
@@ -2434,13 +2483,13 @@ const yn = H({
     const s = () => {
       clearTimeout(n), n = setTimeout(o, 400);
     };
-    return He(o), De(() => clearTimeout(n)), R(() => e.openPath.value, o), R(() => e.source.value, s), () => i("div", {
+    return He(o), ze(() => clearTimeout(n)), L(() => e.openPath.value, o), L(() => e.source.value, s), () => i("div", {
       class: "pnl"
     }, [i("div", {
       class: "pnl-head"
     }, [i("span", {
       class: "text-caption font-weight-medium"
-    }, [a.value.structure.toUpperCase()]), i(y, {
+    }, [a.value.structure.toUpperCase()]), i(P, {
       size: "x-small",
       variant: "text",
       icon: "mdi-refresh",
@@ -2451,10 +2500,10 @@ const yn = H({
       style: {
         padding: 0
       }
-    }, [e.api.symbols ? i(yn, {
+    }, [e.api.symbols ? i(Pn, {
       symbols: l.value,
       emptyText: t.value || a.value.noDeclarations,
-      onNavigate: (p) => e.goto(p.line)
+      onNavigate: (g) => e.goto(g.line)
     }, null) : i("div", {
       class: "text-medium-emphasis",
       style: {
@@ -2462,10 +2511,10 @@ const yn = H({
       }
     }, [a.value.noStructure])])]);
   }
-}), bn = /* @__PURE__ */ H({
+}), Gn = /* @__PURE__ */ N({
   name: "PanelBreakpoints",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = v("current"), t = (n, o) => {
+    const e = E(_), a = E(O, y(() => Q)), l = v("current"), t = (n, o) => {
       const s = e.bpMetaFor(n)[o] || {};
       return i("div", {
         key: n + ":" + o,
@@ -2486,13 +2535,13 @@ const yn = H({
         class: "bp-cond"
       }, [S(" if "), s.condition]) : null]), i("span", {
         class: "bp-actions"
-      }, [i(y, {
+      }, [i(P, {
         size: "x-small",
         variant: "text",
         icon: "mdi-pencil-outline",
         title: a.value.editCondition,
         onClick: () => e.openBpCondition(n, o)
-      }, null), i(y, {
+      }, null), i(P, {
         size: "x-small",
         variant: "text",
         icon: "mdi-close",
@@ -2504,18 +2553,18 @@ const yn = H({
       const n = e.openPath.value, o = e.allBreakpoints();
       return i("div", {
         class: "pnl"
-      }, [i(Gt, b({
+      }, [i(Gt, Z({
         modelValue: l.value
       }, {
         "onUpdate:modelValue": (s) => l.value = s
       }, {
         density: "compact"
       }), {
-        default: () => [i(ke, {
+        default: () => [i(je, {
           value: "current"
         }, {
           default: () => [a.value.currentFile]
-        }), i(ke, {
+        }), i(je, {
           value: "all"
         }, {
           default: () => [a.value.all]
@@ -2526,12 +2575,12 @@ const yn = H({
         class: "text-medium-emphasis"
       }, [S("No breakpoints in "), n.split("/").pop(), S(".")]) : i("div", {
         class: "text-medium-emphasis"
-      }, [a.value.noFileOpen]) : Object.keys(o).length ? Object.entries(o).flatMap(([s, p]) => p.map((u) => t(s, u))) : i("div", {
+      }, [a.value.noFileOpen]) : Object.keys(o).length ? Object.entries(o).flatMap(([s, g]) => g.map((u) => t(s, u))) : i("div", {
         class: "text-medium-emphasis"
       }, [a.value.noBreakpoints])])]);
     };
   }
-}), Gn = /* @__PURE__ */ H({
+}), Zn = /* @__PURE__ */ N({
   name: "BreakpointConditionDialog",
   props: {
     modelValue: {
@@ -2554,8 +2603,8 @@ const yn = H({
   setup(e, {
     emit: a
   }) {
-    const l = D(Q, x(() => X)), t = v(e.initial.condition ?? ""), n = v(!!e.initial.disabled);
-    R(() => e.modelValue, (s) => {
+    const l = E(O, y(() => Q)), t = v(e.initial.condition ?? ""), n = v(!!e.initial.disabled);
+    L(() => e.modelValue, (s) => {
       s && (t.value = e.initial.condition ?? "", n.value = !!e.initial.disabled);
     });
     function o() {
@@ -2564,7 +2613,7 @@ const yn = H({
         disabled: n.value
       }), a("update:modelValue", !1);
     }
-    return () => i(ue, b({
+    return () => i(ue, Z({
       modelValue: e.modelValue
     }, {
       "onUpdate:modelValue": (s) => a("update:modelValue", s)
@@ -2575,7 +2624,7 @@ const yn = H({
         default: () => [i(se, null, {
           default: () => [S("Breakpoint · line "), e.line]
         }), i(re, null, {
-          default: () => [i(K, b({
+          default: () => [i(K, Z({
             modelValue: t.value
           }, {
             "onUpdate:modelValue": (s) => t.value = s
@@ -2587,7 +2636,7 @@ const yn = H({
             variant: "outlined",
             autofocus: !0,
             onKeyup: (s) => s.key === "Enter" && o()
-          }), null), i(Be, b({
+          }), null), i(ke, Z({
             modelValue: n.value
           }, {
             "onUpdate:modelValue": (s) => n.value = !!s
@@ -2598,11 +2647,11 @@ const yn = H({
             class: "mt-2"
           }), null)]
         }), i(de, null, {
-          default: () => [i(ce, null, null), i(y, {
+          default: () => [i(ce, null, null), i(P, {
             onClick: () => a("update:modelValue", !1)
           }, {
             default: () => [l.value.cancel]
-          }), i(y, {
+          }), i(P, {
             color: "primary",
             onClick: o
           }, {
@@ -2613,10 +2662,10 @@ const yn = H({
     });
   }
 });
-function Zn(e) {
-  return typeof e == "function" || Object.prototype.toString.call(e) === "[object Object]" && !Pi(e);
+function An(e) {
+  return typeof e == "function" || Object.prototype.toString.call(e) === "[object Object]" && !bi(e);
 }
-const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-line", "dictItemNewLine"], ["call-params-in-new-line", "callParamsNewLine"]], An = /* @__PURE__ */ H({
+const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-line", "dictItemNewLine"], ["call-params-in-new-line", "callParamsNewLine"]], Mn = /* @__PURE__ */ N({
   name: "SettingsDialog",
   props: {
     modelValue: {
@@ -2643,122 +2692,122 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
   setup(e, {
     emit: a
   }) {
-    const l = D(Q, x(() => X)), t = v("panels"), n = (Z) => e.config[Z] || {}, o = n("fmt"), s = n("transpile"), p = n("template"), u = Se(Object.fromEntries(Aa.map(([Z]) => [Z, o[Z] === !0]))), r = v(o.format === !0), f = v(String(o["max-columns"] ?? "")), I = v(o.backup === !0), h = v(String(s.writeFunc ?? "")), G = v(String(s.rawStrFuncStart ?? "")), w = v(String(s.rawStrFuncEnd ?? "")), j = v(String(p.start_delimiter ?? "")), P = v(String(p.end_delimiter ?? ""));
-    function M() {
-      const Z = {
+    const l = E(O, y(() => Q)), t = v("panels"), n = (A) => e.config[A] || {}, o = n("fmt"), s = n("transpile"), g = n("template"), u = Se(Object.fromEntries(Aa.map(([A]) => [A, o[A] === !0]))), r = v(o.format === !0), h = v(String(o["max-columns"] ?? "")), f = v(o.backup === !0), x = v(String(s.writeFunc ?? "")), j = v(String(s.rawStrFuncStart ?? "")), w = v(String(s.rawStrFuncEnd ?? "")), H = v(String(g.start_delimiter ?? "")), G = v(String(g.end_delimiter ?? ""));
+    function k() {
+      const A = {
         ...o
       };
-      for (const [T] of Aa)
-        u[T] ? Z[T] = !0 : delete Z[T];
-      r.value ? Z.format = !0 : delete Z.format;
-      const B = parseInt(f.value, 10);
-      Number.isFinite(B) && B > 0 ? Z["max-columns"] = B : delete Z["max-columns"], I.value ? Z.backup = !0 : delete Z.backup;
-      const J = {
+      for (const [F] of Aa)
+        u[F] ? A[F] = !0 : delete A[F];
+      r.value ? A.format = !0 : delete A.format;
+      const m = parseInt(h.value, 10);
+      Number.isFinite(m) && m > 0 ? A["max-columns"] = m : delete A["max-columns"], f.value ? A.backup = !0 : delete A.backup;
+      const M = {
         ...s
-      }, N = (T, Pe, te) => {
-        te.trim() === "" ? delete T[Pe] : T[Pe] = te;
+      }, b = (F, Pe, te) => {
+        te.trim() === "" ? delete F[Pe] : F[Pe] = te;
       };
-      N(J, "writeFunc", h.value), N(J, "rawStrFuncStart", G.value), N(J, "rawStrFuncEnd", w.value);
+      b(M, "writeFunc", x.value), b(M, "rawStrFuncStart", j.value), b(M, "rawStrFuncEnd", w.value);
       const W = {
-        ...p
+        ...g
       };
-      j.value === "" ? delete W.start_delimiter : W.start_delimiter = j.value, P.value === "" ? delete W.end_delimiter : W.end_delimiter = P.value;
-      const V = {
+      H.value === "" ? delete W.start_delimiter : W.start_delimiter = H.value, G.value === "" ? delete W.end_delimiter : W.end_delimiter = G.value;
+      const T = {
         ...e.config,
-        fmt: Z
+        fmt: A
       };
-      Object.keys(J).length > 0 ? V.transpile = J : delete V.transpile, Object.keys(W).length > 0 ? V.template = W : delete V.template, a("save", V), a("update:modelValue", !1);
+      Object.keys(M).length > 0 ? T.transpile = M : delete T.transpile, Object.keys(W).length > 0 ? T.template = W : delete T.template, a("save", T), a("update:modelValue", !1);
     }
-    const z = (Z) => ({
-      modelValue: Z.value,
-      "onUpdate:modelValue": (B) => Z.value = B
+    const z = (A) => ({
+      modelValue: A.value,
+      "onUpdate:modelValue": (m) => A.value = m
     });
     return () => {
-      let Z;
-      return i(ue, b({
+      let A;
+      return i(ue, Z({
         modelValue: e.modelValue
       }, {
-        "onUpdate:modelValue": (B) => a("update:modelValue", B)
+        "onUpdate:modelValue": (m) => a("update:modelValue", m)
       }, {
         maxWidth: "560"
       }), {
         default: () => [i(oe, null, {
           default: () => [i(se, null, {
             default: () => [l.value.settings]
-          }), i(Gt, b({
+          }), i(Gt, Z({
             modelValue: t.value
           }, {
-            "onUpdate:modelValue": (B) => t.value = B
+            "onUpdate:modelValue": (m) => t.value = m
           }), {
-            default: () => [i(ke, {
+            default: () => [i(je, {
               value: "panels"
             }, {
               default: () => [l.value.panels]
-            }), i(ke, {
+            }), i(je, {
               value: "formatter"
             }, {
               default: () => [l.value.formatter]
-            }), i(ke, {
+            }), i(je, {
               value: "transpile"
             }, {
               default: () => [l.value.transpile]
-            }), i(ke, {
+            }), i(je, {
               value: "template"
             }, {
               default: () => [l.value.template]
             })]
           }), i(re, null, {
-            default: () => [i(an, b({
+            default: () => [i(tn, Z({
               modelValue: t.value
             }, {
-              "onUpdate:modelValue": (B) => t.value = B
+              "onUpdate:modelValue": (m) => t.value = m
             }), {
               default: () => [i(la, {
                 value: "panels"
-              }, Zn(Z = e.panels.map((B) => i(Be, b({
-                key: B.id,
-                modelValue: B.visible
+              }, An(A = e.panels.map((m) => i(ke, Z({
+                key: m.id,
+                modelValue: m.visible
               }, {
-                "onUpdate:modelValue": (J) => e.onTogglePanel(B.id, !!J)
+                "onUpdate:modelValue": (M) => e.onTogglePanel(m.id, !!M)
               }, {
-                label: B.label,
+                label: m.label,
                 density: "compact",
                 hideDetails: !0
-              }), null))) ? Z : {
-                default: () => [Z]
+              }), null))) ? A : {
+                default: () => [A]
               }), i(la, {
                 value: "formatter"
               }, {
-                default: () => [i(Be, b({
+                default: () => [i(ke, Z({
                   modelValue: r.value
                 }, {
-                  "onUpdate:modelValue": (B) => r.value = !!B
+                  "onUpdate:modelValue": (m) => r.value = !!m
                 }, {
                   label: l.value.forceMultiline,
                   density: "compact",
                   hideDetails: !0
-                }), null), i(K, b({
-                  modelValue: f.value
+                }), null), i(K, Z({
+                  modelValue: h.value
                 }, {
-                  "onUpdate:modelValue": (B) => f.value = B
+                  "onUpdate:modelValue": (m) => h.value = m
                 }, {
                   label: l.value.maxColumns,
                   type: "number",
                   density: "compact",
                   hideDetails: !0
-                }), null), Aa.map(([B, J]) => i(Be, b({
-                  key: B,
-                  modelValue: u[B]
+                }), null), Aa.map(([m, M]) => i(ke, Z({
+                  key: m,
+                  modelValue: u[m]
                 }, {
-                  "onUpdate:modelValue": (N) => u[B] = !!N
+                  "onUpdate:modelValue": (b) => u[m] = !!b
                 }, {
-                  label: l.value[J],
+                  label: l.value[M],
                   density: "compact",
                   hideDetails: !0
-                }), null)), i(Be, b({
-                  modelValue: I.value
+                }), null)), i(ke, Z({
+                  modelValue: f.value
                 }, {
-                  "onUpdate:modelValue": (B) => I.value = !!B
+                  "onUpdate:modelValue": (m) => f.value = !!m
                 }, {
                   label: l.value.keepBackup,
                   density: "compact",
@@ -2767,19 +2816,19 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
               }), i(la, {
                 value: "transpile"
               }, {
-                default: () => [i(K, b(z(h), {
+                default: () => [i(K, Z(z(x), {
                   label: "writeFunc",
                   density: "compact",
                   variant: "outlined",
                   hideDetails: !0,
                   class: "mb-2"
-                }), null), i(K, b(z(G), {
+                }), null), i(K, Z(z(j), {
                   label: "rawStrFuncStart",
                   density: "compact",
                   variant: "outlined",
                   hideDetails: !0,
                   class: "mb-2"
-                }), null), i(K, b(z(w), {
+                }), null), i(K, Z(z(w), {
                   label: "rawStrFuncEnd",
                   density: "compact",
                   variant: "outlined",
@@ -2788,13 +2837,13 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
               }), i(la, {
                 value: "template"
               }, {
-                default: () => [i(K, b(z(j), {
+                default: () => [i(K, Z(z(H), {
                   label: "start_delimiter",
                   density: "compact",
                   variant: "outlined",
                   hideDetails: !0,
                   class: "mb-2"
-                }), null), i(K, b(z(P), {
+                }), null), i(K, Z(z(G), {
                   label: "end_delimiter",
                   density: "compact",
                   variant: "outlined",
@@ -2803,13 +2852,13 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
               })]
             })]
           }), i(de, null, {
-            default: () => [i(ce, null, null), i(y, {
+            default: () => [i(ce, null, null), i(P, {
               onClick: () => a("update:modelValue", !1)
             }, {
               default: () => [l.value.cancel]
-            }), i(y, {
+            }), i(P, {
               color: "primary",
-              onClick: M
+              onClick: k
             }, {
               default: () => [l.value.save]
             })]
@@ -2818,7 +2867,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
       });
     };
   }
-}), Mn = /* @__PURE__ */ H({
+}), Bn = /* @__PURE__ */ N({
   name: "RunProfileDialog",
   props: {
     modelValue: {
@@ -2838,8 +2887,8 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
   setup(e, {
     emit: a
   }) {
-    const l = D(Q, x(() => X)), t = v(""), n = v(e.defaultPath), o = v([]), s = v(""), p = () => /\.gadx$/i.test(n.value);
-    R(() => e.modelValue, (r) => {
+    const l = E(O, y(() => Q)), t = v(""), n = v(e.defaultPath), o = v([]), s = v(""), g = () => /\.gadx$/i.test(n.value);
+    L(() => e.modelValue, (r) => {
       r && (n.value = e.defaultPath, t.value || (t.value = e.defaultPath.split("/").pop() ?? "profile"));
     });
     function u() {
@@ -2848,9 +2897,9 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
         path: n.value,
         args: [...o.value]
       };
-      p() && s.value && (r.tagEncode = s.value), a("create", r), a("update:modelValue", !1), t.value = "", o.value = [], s.value = "";
+      g() && s.value && (r.tagEncode = s.value), a("create", r), a("update:modelValue", !1), t.value = "", o.value = [], s.value = "";
     }
-    return () => i(ue, b({
+    return () => i(ue, Z({
       modelValue: e.modelValue
     }, {
       "onUpdate:modelValue": (r) => a("update:modelValue", r)
@@ -2861,7 +2910,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
         default: () => [i(se, null, {
           default: () => [l.value.newRunProfile]
         }), i(re, null, {
-          default: () => [i(K, b({
+          default: () => [i(K, Z({
             modelValue: t.value
           }, {
             "onUpdate:modelValue": (r) => t.value = r
@@ -2871,7 +2920,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             variant: "outlined",
             class: "mb-2",
             hideDetails: !0
-          }), null), i(K, b({
+          }), null), i(K, Z({
             modelValue: n.value
           }, {
             "onUpdate:modelValue": (r) => n.value = r
@@ -2881,7 +2930,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             variant: "outlined",
             class: "mb-2",
             hideDetails: !0
-          }), null), i(Kl, b({
+          }), null), i(_l, Z({
             modelValue: o.value
           }, {
             "onUpdate:modelValue": (r) => o.value = r
@@ -2894,7 +2943,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             closableChips: !0,
             density: "compact",
             variant: "outlined"
-          }), null), p() && i(Te, b({
+          }), null), g() && i(Fe, Z({
             modelValue: s.value
           }, {
             "onUpdate:modelValue": (r) => s.value = r ?? ""
@@ -2916,11 +2965,11 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             class: "mt-2"
           }), null)]
         }), i(de, null, {
-          default: () => [i(ce, null, null), i(y, {
+          default: () => [i(ce, null, null), i(P, {
             onClick: () => a("update:modelValue", !1)
           }, {
             default: () => [l.value.cancel]
-          }), i(y, {
+          }), i(P, {
             color: "primary",
             disabled: !n.value.trim(),
             onClick: u
@@ -2931,7 +2980,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
       })]
     });
   }
-}), Bn = /* @__PURE__ */ H({
+}), kn = /* @__PURE__ */ N({
   name: "PromptDialog",
   props: {
     request: {
@@ -2945,15 +2994,15 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
   setup(e, {
     emit: a
   }) {
-    const l = D(Q, x(() => X)), t = v("");
-    R(() => e.request, (o) => {
+    const l = E(O, y(() => Q)), t = v("");
+    L(() => e.request, (o) => {
       o && (t.value = o.initial);
     });
     const n = (o) => {
       var s;
       (s = e.request) == null || s.resolve(o ? t.value.trim() : null), a("done");
     };
-    return () => i(ue, b({
+    return () => i(ue, Z({
       modelValue: !!e.request
     }, {
       "onUpdate:modelValue": (o) => {
@@ -2971,7 +3020,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
         }), i(re, null, {
           default: () => {
             var o;
-            return [i(K, b({
+            return [i(K, Z({
               modelValue: t.value
             }, {
               "onUpdate:modelValue": (s) => t.value = s
@@ -2985,11 +3034,11 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             }), null)];
           }
         }), i(de, null, {
-          default: () => [i(ce, null, null), i(y, {
+          default: () => [i(ce, null, null), i(P, {
             onClick: () => n(!1)
           }, {
             default: () => [l.value.cancel]
-          }), i(y, {
+          }), i(P, {
             color: "primary",
             onClick: () => n(!0)
           }, {
@@ -2999,7 +3048,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
       })]
     });
   }
-}), kn = /* @__PURE__ */ H({
+}), jn = /* @__PURE__ */ N({
   name: "ConfirmDialog",
   props: {
     request: {
@@ -3013,11 +3062,11 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
   setup(e, {
     emit: a
   }) {
-    const l = D(Q, x(() => X)), t = (n) => {
+    const l = E(O, y(() => Q)), t = (n) => {
       var o;
       (o = e.request) == null || o.resolve(n), a("done");
     };
-    return () => i(ue, b({
+    return () => i(ue, Z({
       modelValue: !!e.request
     }, {
       "onUpdate:modelValue": (n) => {
@@ -3032,17 +3081,19 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             var n;
             return [(n = e.request) == null ? void 0 : n.title];
           }
-        }), i(re, null, {
+        }), i(re, {
+          style: "white-space: pre-line"
+        }, {
           default: () => {
             var n;
             return [(n = e.request) == null ? void 0 : n.message];
           }
         }), i(de, null, {
-          default: () => [i(ce, null, null), i(y, {
+          default: () => [i(ce, null, null), i(P, {
             onClick: () => t(!1)
           }, {
             default: () => [l.value.cancel]
-          }), i(y, {
+          }), i(P, {
             color: "primary",
             onClick: () => t(!0)
           }, {
@@ -3052,7 +3103,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
       })]
     });
   }
-}), jn = /* @__PURE__ */ H({
+}), Dn = /* @__PURE__ */ N({
   name: "UrlImportDialog",
   props: {
     modelValue: {
@@ -3072,23 +3123,23 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
   setup(e, {
     emit: a
   }) {
-    const l = D(_), t = D(Q, x(() => X)), n = v(""), o = v(!0), s = v(!1), p = v(""), u = v(""), r = v(!1), f = x(() => /\.(zip|tar|tar\.gz|tgz)(\?|#|$)/i.test(n.value));
-    async function I() {
+    const l = E(_), t = E(O, y(() => Q)), n = v(""), o = v(!0), s = v(!1), g = v(""), u = v(""), r = v(!1), h = y(() => /\.(zip|tar|tar\.gz|tgz)(\?|#|$)/i.test(n.value));
+    async function f() {
       if (n.value.trim()) {
-        s.value = !0, p.value = "";
+        s.value = !0, g.value = "";
         try {
-          await a("import", n.value.trim(), f.value && o.value && l.canExtract.value, u.value), a("update:modelValue", !1), n.value = "";
-        } catch (h) {
-          p.value = String(h);
+          await a("import", n.value.trim(), h.value && o.value && l.canExtract.value, u.value), a("update:modelValue", !1), n.value = "";
+        } catch (x) {
+          g.value = String(x);
         } finally {
           s.value = !1;
         }
       }
     }
-    return () => i(ue, b({
+    return () => i(ue, Z({
       modelValue: e.modelValue
     }, {
-      "onUpdate:modelValue": (h) => a("update:modelValue", h)
+      "onUpdate:modelValue": (x) => a("update:modelValue", x)
     }, {
       maxWidth: "520"
     }), {
@@ -3096,10 +3147,10 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
         default: () => [i(se, null, {
           default: () => [t.value.importFromUrl]
         }), i(re, null, {
-          default: () => [i(K, b({
+          default: () => [i(K, Z({
             modelValue: n.value
           }, {
-            "onUpdate:modelValue": (h) => n.value = h
+            "onUpdate:modelValue": (x) => n.value = x
           }, {
             label: t.value.url,
             placeholder: "https://example.com/file.gad",
@@ -3107,11 +3158,11 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             variant: "outlined",
             autofocus: !0,
             hideDetails: !0,
-            onKeyup: (h) => h.key === "Enter" && I()
-          }), null), f.value && l.canExtract.value && i(bt, b({
+            onKeyup: (x) => x.key === "Enter" && f()
+          }), null), h.value && l.canExtract.value && i(bt, Z({
             modelValue: o.value
           }, {
-            "onUpdate:modelValue": (h) => o.value = !!h
+            "onUpdate:modelValue": (x) => o.value = !!x
           }, {
             label: t.value.extractArchive,
             density: "compact",
@@ -3131,7 +3182,7 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             readonly: !0,
             hideDetails: !0,
             onClick: () => r.value = !r.value
-          }, null), i(y, {
+          }, null), i(P, {
             size: "small",
             variant: "text",
             icon: "mdi-folder-search-outline",
@@ -3142,12 +3193,12 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
           }, [i(Wa, {
             root: l.tree.value,
             selected: u.value,
-            onSelect: (h) => {
-              u.value = h, r.value = !1;
+            onSelect: (x) => {
+              u.value = x, r.value = !1;
             }
           }, null)]), s.value && i("div", {
             class: "mt-3"
-          }, [i(en, {
+          }, [i(an, {
             modelValue: e.progress < 0 ? void 0 : e.progress,
             indeterminate: e.progress < 0,
             color: "primary",
@@ -3155,19 +3206,19 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             rounded: !0
           }, null), e.progress >= 0 && i("div", {
             class: "text-caption text-center mt-1"
-          }, [e.progress, S("%")])]), p.value && i("div", {
+          }, [e.progress, S("%")])]), g.value && i("div", {
             class: "pnl-diag mt-2"
-          }, [p.value])]
+          }, [g.value])]
         }), i(de, null, {
-          default: () => [i(ce, null, null), i(y, {
+          default: () => [i(ce, null, null), i(P, {
             onClick: () => a("update:modelValue", !1)
           }, {
             default: () => [t.value.cancel]
-          }), i(y, {
+          }), i(P, {
             color: "primary",
             loading: s.value,
             disabled: !n.value.trim(),
-            onClick: I
+            onClick: f
           }, {
             default: () => [t.value.importAction]
           })]
@@ -3175,18 +3226,18 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
       })]
     });
   }
-}), Hn = /* @__PURE__ */ H({
+}), Hn = /* @__PURE__ */ N({
   name: "MoveDialog",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = v("");
-    R(() => e.moveReq.value, (n) => {
+    const e = E(_), a = E(O, y(() => Q)), l = v("");
+    L(() => e.moveReq.value, (n) => {
       n && (l.value = n.path.includes("/") ? n.path.slice(0, n.path.lastIndexOf("/")) : "");
     });
     const t = (n) => {
       var o;
       return (o = e.moveReq.value) == null ? void 0 : o.resolve(n);
     };
-    return () => i(ue, b({
+    return () => i(ue, Z({
       modelValue: !!e.moveReq.value
     }, {
       "onUpdate:modelValue": (n) => !n && t(null)
@@ -3210,12 +3261,12 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
             onSelect: (n) => l.value = n
           }, null)])]
         }), i(de, null, {
-          default: () => [i(ce, null, null), i(y, {
+          default: () => [i(ce, null, null), i(P, {
             variant: "text",
             onClick: () => t(null)
           }, {
             default: () => [a.value.cancel]
-          }), i(y, {
+          }), i(P, {
             color: "primary",
             variant: "flat",
             onClick: () => t(l.value)
@@ -3226,9 +3277,9 @@ const Aa = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
       })]
     });
   }
-}), Dn = Symbol("gad-ide-extra-panels"), Mt = Symbol("gad-ide-extra-panel-expand");
-function zn(e) {
-  return /* @__PURE__ */ H({
+}), zn = Symbol("gad-ide-extra-panels"), Mt = Symbol("gad-ide-extra-panel-expand");
+function Nn(e) {
+  return /* @__PURE__ */ N({
     name: "PanelExtra_" + e.id.replace(/\W/g, "_"),
     props: {
       // dockview's: { params, api, containerApi }
@@ -3242,7 +3293,7 @@ function zn(e) {
       let n;
       return He(() => {
         t(), n = a.params.containerApi.onDidMaximizedGroupChange(t);
-      }), De(() => n == null ? void 0 : n.dispose()), oa(Mt, {
+      }), ze(() => n == null ? void 0 : n.dispose()), oa(Mt, {
         maximized: l,
         toggle: () => {
           a.params.api.isMaximized() ? a.params.api.exitMaximized() : a.params.api.maximize(), t();
@@ -3254,14 +3305,14 @@ function zn(e) {
         "data-extra-panel": e.id
       }, [i("div", {
         class: "gad-ide__extra-body"
-      }, [ie(e.component, e.props ?? {})]), !e.headerExpand && !e.tabExpand && i(Nn, {
+      }, [ie(e.component, e.props ?? {})]), !e.headerExpand && !e.tabExpand && i(Wn, {
         class: "gad-ide__extra-expand",
         variant: "tonal"
       }, null)]);
     }
   });
 }
-const Nn = /* @__PURE__ */ H({
+const Wn = /* @__PURE__ */ N({
   name: "ExpandButton",
   props: {
     variant: {
@@ -3270,8 +3321,8 @@ const Nn = /* @__PURE__ */ H({
     }
   },
   setup(e) {
-    const a = D(Mt, null);
-    return () => a && i(y, {
+    const a = E(Mt, null);
+    return () => a && i(P, {
       size: "x-small",
       variant: e.variant,
       icon: a.maximized.value ? "mdi-arrow-collapse" : "mdi-arrow-expand",
@@ -3281,8 +3332,8 @@ const Nn = /* @__PURE__ */ H({
     }, null);
   }
 });
-function Wn(e, a) {
-  return /* @__PURE__ */ H({
+function En(e, a) {
+  return /* @__PURE__ */ N({
     name: "PanelTab",
     props: {
       // dockview's: { params, api, containerApi }
@@ -3293,11 +3344,11 @@ function Wn(e, a) {
     },
     setup(l) {
       const t = l.params.api, n = v(t.title ?? ""), o = v(t.isMaximized()), s = [t.onDidTitleChange((r) => n.value = r.title), l.params.containerApi.onDidMaximizedGroupChange(() => o.value = t.isMaximized())];
-      De(() => s.forEach((r) => r.dispose()));
-      const p = (r) => ({
-        onPointerdown: (f) => f.preventDefault(),
-        onClick: (f) => {
-          f.preventDefault(), f.stopPropagation(), r();
+      ze(() => s.forEach((r) => r.dispose()));
+      const g = (r) => ({
+        onPointerdown: (h) => h.preventDefault(),
+        onClick: (h) => {
+          h.preventDefault(), h.stopPropagation(), r();
         }
       }), u = () => {
         t.isMaximized() ? t.exitMaximized() : t.maximize(), o.value = t.isMaximized();
@@ -3307,18 +3358,18 @@ function Wn(e, a) {
         "data-tab": t.id
       }, [i("div", {
         class: "dv-default-tab-content"
-      }, [n.value]), e.has(t.id) && i("div", b({
+      }, [n.value]), e.has(t.id) && i("div", Z({
         class: "dv-default-tab-action gad-ide__tab-expand",
         title: o.value ? a().restore : a().expand,
         "data-tab-expand": t.id,
         "data-maximized": o.value ? "true" : "false"
-      }, p(u)), [i(ae, {
+      }, g(u)), [i(ae, {
         size: "14",
         icon: o.value ? "mdi-arrow-collapse" : "mdi-arrow-expand"
-      }, null)]), i("div", b({
+      }, null)]), i("div", Z({
         class: "dv-default-tab-action",
         "data-tab-close": t.id
-      }, p(() => t.close())), [i(ae, {
+      }, g(() => t.close())), [i(ae, {
         size: "14",
         icon: "mdi-close"
       }, null)])]);
@@ -3333,21 +3384,21 @@ function wn(e, a) {
 }
 function Bt(e) {
   const a = ka([""]), l = v(null);
-  e.api.gitRepos && e.api.gitRepos().then((p) => {
-    p.length && (a.value = p);
+  e.api.gitRepos && e.api.gitRepos().then((g) => {
+    g.length && (a.value = g);
   }).catch(() => {
-  }), R(() => e.openPath.value, () => {
+  }), L(() => e.openPath.value, () => {
     l.value = null;
   });
-  const t = x(() => l.value !== null && a.value.includes(l.value) ? l.value : wn(a.value, e.openPath.value) ?? a.value[0] ?? ""), n = x(() => e.api.gitFor ? e.api.gitFor(t.value) : e.api.git);
-  return { repos: a, repo: t, choose: (p) => {
-    l.value = p;
-  }, api: n, rel: (p) => {
+  const t = y(() => l.value !== null && a.value.includes(l.value) ? l.value : wn(a.value, e.openPath.value) ?? a.value[0] ?? ""), n = y(() => e.api.gitFor ? e.api.gitFor(t.value) : e.api.git);
+  return { repos: a, repo: t, choose: (g) => {
+    l.value = g;
+  }, api: n, rel: (g) => {
     const u = t.value;
-    return u ? p.startsWith(u + "/") ? p.slice(u.length + 1) : "" : p;
-  }, abs: (p) => t.value ? t.value + "/" + p : p };
+    return u ? g.startsWith(u + "/") ? g.slice(u.length + 1) : "" : g;
+  }, abs: (g) => t.value ? t.value + "/" + g : g };
 }
-const kt = /* @__PURE__ */ H({
+const kt = /* @__PURE__ */ N({
   name: "RepoSelect",
   props: {
     git: {
@@ -3364,7 +3415,7 @@ const kt = /* @__PURE__ */ H({
     }
   },
   setup(e) {
-    return () => e.git.repos.value.length > 1 ? i(Te, b({
+    return () => e.git.repos.value.length > 1 ? i(Fe, Z({
       class: "gad-ide__repo-select",
       density: "compact",
       variant: "outlined",
@@ -3383,12 +3434,12 @@ const kt = /* @__PURE__ */ H({
       "onUpdate:modelValue": (a) => e.git.choose(a)
     }), null) : null;
   }
-}), En = /* @__PURE__ */ H({
+}), Rn = /* @__PURE__ */ N({
   name: "PanelChanges",
   setup() {
     var n;
-    const e = D(_), a = D(Q, x(() => X)), l = ((n = e.workspace.actions) == null ? void 0 : n.edit) ?? !0, t = Bt(e);
-    return () => i(ki, {
+    const e = E(_), a = E(O, y(() => Q)), l = ((n = e.workspace.actions) == null ? void 0 : n.edit) ?? !0, t = Bt(e);
+    return () => i(ji, {
       key: t.repo.value,
       api: t.api.value,
       dark: e.dark.value,
@@ -3405,11 +3456,11 @@ const kt = /* @__PURE__ */ H({
       }, null)]
     });
   }
-}), Rn = /* @__PURE__ */ H({
+}), Vn = /* @__PURE__ */ N({
   name: "PanelGit",
   setup() {
-    const e = D(_), a = D(Q, x(() => X)), l = Bt(e);
-    return () => i(ji, {
+    const e = E(_), a = E(O, y(() => Q)), l = Bt(e);
+    return () => i(Di, {
       key: l.repo.value,
       api: l.api.value,
       dark: e.dark.value,
@@ -3566,16 +3617,16 @@ const kt = /* @__PURE__ */ H({
       }
     })
   }
-], Vn = {
-  explorer: sn,
-  editor: cn,
-  docs: Cn,
-  structure: Pn,
-  callstack: In,
-  locals: gn,
-  breakpoints: bn,
-  output: pn
-}, xo = /* @__PURE__ */ H({
+], Ln = {
+  explorer: un,
+  editor: In,
+  docs: Sn,
+  structure: bn,
+  callstack: gn,
+  locals: pn,
+  breakpoints: Gn,
+  output: mn
+}, yo = /* @__PURE__ */ N({
   name: "GadIde",
   props: {
     api: {
@@ -3685,7 +3736,7 @@ const kt = /* @__PURE__ */ H({
   setup(e, {
     emit: a
   }) {
-    const l = x(() => e.dark), t = Sl(() => e.messages), n = Ol(e.api, e.workspace, l, {
+    const l = y(() => e.dark), t = xl(() => e.messages), n = Kl(e.api, e.workspace, l, {
       onReset: e.onReset,
       onUpload: e.onUpload,
       getRunProfiles: () => e.runProfiles,
@@ -3699,17 +3750,17 @@ const kt = /* @__PURE__ */ H({
       fileTypes: e.fileTypes,
       getWords: () => t.value
     });
-    oa(_, n), oa(Q, t), R(() => e.fontSize, (c) => {
+    oa(_, n), oa(O, t), L(() => e.fontSize, (c) => {
       c !== n.fontSize.value && n.setFontSize(c);
     });
-    let o = null, s = null, p = !1, u = "";
-    const r = Se(/* @__PURE__ */ new Set()), I = [...e.workspace.git && e.api.git ? [
+    let o = null, s = null, g = !1, u = "";
+    const r = Se(/* @__PURE__ */ new Set()), f = [...e.workspace.git && e.api.git ? [
       // Changes: its button in the left strip, below the Structure
       {
         id: "changes",
         label: t.value.changes,
         icon: "mdi-file-compare",
-        component: En,
+        component: Rn,
         toolbarButton: !0,
         strip: "left",
         tabExpand: !0
@@ -3718,180 +3769,180 @@ const kt = /* @__PURE__ */ H({
         id: "git",
         label: t.value.git,
         icon: "mdi-source-branch",
-        component: Rn,
+        component: Vn,
         toolbarButton: !0,
         tabExpand: !0
       }
-    ] : [], ...e.extraPanels], h = /* @__PURE__ */ new Set(["editor", "explorer", "structure", "docs", ...I.filter((c) => c.tabExpand).map((c) => c.id)]), G = Wn(h, () => ({
+    ] : [], ...e.extraPanels], x = /* @__PURE__ */ new Set(["editor", "explorer", "structure", "docs", ...f.filter((c) => c.tabExpand).map((c) => c.id)]), j = En(x, () => ({
       expand: t.value.expand,
       restore: t.value.restore
-    })), w = x(() => I.map((c) => ({
+    })), w = y(() => f.map((c) => ({
       id: c.id,
       label: c.label,
-      add: (m) => {
-        var he;
-        const A = c.placement ?? "bottom", L = I.find((We) => We.id !== c.id && (We.placement ?? "bottom") === A && m.getPanel(We.id)), U = A === "right" ? "right" : A === "left" ? "left" : "below", F = I.indexOf(c) < I.indexOf(L) ? "left" : "right", ge = L ? {
-          referencePanel: L.id,
-          direction: A === "bottom" ? F : "within"
-        } : m.panels.length ? {
-          direction: U
+      add: (p) => {
+        var pe;
+        const B = c.placement ?? "bottom", Y = f.find((Ee) => Ee.id !== c.id && (Ee.placement ?? "bottom") === B && p.getPanel(Ee.id)), J = B === "right" ? "right" : B === "left" ? "left" : "below", U = f.indexOf(c) < f.indexOf(Y) ? "left" : "right", ge = Y ? {
+          referencePanel: Y.id,
+          direction: B === "bottom" ? U : "within"
+        } : p.panels.length ? {
+          direction: J
         } : void 0;
-        m.addPanel({
+        p.addPanel({
           id: c.id,
           component: c.id,
           title: c.label,
           ...ge ? {
             position: ge
           } : {}
-        }), !L && A === "bottom" && ((he = m.getPanel(c.id)) == null || he.api.setSize({
-          height: q(m)
+        }), !Y && B === "bottom" && ((pe = p.getPanel(c.id)) == null || pe.api.setSize({
+          height: q(p)
         }));
       }
-    }))), j = {
-      ...Vn
+    }))), H = {
+      ...Ln
     };
-    for (const c of I) j[c.id] = zn(c);
-    const P = (c) => c.word ? t.value[c.word] : c.label, M = x(() => [...(e.panels ? Ma.filter((c) => e.panels.includes(c.id)) : Ma).map((c) => ({
+    for (const c of f) H[c.id] = Nn(c);
+    const G = (c) => c.word ? t.value[c.word] : c.label, k = y(() => [...(e.panels ? Ma.filter((c) => e.panels.includes(c.id)) : Ma).map((c) => ({
       ...c,
-      label: P(c)
-    })), ...w.value]), z = (c) => M.value.some((m) => m.id === c);
-    function Z(c, m) {
+      label: G(c)
+    })), ...w.value]), z = (c) => k.value.some((p) => p.id === c);
+    function A(c, p) {
       try {
-        m.add(c);
+        p.add(c);
       } catch {
         c.addPanel({
-          id: m.id,
-          component: m.id,
-          title: m.label
+          id: p.id,
+          component: p.id,
+          title: p.label
         });
       }
-      const A = c.getPanel(m.id);
-      A && A.title !== m.label && A.api.setTitle(m.label);
+      const B = c.getPanel(p.id);
+      B && B.title !== p.label && B.api.setTitle(p.label);
     }
-    function B(c) {
-      for (const m of M.value) m.id !== "docs" && m.id !== "structure" && !w.value.some((A) => A.id === m.id) && Z(c, m);
+    function m(c) {
+      for (const p of k.value) p.id !== "docs" && p.id !== "structure" && !w.value.some((B) => B.id === p.id) && A(c, p);
     }
-    function J(c) {
-      for (const m of [...c.panels]) z(m.id) || c.removePanel(m);
+    function M(c) {
+      for (const p of [...c.panels]) z(p.id) || c.removePanel(p);
     }
-    const N = v("");
+    const b = v("");
     function W() {
       var c;
       if (o) {
         r.clear();
-        for (const m of o.panels) r.add(m.id);
-        N.value = ((c = o.panels.find((m) => m.api.isMaximized())) == null ? void 0 : c.id) ?? "";
+        for (const p of o.panels) r.add(p.id);
+        b.value = ((c = o.panels.find((p) => p.api.isMaximized())) == null ? void 0 : c.id) ?? "";
       }
-    }
-    function V(c) {
-      const m = o == null ? void 0 : o.getPanel(c);
-      m && (m.api.isMaximized() ? m.api.exitMaximized() : m.api.maximize(), W());
     }
     function T(c) {
-      for (const m of Ma) {
-        const A = c.getPanel(m.id);
-        A && A.title !== P(m) && A.api.setTitle(P(m));
+      const p = o == null ? void 0 : o.getPanel(c);
+      p && (p.api.isMaximized() ? p.api.exitMaximized() : p.api.maximize(), W());
+    }
+    function F(c) {
+      for (const p of Ma) {
+        const B = c.getPanel(p.id);
+        B && B.title !== G(p) && B.api.setTitle(G(p));
       }
     }
-    R(t, () => o && T(o));
+    L(t, () => o && F(o));
     function Pe(c) {
       o = c.api;
-      const m = e.layoutConfig;
+      const p = e.layoutConfig;
       try {
-        m && m.grid ? (o.fromJSON(m), J(o), T(o), o.panels.length || B(o)) : B(o);
+        p && p.grid ? (o.fromJSON(p), M(o), F(o), o.panels.length || m(o)) : m(o);
       } catch {
-        o.clear(), B(o);
+        o.clear(), m(o);
       }
       W(), u = JSON.stringify(o.toJSON());
-      const A = o.onDidMaximizedGroupChange(() => W()), L = o.onDidLayoutChange(() => {
-        if (!o || (W(), p)) return;
-        const U = o.toJSON(), F = JSON.stringify(U);
-        F !== u && (u = F, a("update:layoutConfig", U));
+      const B = o.onDidMaximizedGroupChange(() => W()), Y = o.onDidLayoutChange(() => {
+        if (!o || (W(), g)) return;
+        const J = o.toJSON(), U = JSON.stringify(J);
+        U !== u && (u = U, a("update:layoutConfig", J));
       });
       s = {
         dispose: () => {
-          A.dispose(), L.dispose();
+          B.dispose(), Y.dispose();
         }
       };
     }
-    R(() => e.layoutConfig, (c) => {
+    L(() => e.layoutConfig, (c) => {
       if (!(!o || !c || JSON.stringify(c) === u)) {
-        p = !0;
+        g = !0;
         try {
-          o.fromJSON(c), J(o), T(o), u = JSON.stringify(o.toJSON());
+          o.fromJSON(c), M(o), F(o), u = JSON.stringify(o.toJSON());
         } catch {
         } finally {
-          p = !1, W();
+          g = !1, W();
         }
       }
     });
     const te = "gad-ide.bottom.height";
     function q(c) {
-      let m = 0;
+      let p = 0;
       try {
-        m = Number(localStorage.getItem(te)) || 0;
+        p = Number(localStorage.getItem(te)) || 0;
       } catch {
       }
-      const A = Math.max(160, c.height - 120);
-      return Math.min(A, Math.max(160, m || Math.round(c.height / 3)));
+      const B = Math.max(160, c.height - 120);
+      return Math.min(B, Math.max(160, p || Math.round(c.height / 3)));
     }
-    const Fe = "gad-ide.preview.width";
+    const Ue = "gad-ide.preview.width";
     function le(c) {
-      let m = 0;
+      let p = 0;
       try {
-        m = Number(localStorage.getItem(Fe)) || 0;
+        p = Number(localStorage.getItem(Ue)) || 0;
       } catch {
       }
-      return Math.min(Math.max(240, c.width - 300), Math.max(240, m || Math.round(c.width / 3)));
+      return Math.min(Math.max(240, c.width - 300), Math.max(240, p || Math.round(c.width / 3)));
     }
-    const Ue = "gad-ide.left.width";
+    const Je = "gad-ide.left.width";
     function Ia(c) {
-      var L, U;
+      var Y, J;
       if (!o) return;
-      const m = M.value.find((F) => F.id === c);
-      if (!m || o.getPanel(c)) return;
-      const A = !o.getPanel(c === "explorer" ? "structure" : "explorer");
-      if (Z(o, m), A) {
-        let F = 0;
+      const p = k.value.find((U) => U.id === c);
+      if (!p || o.getPanel(c)) return;
+      const B = !o.getPanel(c === "explorer" ? "structure" : "explorer");
+      if (A(o, p), B) {
+        let U = 0;
         try {
-          F = Number(localStorage.getItem(Ue)) || 0;
+          U = Number(localStorage.getItem(Je)) || 0;
         } catch {
         }
-        (L = o.getPanel(c)) == null || L.api.setSize({
-          width: Math.min(Math.max(160, o.width - 300), Math.max(160, F || 260))
+        (Y = o.getPanel(c)) == null || Y.api.setSize({
+          width: Math.min(Math.max(160, o.width - 300), Math.max(160, U || 260))
         });
       }
-      (U = o.getPanel(c)) == null || U.api.setActive();
+      (J = o.getPanel(c)) == null || J.api.setActive();
     }
-    function Je(c) {
-      var L, U;
+    function Xe(c) {
+      var Y, J;
       if (c === "docs" || c === "explorer" || c === "structure") {
-        const F = (L = o == null ? void 0 : o.getPanel(c)) == null ? void 0 : L.api.width, ge = c === "docs" ? Fe : Ue;
-        if (F) try {
-          localStorage.setItem(ge, String(Math.round(F)));
+        const U = (Y = o == null ? void 0 : o.getPanel(c)) == null ? void 0 : Y.api.width, ge = c === "docs" ? Ue : Je;
+        if (U) try {
+          localStorage.setItem(ge, String(Math.round(U)));
         } catch {
         }
         return;
       }
-      const m = I.find((F) => F.id === c), A = (U = o == null ? void 0 : o.getPanel(c)) == null ? void 0 : U.api.height;
-      if (!(!m || (m.placement ?? "bottom") !== "bottom" || !A))
+      const p = f.find((U) => U.id === c), B = (J = o == null ? void 0 : o.getPanel(c)) == null ? void 0 : J.api.height;
+      if (!(!p || (p.placement ?? "bottom") !== "bottom" || !B))
         try {
-          localStorage.setItem(te, String(Math.round(A)));
+          localStorage.setItem(te, String(Math.round(B)));
         } catch {
         }
     }
-    function Xe(c, m) {
+    function Qe(c, p) {
       if (o)
-        if (m) {
-          const A = M.value.find((L) => L.id === c);
-          A && !o.getPanel(c) && Z(o, A);
+        if (p) {
+          const B = k.value.find((Y) => Y.id === c);
+          B && !o.getPanel(c) && A(o, B);
         } else {
-          const A = o.getPanel(c);
-          A && (Je(c), o.removePanel(A));
+          const B = o.getPanel(c);
+          B && (Xe(c), o.removePanel(B));
         }
     }
-    const $ = {
-      buttons: x(() => I.filter((c) => c.toolbarButton).map((c) => ({
+    const ee = {
+      buttons: y(() => f.filter((c) => c.toolbarButton).map((c) => ({
         id: c.id,
         label: c.label,
         icon: c.icon ?? "mdi-view-split-horizontal",
@@ -3900,39 +3951,39 @@ const kt = /* @__PURE__ */ H({
         strip: c.strip ?? "bottom"
       }))),
       open: (c) => {
-        var A;
+        var B;
         if (!o) return;
-        const m = M.value.find((L) => L.id === c);
-        m && !o.getPanel(c) && Z(o, m), (A = o.getPanel(c)) == null || A.api.setActive();
+        const p = k.value.find((Y) => Y.id === c);
+        p && !o.getPanel(c) && A(o, p), (B = o.getPanel(c)) == null || B.api.setActive();
       }
     };
-    oa(Dn, $);
-    const be = (c, m, A = !1) => i(y, {
+    oa(zn, ee);
+    const be = (c, p, B = !1) => i(P, {
       key: c.id,
       size: "small",
       variant: r.has(c.id) ? "tonal" : "text",
       prependIcon: c.icon,
       class: "text-none",
-      disabled: A,
+      disabled: B,
       "data-extra-open": c.id,
-      onClick: m
+      onClick: p
     }, {
       default: () => [c.label]
-    }), ze = x(() => $.buttons.value.filter((c) => c.bottom && c.strip === "bottom")), fe = (c, m = "bottom", A = () => $.open(c.id), L = !1) => {
-      const U = r.has(c.id), F = N.value === c.id, ge = U && !h.has(c.id), he = m === "right" ? U ? "mdi-chevron-right" : "mdi-chevron-left" : m === "left" ? U ? "mdi-chevron-left" : "mdi-chevron-right" : U ? "mdi-chevron-down" : "mdi-chevron-up";
+    }), Ne = y(() => ee.buttons.value.filter((c) => c.bottom && c.strip === "bottom")), he = (c, p = "bottom", B = () => ee.open(c.id), Y = !1) => {
+      const J = r.has(c.id), U = b.value === c.id, ge = J && !x.has(c.id), pe = p === "right" ? J ? "mdi-chevron-right" : "mdi-chevron-left" : p === "left" ? J ? "mdi-chevron-left" : "mdi-chevron-right" : J ? "mdi-chevron-down" : "mdi-chevron-up";
       return i("span", {
         key: c.id,
         class: "gad-ide__strip-item"
       }, [i("button", {
         type: "button",
         class: ["gad-ide__strip-btn", {
-          "gad-ide__strip-btn--open": U
+          "gad-ide__strip-btn--open": J
         }],
         title: c.label,
-        disabled: L,
+        disabled: Y,
         "data-extra-open": c.id,
-        "data-open": U ? "true" : "false",
-        onClick: () => U ? Xe(c.id, !1) : A()
+        "data-open": J ? "true" : "false",
+        onClick: () => J ? Qe(c.id, !1) : B()
       }, [i(ae, {
         size: "16",
         icon: c.icon
@@ -3940,23 +3991,23 @@ const kt = /* @__PURE__ */ H({
         class: "gad-ide__strip-label"
       }, [c.label]), i(ae, {
         size: "14",
-        icon: he
+        icon: pe
       }, null)]), ge && i("button", {
         type: "button",
         class: "gad-ide__strip-btn gad-ide__strip-expand",
-        title: F ? t.value.restore : t.value.expand,
+        title: U ? t.value.restore : t.value.expand,
         "data-strip-expand": c.id,
-        "data-maximized": F ? "true" : "false",
-        onClick: () => V(c.id)
+        "data-maximized": U ? "true" : "false",
+        onClick: () => T(c.id)
       }, [i(ae, {
         size: "14",
-        icon: F ? "mdi-arrow-collapse" : "mdi-arrow-expand"
+        icon: U ? "mdi-arrow-collapse" : "mdi-arrow-expand"
       }, null)])]);
     }, Ie = {
       id: "docs",
       label: t.value.preview,
       icon: "mdi-file-eye-outline"
-    }, Ge = x(() => [{
+    }, Ge = y(() => [{
       id: "editor",
       label: t.value.editor,
       icon: "mdi-file-document-edit-outline"
@@ -3968,23 +4019,23 @@ const kt = /* @__PURE__ */ H({
       id: "structure",
       label: t.value.structure,
       icon: "mdi-file-tree"
-    }].filter((c) => z(c.id))), Ze = x(() => $.buttons.value.filter((c) => c.bottom && c.strip === "left")), Qe = x(() => M.value.map((c) => ({
+    }].filter((c) => z(c.id))), Ze = y(() => ee.buttons.value.filter((c) => c.bottom && c.strip === "left")), Oe = y(() => k.value.map((c) => ({
       id: c.id,
       label: c.label,
       visible: r.has(c.id)
     })));
-    R(() => n.docRequest.value, () => {
-      var m, A;
-      const c = M.value.find((L) => L.id === "docs");
-      o && c && !o.getPanel("docs") && (Z(o, c), (m = o.getPanel("docs")) == null || m.api.setSize({
+    L(() => n.docRequest.value, () => {
+      var p, B;
+      const c = k.value.find((Y) => Y.id === "docs");
+      o && c && !o.getPanel("docs") && (A(o, c), (p = o.getPanel("docs")) == null || p.api.setSize({
         width: le(o)
-      })), (A = o == null ? void 0 : o.getPanel("docs")) == null || A.api.setActive();
+      })), (B = o == null ? void 0 : o.getPanel("docs")) == null || B.api.setActive();
     });
-    function Oe(c) {
+    function Ke(c) {
       a("update:config", c);
     }
-    He(() => void n.init()), De(() => s == null ? void 0 : s.dispose());
-    const Ne = x(() => e.dark ? bi : Gi);
+    He(() => void n.init()), ze(() => s == null ? void 0 : s.dispose());
+    const We = y(() => e.dark ? Gi : Zi);
     return () => {
       var c;
       return i("div", {
@@ -3992,7 +4043,7 @@ const kt = /* @__PURE__ */ H({
       }, [i("div", {
         class: "gad-ide__header",
         "data-ide-header": !0
-      }, [$.buttons.value.filter((m) => !m.bottom && m.align === "left").map((m) => be(m, () => $.open(m.id))), i(y, {
+      }, [ee.buttons.value.filter((p) => !p.bottom && p.align === "left").map((p) => be(p, () => ee.open(p.id))), i(P, {
         size: "small",
         variant: "text",
         prependIcon: "mdi-cog-outline",
@@ -4003,94 +4054,94 @@ const kt = /* @__PURE__ */ H({
         default: () => [t.value.settings]
       }), i("span", {
         class: "gad-ide__header-spacer"
-      }, null), $.buttons.value.filter((m) => !m.bottom && m.align === "right").map((m) => be(m, () => $.open(m.id))), e.headerActions.map((m) => (
+      }, null), ee.buttons.value.filter((p) => !p.bottom && p.align === "right").map((p) => be(p, () => ee.open(p.id))), e.headerActions.map((p) => (
         // with a label, its text beside the icon; else an icon button
         // (no children: a default slot, even empty, hides the icon)
-        m.label ? i(y, {
-          key: "action-" + m.id,
+        p.label ? i(P, {
+          key: "action-" + p.id,
           size: "small",
           variant: "text",
           class: "text-none",
-          prependIcon: m.icon,
-          title: m.title ?? m.label,
-          "data-ide-action": m.id,
-          onClick: m.onClick
+          prependIcon: p.icon,
+          title: p.title ?? p.label,
+          "data-ide-action": p.id,
+          onClick: p.onClick
         }, {
-          default: () => [m.label]
-        }) : i(y, {
-          key: "action-" + m.id,
+          default: () => [p.label]
+        }) : i(P, {
+          key: "action-" + p.id,
           size: "small",
           variant: "text",
           density: "comfortable",
-          icon: m.icon,
-          title: m.title,
-          "data-ide-action": m.id,
-          onClick: m.onClick
+          icon: p.icon,
+          title: p.title,
+          "data-ide-action": p.id,
+          onClick: p.onClick
         }, null)
       ))]), i("div", {
         class: "gad-ide__main"
       }, [Ge.value.length + Ze.value.length > 0 && i("div", {
         class: "gad-ide__strip gad-ide__strip--side gad-ide__strip--left",
         "data-ide-strip-left": !0
-      }, [Ge.value.map((m) => fe(m, "left", () => m.id === "editor" ? $.open(m.id) : Ia(m.id))), Ze.value.map((m) => fe(m, "left"))]), i("div", {
+      }, [Ge.value.map((p) => he(p, "left", () => p.id === "editor" ? ee.open(p.id) : Ia(p.id))), Ze.value.map((p) => he(p, "left"))]), i("div", {
         class: "gad-ide__dock"
-      }, [i(Zi, {
+      }, [i(Ai, {
         style: {
           height: "100%"
         },
-        theme: Ne.value,
-        components: j,
-        defaultTabComponent: G,
+        theme: We.value,
+        components: H,
+        defaultTabComponent: j,
         onReady: Pe
       }, null)]), z("docs") && i("div", {
         class: "gad-ide__strip gad-ide__strip--side gad-ide__strip--right",
         "data-ide-strip-right": !0
-      }, [fe(Ie, "right", () => n.requestDocs(), !n.openPath.value && !r.has("docs"))])]), ze.value.length > 0 && i("div", {
+      }, [he(Ie, "right", () => n.requestDocs(), !n.openPath.value && !r.has("docs"))])]), Ne.value.length > 0 && i("div", {
         class: "gad-ide__strip",
         "data-ide-strip": !0
-      }, [ze.value.filter((m) => m.align === "left").map((m) => fe(m)), i("span", {
+      }, [Ne.value.filter((p) => p.align === "left").map((p) => he(p)), i("span", {
         class: "gad-ide__header-spacer"
-      }, null), ze.value.filter((m) => m.align === "right").map((m) => fe(m))]), i(An, b({
+      }, null), Ne.value.filter((p) => p.align === "right").map((p) => he(p))]), i(Mn, Z({
         modelValue: n.settingsOpen.value
       }, {
-        "onUpdate:modelValue": (m) => n.settingsOpen.value = m
+        "onUpdate:modelValue": (p) => n.settingsOpen.value = p
       }, {
         config: e.config,
-        panels: Qe.value,
-        onTogglePanel: Xe,
-        onSave: Oe
-      }), null), i(Mn, b({
+        panels: Oe.value,
+        onTogglePanel: Qe,
+        onSave: Ke
+      }), null), i(Bn, Z({
         modelValue: n.profileDialog.value
       }, {
-        "onUpdate:modelValue": (m) => n.profileDialog.value = m
+        "onUpdate:modelValue": (p) => n.profileDialog.value = p
       }, {
         defaultPath: n.openPath.value,
         onCreate: n.addProfile
-      }), null), i(Gn, b({
+      }), null), i(Zn, Z({
         modelValue: !!n.bpDialog.value
       }, {
-        "onUpdate:modelValue": (m) => {
-          m || (n.bpDialog.value = null);
+        "onUpdate:modelValue": (p) => {
+          p || (n.bpDialog.value = null);
         }
       }, {
         line: ((c = n.bpDialog.value) == null ? void 0 : c.line) ?? 0,
         initial: n.bpDialog.value ? n.bpMetaFor(n.bpDialog.value.path)[n.bpDialog.value.line] ?? {} : {},
-        onSave: (m) => {
-          n.bpDialog.value && n.setBpMeta(n.bpDialog.value.path, n.bpDialog.value.line, m);
+        onSave: (p) => {
+          n.bpDialog.value && n.setBpMeta(n.bpDialog.value.path, n.bpDialog.value.line, p);
         }
-      }), null), i(Bn, {
+      }), null), i(kn, {
         request: n.promptReq.value,
         onDone: () => n.promptReq.value = null
-      }, null), i(Hn, null, null), i(kn, {
+      }, null), i(Hn, null, null), i(jn, {
         request: n.confirmReq.value,
         onDone: () => n.confirmReq.value = null
-      }, null), i(jn, b({
+      }, null), i(Dn, Z({
         modelValue: n.urlDialog.value
       }, {
-        "onUpdate:modelValue": (m) => n.urlDialog.value = m
+        "onUpdate:modelValue": (p) => n.urlDialog.value = p
       }, {
         progress: n.uploadProgress.value,
-        onImport: (m, A, L) => n.uploadUrl(m, A, L)
+        onImport: (p, B, Y) => n.uploadUrl(p, B, Y)
       }), null)]);
     };
   }
@@ -4124,12 +4175,12 @@ Prism.languages.webmanifest = Prism.languages.json;
   var a = /[*&][^\s[\]{},]+/, l = /!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/, t = "(?:" + l.source + "(?:[ 	]+" + a.source + ")?|" + a.source + "(?:[ 	]+" + l.source + ")?)", n = /(?:[^\s\x00-\x08\x0e-\x1f!"#%&'*,\-:>?@[\]`{|}\x7f-\x84\x86-\x9f\ud800-\udfff\ufffe\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*/.source.replace(/<PLAIN>/g, function() {
     return /[^\s\x00-\x08\x0e-\x1f,[\]{}\x7f-\x84\x86-\x9f\ud800-\udfff\ufffe\uffff]/.source;
   }), o = /"(?:[^"\\\r\n]|\\.)*"|'(?:[^'\\\r\n]|\\.)*'/.source;
-  function s(p, u) {
+  function s(g, u) {
     u = (u || "").replace(/m/g, "") + "m";
     var r = /([:\-,[{]\s*(?:\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|\]|\}|(?:[\r\n]\s*)?#))/.source.replace(/<<prop>>/g, function() {
       return t;
     }).replace(/<<value>>/g, function() {
-      return p;
+      return g;
     });
     return RegExp(r, u);
   }
@@ -4188,10 +4239,10 @@ Prism.languages.webmanifest = Prism.languages.json;
 })(Prism);
 (function(e) {
   var a = /(?:\\.|[^\\\n\r]|(?:\n|\r\n?)(?![\r\n]))/.source;
-  function l(f) {
-    return f = f.replace(/<inner>/g, function() {
+  function l(h) {
+    return h = h.replace(/<inner>/g, function() {
       return a;
-    }), RegExp(/((?:^|[^\\])(?:\\{2})*)/.source + "(?:" + f + ")");
+    }), RegExp(/((?:^|[^\\])(?:\\{2})*)/.source + "(?:" + h + ")");
   }
   var t = /(?:\\.|``(?:[^`\r\n]|`(?!`))+``|`[^`\r\n]+`|[^\\|\r\n`])+/.source, n = /\|?__(?:\|__)+\|?(?:(?:\n|\r\n?)|(?![\s\S]))/.source.replace(/__/g, function() {
     return t;
@@ -4420,73 +4471,73 @@ Prism.languages.webmanifest = Prism.languages.json;
         }
       }
     }
-  }), ["url", "bold", "italic", "strike"].forEach(function(f) {
-    ["url", "bold", "italic", "strike", "code-snippet"].forEach(function(I) {
-      f !== I && (e.languages.markdown[f].inside.content.inside[I] = e.languages.markdown[I]);
+  }), ["url", "bold", "italic", "strike"].forEach(function(h) {
+    ["url", "bold", "italic", "strike", "code-snippet"].forEach(function(f) {
+      h !== f && (e.languages.markdown[h].inside.content.inside[f] = e.languages.markdown[f]);
     });
-  }), e.hooks.add("after-tokenize", function(f) {
-    if (f.language !== "markdown" && f.language !== "md")
+  }), e.hooks.add("after-tokenize", function(h) {
+    if (h.language !== "markdown" && h.language !== "md")
       return;
-    function I(h) {
-      if (!(!h || typeof h == "string"))
-        for (var G = 0, w = h.length; G < w; G++) {
-          var j = h[G];
-          if (j.type !== "code") {
-            I(j.content);
+    function f(x) {
+      if (!(!x || typeof x == "string"))
+        for (var j = 0, w = x.length; j < w; j++) {
+          var H = x[j];
+          if (H.type !== "code") {
+            f(H.content);
             continue;
           }
-          var P = j.content[1], M = j.content[3];
-          if (P && M && P.type === "code-language" && M.type === "code-block" && typeof P.content == "string") {
-            var z = P.content.replace(/\b#/g, "sharp").replace(/\b\+\+/g, "pp");
+          var G = H.content[1], k = H.content[3];
+          if (G && k && G.type === "code-language" && k.type === "code-block" && typeof G.content == "string") {
+            var z = G.content.replace(/\b#/g, "sharp").replace(/\b\+\+/g, "pp");
             z = (/[a-z][\w-]*/i.exec(z) || [""])[0].toLowerCase();
-            var Z = "language-" + z;
-            M.alias ? typeof M.alias == "string" ? M.alias = [M.alias, Z] : M.alias.push(Z) : M.alias = [Z];
+            var A = "language-" + z;
+            k.alias ? typeof k.alias == "string" ? k.alias = [k.alias, A] : k.alias.push(A) : k.alias = [A];
           }
         }
     }
-    I(f.tokens);
-  }), e.hooks.add("wrap", function(f) {
-    if (f.type === "code-block") {
-      for (var I = "", h = 0, G = f.classes.length; h < G; h++) {
-        var w = f.classes[h], j = /language-(.+)/.exec(w);
-        if (j) {
-          I = j[1];
+    f(h.tokens);
+  }), e.hooks.add("wrap", function(h) {
+    if (h.type === "code-block") {
+      for (var f = "", x = 0, j = h.classes.length; x < j; x++) {
+        var w = h.classes[x], H = /language-(.+)/.exec(w);
+        if (H) {
+          f = H[1];
           break;
         }
       }
-      var P = e.languages[I];
-      if (P)
-        f.content = e.highlight(r(f.content), P, I);
-      else if (I && I !== "none" && e.plugins.autoloader) {
-        var M = "md-" + (/* @__PURE__ */ new Date()).valueOf() + "-" + Math.floor(Math.random() * 1e16);
-        f.attributes.id = M, e.plugins.autoloader.loadLanguages(I, function() {
-          var z = document.getElementById(M);
-          z && (z.innerHTML = e.highlight(z.textContent, e.languages[I], I));
+      var G = e.languages[f];
+      if (G)
+        h.content = e.highlight(r(h.content), G, f);
+      else if (f && f !== "none" && e.plugins.autoloader) {
+        var k = "md-" + (/* @__PURE__ */ new Date()).valueOf() + "-" + Math.floor(Math.random() * 1e16);
+        h.attributes.id = k, e.plugins.autoloader.loadLanguages(f, function() {
+          var z = document.getElementById(k);
+          z && (z.innerHTML = e.highlight(z.textContent, e.languages[f], f));
         });
       }
     }
   });
-  var s = RegExp(e.languages.markup.tag.pattern.source, "gi"), p = {
+  var s = RegExp(e.languages.markup.tag.pattern.source, "gi"), g = {
     amp: "&",
     lt: "<",
     gt: ">",
     quot: '"'
   }, u = String.fromCodePoint || String.fromCharCode;
-  function r(f) {
-    var I = f.replace(s, "");
-    return I = I.replace(/&(\w{1,8}|#x?[\da-f]{1,8});/gi, function(h, G) {
-      if (G = G.toLowerCase(), G[0] === "#") {
+  function r(h) {
+    var f = h.replace(s, "");
+    return f = f.replace(/&(\w{1,8}|#x?[\da-f]{1,8});/gi, function(x, j) {
+      if (j = j.toLowerCase(), j[0] === "#") {
         var w;
-        return G[1] === "x" ? w = parseInt(G.slice(2), 16) : w = Number(G.slice(1)), u(w);
+        return j[1] === "x" ? w = parseInt(j.slice(2), 16) : w = Number(j.slice(1)), u(w);
       } else {
-        var j = p[G];
-        return j || h;
+        var H = g[j];
+        return H || x;
       }
-    }), I;
+    }), f;
   }
   e.languages.md = e.languages.markdown;
 })(Prism);
-const Ln = [{
+const Tn = [{
   title: "Render Markdown",
   value: "render-md"
 }, {
@@ -4508,12 +4559,12 @@ const Ln = [{
 function Yn(e) {
   return e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-const Tn = (e) => e.replace(/\s*\{data-src-pos="\d+,\d+"\}/g, "");
+const Fn = (e) => e.replace(/\s*\{data-src-pos="\d+,\d+"\}/g, "");
 function na(e, a) {
   const l = ye.languages[a];
   return l ? ye.highlight(e, l, a) : Yn(e);
 }
-const jt = /* @__PURE__ */ H({
+const jt = /* @__PURE__ */ N({
   name: "DocPanel",
   props: {
     doc: {
@@ -4556,20 +4607,20 @@ const jt = /* @__PURE__ */ H({
   }) {
     const l = v("render-md"), t = v(null), n = v(!1);
     let o = 0, s;
-    async function p() {
+    async function g() {
       const r = ++o;
       n.value = !0;
       try {
-        const f = await e.doc(e.source(), e.sourceType, l.value);
-        r === o && (t.value = f);
+        const h = await e.doc(e.source(), e.sourceType, l.value);
+        r === o && (t.value = h);
       } finally {
         r === o && (n.value = !1);
       }
     }
-    R([l, () => e.sourceType], p, {
+    L([l, () => e.sourceType], g, {
       immediate: !0
-    }), R(() => e.revision, () => {
-      clearTimeout(s), s = setTimeout(p, 250);
+    }), L(() => e.revision, () => {
+      clearTimeout(s), s = setTimeout(g, 250);
     });
     function u() {
       const r = t.value;
@@ -4593,7 +4644,7 @@ const jt = /* @__PURE__ */ H({
         case "md":
           return i("pre", {
             class: "gp-doc-src language-markdown",
-            innerHTML: na(Tn(r.markdown ?? ""), "markdown")
+            innerHTML: na(Fn(r.markdown ?? ""), "markdown")
           }, null);
         case "html":
           return i("pre", {
@@ -4624,13 +4675,13 @@ const jt = /* @__PURE__ */ H({
         class: "gp-doc-title"
       }, [S("Doc")]), i("span", {
         class: "gp-actions gp-doc-actions"
-      }, [i(Te, b({
+      }, [i(Fe, Z({
         class: "gp-doc-ctl",
         modelValue: l.value
       }, {
-        "onUpdate:modelValue": (f) => l.value = f ?? "render-md"
+        "onUpdate:modelValue": (h) => l.value = h ?? "render-md"
       }, {
-        items: Ln,
+        items: Tn,
         density: "compact",
         variant: "outlined",
         hideDetails: !0,
@@ -4638,30 +4689,30 @@ const jt = /* @__PURE__ */ H({
         style: {
           maxWidth: "180px"
         }
-      }), null), i(y, {
+      }), null), i(P, {
         class: "gp-doc-ctl",
         size: "small",
         height: "32",
         variant: "tonal",
         loading: n.value,
         title: "Reload documentation",
-        onClick: p
+        onClick: g
       }, {
         default: () => [S("↻")]
       }), (r = a.default) == null ? void 0 : r.call(a)])]), i("div", {
         class: "gp-doc-body",
-        onClick: (f) => {
+        onClick: (h) => {
           if (!e.onNavigate) return;
-          const I = f.target.closest("[data-src-pos]"), h = I == null ? void 0 : I.getAttribute("data-src-pos");
-          if (h) {
-            const [G, w] = h.split(",").map((j) => parseInt(j, 10));
-            G && e.onNavigate(G, w || 1);
+          const f = h.target.closest("[data-src-pos]"), x = f == null ? void 0 : f.getAttribute("data-src-pos");
+          if (x) {
+            const [j, w] = x.split(",").map((H) => parseInt(H, 10));
+            j && e.onNavigate(j, w || 1);
           }
         }
       }, [u()])]);
     };
   }
-}), Fn = {
+}), Un = {
   gad: `/**
 # Greetings
 
@@ -4702,15 +4753,15 @@ Open the *Doc* panel to see this rendered.
         @for i in [1, 2, 3]
             li item {= i }
 `
-}, Un = {
+}, Jn = {
   gad: "gad",
   gadt: "gadt",
   gadx: "gadx"
-}, Jn = {
+}, Xn = {
   gad: "",
   gadt: "gadTemplate",
   gadx: "gadx"
-}, yo = /* @__PURE__ */ H({
+}, Po = /* @__PURE__ */ N({
   name: "GadPlayground",
   props: {
     runner: {
@@ -4724,19 +4775,19 @@ Open the *Doc* panel to see this rendered.
   },
   setup(e) {
     const a = v("gad"), l = Se({
-      ...Fn
-    }), t = x({
+      ...Un
+    }), t = y({
       get: () => l[a.value],
-      set: (M) => l[a.value] = M
-    }), n = x(() => Jn[a.value]), o = v(!1), s = v(""), p = v(!1), u = v(0), r = v(0), f = v(0), I = v(null), h = e.runner.diagnose ? (M) => e.runner.diagnose(M, n.value) : void 0;
-    async function G(M) {
+      set: (k) => l[a.value] = k
+    }), n = y(() => Xn[a.value]), o = v(!1), s = v(""), g = v(!1), u = v(0), r = v(0), h = v(0), f = v(null), x = e.runner.diagnose ? (k) => e.runner.diagnose(k, n.value) : void 0;
+    async function j(k) {
       o.value = !0;
       try {
         const z = await e.runner.format(t.value, n.value);
-        I.value = {
+        f.value = {
           kind: "format",
           fmt: z
-        }, M && z.ok && (t.value = z.source);
+        }, k && z.ok && (t.value = z.source);
       } finally {
         o.value = !1;
       }
@@ -4744,49 +4795,49 @@ Open the *Doc* panel to see this rendered.
     async function w() {
       o.value = !0;
       try {
-        const M = a.value === "gadx" ? s.value : "";
-        I.value = {
+        const k = a.value === "gadx" ? s.value : "";
+        f.value = {
           kind: "run",
-          run: await e.runner.run(t.value, n.value, M)
+          run: await e.runner.run(t.value, n.value, k)
         };
       } finally {
         o.value = !1;
       }
     }
-    const j = da("gad-ide.playground.editor", 560, 200, 4e3), P = da("gad-ide.playground.doc", 420, 160, 4e3);
+    const H = da("gad-ide.playground.editor", 560, 200, 4e3), G = da("gad-ide.playground.doc", 420, 160, 4e3);
     return () => {
-      var M, z;
+      var k, z;
       return i("div", {
         class: "gp-split"
       }, [i("section", {
         class: "gp-pane",
         style: {
-          flex: `0 0 ${j.size.value}px`
+          flex: `0 0 ${H.size.value}px`
         }
       }, [i("div", {
         class: "gp-pane-head"
-      }, [i(Pt, b({
+      }, [i(Pt, Z({
         modelValue: a.value
       }, {
-        "onUpdate:modelValue": (Z) => {
-          Z && (a.value = Z);
+        "onUpdate:modelValue": (A) => {
+          A && (a.value = A);
         }
       }, {
         density: "compact",
         variant: "outlined",
         mandatory: !0
       }), {
-        default: () => [i(y, {
+        default: () => [i(P, {
           size: "small",
           value: "gad"
         }, {
           default: () => [S("GAD")]
-        }), i(y, {
+        }), i(P, {
           size: "small",
           value: "gadt"
         }, {
           default: () => [S("GAD Template")]
-        }), i(y, {
+        }), i(P, {
           size: "small",
           value: "gadx"
         }, {
@@ -4794,10 +4845,10 @@ Open the *Doc* panel to see this rendered.
         })]
       }), i("span", {
         class: "gp-actions"
-      }, [a.value === "gadx" && i(Te, b({
+      }, [a.value === "gadx" && i(Fe, Z({
         modelValue: s.value
       }, {
-        "onUpdate:modelValue": (Z) => s.value = Z ?? ""
+        "onUpdate:modelValue": (A) => s.value = A ?? ""
       }, {
         items: [{
           title: "Render",
@@ -4816,21 +4867,21 @@ Open the *Doc* panel to see this rendered.
         style: {
           maxWidth: "120px"
         }
-      }), null), i(y, {
+      }), null), i(P, {
         size: "small",
         variant: "tonal",
         loading: o.value,
-        onClick: () => G(!1)
+        onClick: () => j(!1)
       }, {
         default: () => [S("Format")]
-      }), i(y, {
+      }), i(P, {
         size: "small",
         variant: "tonal",
         loading: o.value,
-        onClick: () => G(!0)
+        onClick: () => j(!0)
       }, {
         default: () => [S("Format & apply")]
-      }), i(y, {
+      }), i(P, {
         size: "small",
         color: "primary",
         prependIcon: "mdi-play",
@@ -4838,33 +4889,33 @@ Open the *Doc* panel to see this rendered.
         onClick: w
       }, {
         default: () => [S("Run")]
-      }), e.runner.doc && i(y, {
+      }), e.runner.doc && i(P, {
         size: "small",
-        variant: p.value ? "flat" : "tonal",
-        color: p.value ? "primary" : void 0,
-        onClick: () => p.value = !p.value,
+        variant: g.value ? "flat" : "tonal",
+        color: g.value ? "primary" : void 0,
+        onClick: () => g.value = !g.value,
         title: "Toggle the documentation panel"
       }, {
         default: () => [S("Doc")]
       })])]), i("div", {
         class: "gp-editor"
-      }, [i(wa, b({
+      }, [i(Ea, Z({
         key: a.value,
         modelValue: t.value
       }, {
-        "onUpdate:modelValue": (Z) => {
-          t.value = Z, p.value && u.value++;
+        "onUpdate:modelValue": (A) => {
+          t.value = A, g.value && u.value++;
         }
       }, {
-        language: Un[a.value],
+        language: Jn[a.value],
         dark: e.dark,
-        diagnose: h,
+        diagnose: x,
         gotoLine: r.value,
-        gotoSeq: f.value
+        gotoSeq: h.value
       }), null)])]), i(ra, {
-        onStart: j.begin,
-        onDrag: (Z) => j.drag(Z),
-        onReset: j.reset
+        onStart: H.begin,
+        onDrag: (A) => H.drag(A),
+        onReset: H.reset
       }, null), i("section", {
         class: "gp-pane",
         style: {
@@ -4874,44 +4925,44 @@ Open the *Doc* panel to see this rendered.
         class: "gp-pane-head"
       }, [S("Output")]), i("div", {
         class: "gp-pane-body"
-      }, [!I.value && i("p", {
+      }, [!f.value && i("p", {
         class: "text-medium-emphasis"
-      }, [S("Format or run the source on the left.")]), ((M = I.value) == null ? void 0 : M.kind) === "format" && i(Xn, {
-        fmt: I.value.fmt
-      }, null), ((z = I.value) == null ? void 0 : z.kind) === "run" && i(Qn, {
-        run: I.value.run
-      }, null)])]), e.runner.doc && p.value && i(ra, {
-        onStart: P.begin,
-        onDrag: (Z) => P.drag(Z, -1),
-        onReset: P.reset
-      }, null), e.runner.doc && p.value && i("section", {
+      }, [S("Format or run the source on the left.")]), ((k = f.value) == null ? void 0 : k.kind) === "format" && i(Qn, {
+        fmt: f.value.fmt
+      }, null), ((z = f.value) == null ? void 0 : z.kind) === "run" && i(On, {
+        run: f.value.run
+      }, null)])]), e.runner.doc && g.value && i(ra, {
+        onStart: G.begin,
+        onDrag: (A) => G.drag(A, -1),
+        onReset: G.reset
+      }, null), e.runner.doc && g.value && i("section", {
         class: "gp-pane gp-pane--doc",
         style: {
-          flex: `0 0 ${P.size.value}px`
+          flex: `0 0 ${G.size.value}px`
         }
       }, [i(jt, {
         doc: e.runner.doc,
         source: () => t.value,
         sourceType: n.value,
         revision: u.value,
-        onNavigate: (Z) => {
-          r.value = Z, f.value++;
+        onNavigate: (A) => {
+          r.value = A, h.value++;
         }
       }, {
-        default: () => [i(y, {
+        default: () => [i(P, {
           class: "gp-doc-ctl",
           size: "small",
           height: "32",
           variant: "tonal",
           title: "Close the doc panel",
-          onClick: () => p.value = !1
+          onClick: () => g.value = !1
         }, {
           default: () => [S("✕")]
         })]
       })])]);
     };
   }
-}), Xn = /* @__PURE__ */ H({
+}), Qn = /* @__PURE__ */ N({
   props: {
     fmt: {
       type: Object,
@@ -4926,7 +4977,7 @@ Open the *Doc* panel to see this rendered.
       key: l
     }, [a.line, S(":"), a.column, S(" "), a.message]))]);
   }
-}), Qn = /* @__PURE__ */ H({
+}), On = /* @__PURE__ */ N({
   props: {
     run: {
       type: Object,
@@ -4947,7 +4998,7 @@ Open the *Doc* panel to see this rendered.
       key: l
     }, [a.line, S(":"), a.column, S(" "), a.message]))]);
   }
-}), On = {
+}), Kn = {
   gad: "gad",
   gadt: "gadt",
   gadx: "gadx"
@@ -4956,9 +5007,9 @@ Open the *Doc* panel to see this rendered.
   gadt: "gadTemplate",
   gadx: "gadx"
 };
-let Kn = 1;
+let _n = 1;
 const ct = (e = "", a = "gad") => ({
-  id: Kn++,
+  id: _n++,
   source: e,
   dialect: a,
   tagEncode: "",
@@ -4968,7 +5019,7 @@ const ct = (e = "", a = "gad") => ({
   docRev: 0,
   gotoLine: 0,
   gotoSeq: 0
-}), _n = [{
+}), qn = [{
   dialect: "gad",
   source: `/**
 # Squares
@@ -5008,7 +5059,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
         @for i in [1, 2, 3]
             li item {= i }
 `
-}], Po = /* @__PURE__ */ H({
+}], bo = /* @__PURE__ */ N({
   name: "GadNotebook",
   props: {
     runner: {
@@ -5021,7 +5072,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
     }
   },
   setup(e) {
-    const a = v(_n.map((u) => ct(u.source, u.dialect)));
+    const a = v(qn.map((u) => ct(u.source, u.dialect)));
     async function l(u) {
       u.running = !0;
       try {
@@ -5041,7 +5092,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
     }
     const t = () => a.value.push(ct()), n = (u) => {
       a.value.length > 1 && (a.value = a.value.filter((r) => r.id !== u));
-    }, o = (u) => e.runner.diagnose ? (r) => e.runner.diagnose(r, Ba[u.dialect]) : void 0, s = da("gad-ide.notebook.editor", 220, 80, 4e3), p = da("gad-ide.notebook.doc", 420, 160, 4e3);
+    }, o = (u) => e.runner.diagnose ? (r) => e.runner.diagnose(r, Ba[u.dialect]) : void 0, s = da("gad-ide.notebook.editor", 220, 80, 4e3), g = da("gad-ide.notebook.doc", 420, 160, 4e3);
     return () => i("div", {
       class: "gnb"
     }, [i("p", {
@@ -5056,7 +5107,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
       style: {
         height: `${s.size.value}px`
       }
-    }, [i(wa, b({
+    }, [i(Ea, Z({
       key: u.id + ":" + u.dialect,
       modelValue: u.source
     }, {
@@ -5064,19 +5115,19 @@ An indentation-based HTML template; \`@main\` is its public entry.
         u.source = r, u.showDoc && u.docRev++;
       }
     }, {
-      language: On[u.dialect],
+      language: Kn[u.dialect],
       dark: e.dark,
       diagnose: o(u),
       gotoLine: u.gotoLine,
       gotoSeq: u.gotoSeq
     }), null)]), e.runner.doc && u.showDoc && i(ra, {
-      onStart: p.begin,
-      onDrag: (r) => p.drag(r, -1),
-      onReset: p.reset
+      onStart: g.begin,
+      onDrag: (r) => g.drag(r, -1),
+      onReset: g.reset
     }, null), e.runner.doc && u.showDoc && i("div", {
       class: "gnb-doc",
       style: {
-        flex: `0 0 ${p.size.value}px`,
+        flex: `0 0 ${g.size.value}px`,
         height: `${s.size.value}px`
       }
     }, [i(jt, {
@@ -5088,7 +5139,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
         u.gotoLine = r, u.gotoSeq++;
       }
     }, {
-      default: () => [i(y, {
+      default: () => [i(P, {
         class: "gp-doc-ctl",
         size: "small",
         height: "32",
@@ -5105,7 +5156,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
       onReset: s.reset
     }, null), i("div", {
       class: "gnb-bar"
-    }, [i(Pt, b({
+    }, [i(Pt, Z({
       modelValue: u.dialect
     }, {
       "onUpdate:modelValue": (r) => {
@@ -5116,23 +5167,23 @@ An indentation-based HTML template; \`@main\` is its public entry.
       variant: "outlined",
       mandatory: !0
     }), {
-      default: () => [i(y, {
+      default: () => [i(P, {
         size: "small",
         value: "gad"
       }, {
         default: () => [S("GAD")]
-      }), i(y, {
+      }), i(P, {
         size: "small",
         value: "gadt"
       }, {
         default: () => [S("GAD Template")]
-      }), i(y, {
+      }), i(P, {
         size: "small",
         value: "gadx"
       }, {
         default: () => [S("GADx")]
       })]
-    }), u.dialect === "gadx" && i(Te, b({
+    }), u.dialect === "gadx" && i(Fe, Z({
       modelValue: u.tagEncode
     }, {
       "onUpdate:modelValue": (r) => u.tagEncode = r ?? ""
@@ -5154,7 +5205,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
       style: {
         maxWidth: "120px"
       }
-    }), null), i(y, {
+    }), null), i(P, {
       size: "small",
       color: "primary",
       prependIcon: "mdi-play",
@@ -5162,7 +5213,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
       onClick: () => l(u)
     }, {
       default: () => [S("Run")]
-    }), e.runner.doc && i(y, {
+    }), e.runner.doc && i(P, {
       size: "small",
       variant: u.showDoc ? "flat" : "tonal",
       color: u.showDoc ? "primary" : void 0,
@@ -5172,7 +5223,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
       }
     }, {
       default: () => [S("Doc")]
-    }), i(y, {
+    }), i(P, {
       size: "small",
       variant: "text",
       onClick: () => n(u.id)
@@ -5186,10 +5237,10 @@ An indentation-based HTML template; \`@main\` is its public entry.
       class: "gp-out gad-ide__diag"
     }, [u.result.stderr]), u.result.ok && u.result.result && i("div", {
       class: "pnl-return"
-    }, [S("↩ "), u.result.result]), (u.result.diagnostics ?? []).map((r, f) => i("div", {
+    }, [S("↩ "), u.result.result]), (u.result.diagnostics ?? []).map((r, h) => i("div", {
       class: "gad-ide__diag",
-      key: f
-    }, [r.line, S(":"), r.column, S(" "), r.message]))])])), i(y, {
+      key: h
+    }, [r.line, S(":"), r.column, S(" "), r.message]))])])), i(P, {
       size: "small",
       variant: "tonal",
       prependIcon: "mdi-plus",
@@ -5199,7 +5250,7 @@ An indentation-based HTML template; \`@main\` is its public entry.
     })]);
   }
 });
-async function E(e, a, l) {
+async function V(e, a, l) {
   const t = await fetch(a, {
     method: e,
     headers: l ? { "Content-Type": "application/json" } : void 0,
@@ -5208,7 +5259,7 @@ async function E(e, a, l) {
   if (!t.ok) throw new Error(n.error || t.statusText);
   return n;
 }
-function qn(e = "") {
+function $n(e = "") {
   const a = (t) => e + t, l = et(a("api/ide/"));
   return {
     /** the workspace's repository (Workspace.git) */
@@ -5218,102 +5269,102 @@ function qn(e = "") {
     gitFor: (t) => t ? et(a("api/ide/"), t) : l,
     /** gitRepos are the repositories of the workspace: "" when it is in
      * one, then its folders that are one. */
-    gitRepos: () => E("GET", a("api/ide/git/repos")).then((t) => t.repos || []),
-    workspace: () => E("GET", a("api/ide/workspace")),
-    tree: (t = !1) => E("GET", a("api/ide/tree") + (t ? "?hidden=true" : "")),
-    read: (t) => E(
+    gitRepos: () => V("GET", a("api/ide/git/repos")).then((t) => t.repos || []),
+    workspace: () => V("GET", a("api/ide/workspace")),
+    tree: (t = !1) => V("GET", a("api/ide/tree") + (t ? "?hidden=true" : "")),
+    read: (t) => V(
       "GET",
       a("api/ide/file?path=") + encodeURIComponent(t)
     ),
     /** rawUrl is the URL of the file's bytes as they are (an image to show). */
     rawUrl: (t) => a("api/ide/file?raw=1&path=") + encodeURIComponent(t),
-    write: (t, n) => E("PUT", a("api/ide/file"), { path: t, content: n }),
-    mkfile: (t) => E("PUT", a("api/ide/file"), { path: t, content: "" }),
-    del: (t) => E("POST", a("api/ide/delete"), { path: t }),
-    rename: (t, n) => E("POST", a("api/ide/rename"), { path: t, to: n }),
-    mkdir: (t) => E("POST", a("api/ide/mkdir"), { path: t }),
+    write: (t, n) => V("PUT", a("api/ide/file"), { path: t, content: n }),
+    mkfile: (t) => V("PUT", a("api/ide/file"), { path: t, content: "" }),
+    del: (t) => V("POST", a("api/ide/delete"), { path: t }),
+    rename: (t, n) => V("POST", a("api/ide/rename"), { path: t, to: n }),
+    mkdir: (t) => V("POST", a("api/ide/mkdir"), { path: t }),
     /** upload writes files uploaded — text, or bytes (base64) — at their paths. */
-    upload: (t) => E("POST", a("api/ide/upload"), {
+    upload: (t) => V("POST", a("api/ide/upload"), {
       files: t.map((n) => n.bytes ? { path: n.path, bytes: n.bytes } : { path: n.path, content: n.content })
     }),
-    fetchUrl: (t, n) => E("POST", a("api/ide/fetch"), { url: t, path: n }),
-    config: () => E("GET", a("api/ide/config")),
-    saveConfig: (t) => E("PUT", a("api/ide/config"), t),
-    modules: () => E("GET", a("api/ide/modules")),
-    format: (t) => E("POST", a("api/ide/format"), { source: t }),
+    fetchUrl: (t, n) => V("POST", a("api/ide/fetch"), { url: t, path: n }),
+    config: () => V("GET", a("api/ide/config")),
+    saveConfig: (t) => V("PUT", a("api/ide/config"), t),
+    modules: () => V("GET", a("api/ide/modules")),
+    format: (t) => V("POST", a("api/ide/format"), { source: t }),
     /** symbols is the structure of source (`gad symbols`): its declarations as
      * a tree; path (or sourceType) says its dialect. */
-    symbols: (t, n, o) => E("POST", a("api/ide/symbols"), { source: t, path: n, sourceType: o }),
-    transpile: (t, n) => E("POST", a("api/ide/transpile"), { source: t, path: n }),
-    doc: (t) => E("POST", a("api/ide/doc"), { source: t }).then((n) => n.docs || []),
+    symbols: (t, n, o) => V("POST", a("api/ide/symbols"), { source: t, path: n, sourceType: o }),
+    transpile: (t, n) => V("POST", a("api/ide/transpile"), { source: t, path: n }),
+    doc: (t) => V("POST", a("api/ide/doc"), { source: t }).then((n) => n.docs || []),
     /** docGen generates documentation for source in the requested mode. */
-    docGen: (t, n, o) => E("POST", a("api/ide/doc-gen"), { source: t, sourceType: n, mode: o }),
-    eval: (t) => E("POST", a("api/ide/eval"), t),
-    inspect: (t) => E("POST", a("api/ide/inspect"), t),
-    diagnose: (t, n) => E("POST", a("api/ide/diagnose"), { source: t, sourceType: n }).then(
+    docGen: (t, n, o) => V("POST", a("api/ide/doc-gen"), { source: t, sourceType: n, mode: o }),
+    eval: (t) => V("POST", a("api/ide/eval"), t),
+    inspect: (t) => V("POST", a("api/ide/inspect"), t),
+    diagnose: (t, n) => V("POST", a("api/ide/diagnose"), { source: t, sourceType: n }).then(
       (o) => o.diagnostics || []
     ),
-    run: (t) => E("POST", a("api/ide/run"), t),
-    dbgStart: (t) => E("POST", a("api/ide/debug/start"), t),
-    dbgCmd: (t, n) => E("POST", a("api/ide/debug/command"), { session: t, command: n }),
-    dbgEval: (t, n, o) => E("POST", a("api/ide/debug/eval"), {
+    run: (t) => V("POST", a("api/ide/run"), t),
+    dbgStart: (t) => V("POST", a("api/ide/debug/start"), t),
+    dbgCmd: (t, n) => V("POST", a("api/ide/debug/command"), { session: t, command: n }),
+    dbgEval: (t, n, o) => V("POST", a("api/ide/debug/eval"), {
       session: t,
       expr: n,
       repr: o
     })
   };
 }
-const Ht = qn(), bo = Ht;
-async function Go() {
+const Dt = $n(), Go = Dt;
+async function Zo() {
   try {
-    return await Ht.workspace();
+    return await Dt.workspace();
   } catch {
     return null;
   }
 }
 export {
-  Mo as ChangesPanel,
-  Tl as DEFAULT_FILE_TYPES,
+  Bo as ChangesPanel,
+  Fl as DEFAULT_FILE_TYPES,
   za as DEFAULT_IDE_OWN_MESSAGES,
-  X as DEFAULT_MESSAGES,
-  Bo as DiffBrowser,
-  ko as DiffMergeView,
+  Q as DEFAULT_MESSAGES,
+  ko as DiffBrowser,
+  jo as DiffMergeView,
   jt as DocPanel,
-  Jl as FileTypeRegistry,
-  jo as GIT_I18N_MESSAGES,
+  Xl as FileTypeRegistry,
+  Do as GIT_I18N_MESSAGES,
   Ho as GIT_I18N_NAMESPACE,
-  Do as GIT_MESSAGES_PT_BR,
-  wa as GadEditor,
-  jl as GadEditorView,
-  xo as GadIde,
-  Po as GadNotebook,
-  yo as GadPlayground,
-  zo as GitPanel,
-  So as IDE_I18N_MESSAGES,
-  Cl as IDE_I18N_NAMESPACE,
+  zo as GIT_MESSAGES_PT_BR,
+  Ea as GadEditor,
+  Dl as GadEditorView,
+  yo as GadIde,
+  bo as GadNotebook,
+  Po as GadPlayground,
+  No as GitPanel,
+  xo as IDE_I18N_MESSAGES,
+  Sl as IDE_I18N_NAMESPACE,
   gt as IDE_OWN_MESSAGES_PT_BR,
   _ as IdeControllerKey,
   At as InspectorNode,
-  Sn as KIND_ICONS,
-  No as LANGUAGES,
-  Wo as ResizeHandle,
-  yn as StructureTree,
-  Ol as createController,
+  xn as KIND_ICONS,
+  Wo as LANGUAGES,
+  Eo as ResizeHandle,
+  Pn as StructureTree,
+  Kl as createController,
   wo as createHttpGitApi,
-  qn as createHttpIdeApi,
-  bo as httpIdeApi,
-  Ht as ideApi,
-  xn as kindIcon,
+  $n as createHttpIdeApi,
+  Go as httpIdeApi,
+  Dt as ideApi,
+  yn as kindIcon,
   it as langExtension,
   ht as langOf,
-  Eo as languageExtensions,
-  Ro as languageOf,
-  Go as probeIde,
-  Vo as renamedTo,
+  Ro as languageExtensions,
+  Vo as languageOf,
+  Zo as probeIde,
+  Lo as renamedTo,
   Na as renderDocMarkdown,
-  Lo as statusColor,
+  To as statusColor,
   Yo as treePath,
-  To as unchangedContent,
-  Sl as useIdeMessages,
-  Fo as useStoredSize
+  Fo as unchangedContent,
+  xl as useIdeMessages,
+  Uo as useStoredSize
 };

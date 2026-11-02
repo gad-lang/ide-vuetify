@@ -98,6 +98,10 @@ export interface IdeOwnMessages {
   renameOpenFile: string;
   /** title of the button that moves the file open. */
   moveOpenFile: string;
+  /** a drag onto a folder of the Explorer: the confirm's title, its from and to */
+  dropMoveTitle: string;
+  fromDir: string;
+  toDir: string;
   /** title of the button that deletes the file open. */
   deleteOpenFile: string;
   /** title of the button that hides the hidden files. */
@@ -260,6 +264,9 @@ export const DEFAULT_IDE_OWN_MESSAGES: IdeOwnMessages = {
   importFromUrl: "Import from URL",
   renameOpenFile: "Rename open file",
   moveOpenFile: "Move open file",
+  dropMoveTitle: "Move?",
+  fromDir: "From",
+  toDir: "To",
   deleteOpenFile: "Delete open file",
   hideHidden: "Hide hidden files",
   showHidden: "Show hidden files",
@@ -362,6 +369,9 @@ export const IDE_OWN_MESSAGES_PT_BR: IdeOwnMessages = {
   importFromUrl: "Importar de URL",
   renameOpenFile: "Renomear o arquivo aberto",
   moveOpenFile: "Mover o arquivo aberto",
+  dropMoveTitle: "Mover?",
+  fromDir: "De",
+  toDir: "Para",
   deleteOpenFile: "Excluir o arquivo aberto",
   hideHidden: "Ocultar arquivos ocultos",
   showHidden: "Mostrar arquivos ocultos",

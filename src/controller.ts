@@ -329,10 +329,28 @@ export function createController(
     retarget(path, to);
     await loadTree();
   }
-  // retarget points the tab of from to its new path.
+  // retarget points the tab of from to its new path — of a folder, the tabs
+  // of the files in it.
   function retarget(from: string, to: string) {
-    const t = tabs.value.find((x) => x.path === from);
-    if (t) t.path = to;
+    for (const t of tabs.value) {
+      if (t.path === from) t.path = to;
+      else if (t.path.startsWith(from + "/")) t.path = to + t.path.slice(from.length);
+    }
+  }
+  // dropMove moves path (a file, a folder) into the folder dir ("" the
+  // root) — dragged onto it in the Explorer —, confirmed first: from where
+  // to where, as the workspace's paths. Nothing into itself, nor where it is.
+  async function dropMove(path: string, dir: string) {
+    const name = path.slice(path.lastIndexOf("/") + 1);
+    const from = path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : "";
+    if (!canMove.value || from === dir || dir === path || dir.startsWith(path + "/")) return;
+    const shown = (d: string) => "/" + d;
+    const ok = await uiConfirm(words().dropMoveTitle, `${name}\n${words().fromDir}: ${shown(from)}\n${words().toDir}: ${shown(dir)}`);
+    if (!ok) return;
+    const to = (dir ? dir + "/" : "") + name;
+    await api.rename(path, to);
+    retarget(path, to);
+    await loadTree();
   }
   async function reset() {
     if (!onReset || !(await uiConfirm(words().resetWorkspace, words().resetConfirm))) return;
@@ -729,7 +747,7 @@ export function createController(
     readonly,
     fileTypes, iconFor,
     canUpload: computed(() => (!!hooks.onUpload || serverImport.value) && !readonly.value),
-    canCreate, canRename, canMove, canDelete, renameOpen, moveOpen, moveReq,
+    canCreate, canRename, canMove, canDelete, renameOpen, moveOpen, moveReq, dropMove,
     // an archive is extracted only by a host's onUpload
     canExtract: computed(() => !!hooks.onUpload),
     canEdit,
