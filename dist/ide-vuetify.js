@@ -821,14 +821,14 @@ function Ol(e, a, l, t = {}) {
         d.push({ node: L, depth: k }), L.dir && J.has(L.path) && g(L, k + 1);
     };
     return B.value && g(B.value, 0), d;
-  }), ae = v(!1);
+  }), te = v(!1);
   async function q() {
-    B.value = await o.tree(ae.value);
+    B.value = await o.tree(te.value);
     const d = V.value.split("/");
     for (let g = 1; g < d.length; g++) J.add(d.slice(0, g).join("/"));
   }
   async function Te() {
-    ae.value = !ae.value, await q();
+    te.value = !te.value, await q();
   }
   async function le(d) {
     const g = N.value.findIndex((k) => k.path === d);
@@ -852,7 +852,7 @@ function Ol(e, a, l, t = {}) {
   function Je(d) {
     J.has(d) ? J.delete(d) : J.add(d);
   }
-  function te(d) {
+  function $(d) {
     return J.has(d);
   }
   const be = x(() => {
@@ -948,8 +948,8 @@ function Ol(e, a, l, t = {}) {
       for (const O of L) O.archive || await o.upload([O]);
     else for (const O of L) !O.archive && !O.bytes && await o.write(O.path, O.content);
     await q();
-    const $ = L.find((O) => !O.archive);
-    $ && await le($.path);
+    const ee = L.find((O) => !O.archive);
+    ee && await le(ee.path);
   }
   const zt = v(!1), Ae = v(0);
   function wa(d) {
@@ -962,8 +962,8 @@ function Ol(e, a, l, t = {}) {
     if (Ae.value = 0, j.value && !t.onUpload) {
       Ae.value = -1;
       try {
-        const k = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), L = C.replace(/\/$/, ""), $ = (L ? L + "/" : "") + k;
-        await o.fetchUrl(d, $), await q(), await le($);
+        const k = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), L = C.replace(/\/$/, ""), ee = (L ? L + "/" : "") + k;
+        await o.fetchUrl(d, ee), await q(), await le(ee);
       } finally {
         Ae.value = 0;
       }
@@ -972,13 +972,13 @@ function Ol(e, a, l, t = {}) {
     try {
       const k = await fetch(d);
       if (!k.ok) throw new Error(`${d}: HTTP ${k.status}`);
-      const L = await Ll(k, ($e) => Ae.value = $e), $ = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), O = wa($);
+      const L = await Ll(k, ($e) => Ae.value = $e), ee = decodeURIComponent(new URL(d, location.href).pathname.split("/").pop() || "download"), O = wa(ee);
       if (g && O) {
         let $e = "";
         for (let ya = 0; ya < L.length; ya++) $e += String.fromCharCode(L[ya]);
-        await Ia([{ path: $, content: "", archive: O, bytes: btoa($e) }], C);
+        await Ia([{ path: ee, content: "", archive: O, bytes: btoa($e) }], C);
       } else
-        await Ia([xt($, L)], C);
+        await Ia([xt(ee, L)], C);
     } finally {
       Ae.value = 0;
     }
@@ -1073,7 +1073,7 @@ function Ol(e, a, l, t = {}) {
     return d;
   }
   function Ke(d, g) {
-    const C = [...new Set(g)].sort((L, $) => L - $);
+    const C = [...new Set(g)].sort((L, ee) => L - ee);
     ha[d] = C;
     const k = Me[d];
     if (k)
@@ -1217,7 +1217,7 @@ function Ol(e, a, l, t = {}) {
     rows: Pe,
     openPath: V,
     source: F,
-    isExpanded: te,
+    isExpanded: $,
     toggleDir: Je,
     openFile: le,
     tabs: N,
@@ -1230,7 +1230,7 @@ function Ol(e, a, l, t = {}) {
       var d;
       return ((d = t.getTabNameMax) == null ? void 0 : d.call(t)) ?? 25;
     }),
-    showHidden: ae,
+    showHidden: te,
     toggleHidden: Te,
     newFile: m,
     newDir: A,
@@ -1327,7 +1327,7 @@ function Ol(e, a, l, t = {}) {
     init: Ci
   };
 }
-const y = Ki, Ye = Oi, yt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl = vl, ue = el, ot = ol, ee = cl, _l = rl, Ga = sl, ql = ul, $l = dl, en = fl, ce = nl, Pt = Il, ke = qi, bt = _i, K = $i, an = pl, ia = ml, Gt = /* @__PURE__ */ H({
+const y = Ki, Ye = Oi, yt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl = vl, ue = el, ot = ol, ae = cl, _l = rl, Ga = sl, ql = ul, $l = dl, en = fl, ce = nl, Pt = Il, ke = qi, bt = _i, K = $i, an = pl, ia = ml, Gt = /* @__PURE__ */ H({
   name: "DirRow",
   props: {
     node: {
@@ -1358,7 +1358,7 @@ const y = Ki, Ye = Oi, yt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
           paddingLeft: 6 + e.depth * 14 + "px"
         },
         onClick: () => e.onSelect(e.node.path)
-      }, [i(ee, {
+      }, [i(ae, {
         size: "14",
         class: "mr-1"
       }, {
@@ -1400,7 +1400,7 @@ const y = Ki, Ye = Oi, yt = hl, oe = al, de = ll, re = il, se = tl, Be = gl, Kl 
           "dirtree-row--active": e.selected === ""
         }],
         onClick: () => e.onSelect("")
-      }, [i(ee, {
+      }, [i(ae, {
         size: "14",
         class: "mr-1"
       }, {
@@ -1679,7 +1679,7 @@ const sn = /* @__PURE__ */ H({
           imageRendering: "pixelated",
           verticalAlign: "-3px"
         }
-      }, null) : i(ee, {
+      }, null) : i(ae, {
         size: "16",
         class: "mr-1"
       }, {
@@ -2399,9 +2399,9 @@ const yn = H({
                 s.length && (I.stopPropagation(), a[n] = p);
               }
             },
-            s.length > 0 ? [ie(ee, { size: "16" }, () => p ? "mdi-chevron-down" : "mdi-chevron-right")] : []
+            s.length > 0 ? [ie(ae, { size: "16" }, () => p ? "mdi-chevron-down" : "mdi-chevron-right")] : []
           ),
-          ie(ee, { size: "16", style: { color: r } }, () => u),
+          ie(ae, { size: "16", style: { color: r } }, () => u),
           ie("span", t.name),
           t.detail ? ie("span", { class: "text-medium-emphasis", style: { overflow: "hidden", textOverflow: "ellipsis" } }, t.detail) : null
         ]
@@ -2476,7 +2476,7 @@ const yn = H({
         class: "bp-entry",
         title: a.value.goToLine,
         onClick: () => e.gotoFileLine(n, o)
-      }, [i(ee, {
+      }, [i(ae, {
         size: "14",
         color: "error",
         class: "mr-1"
@@ -2655,8 +2655,8 @@ const Za = [["array-item-in-new-line", "arrayItemNewLine"], ["dict-item-in-new-l
       Number.isFinite(B) && B > 0 ? Z["max-columns"] = B : delete Z["max-columns"], I.value ? Z.backup = !0 : delete Z.backup;
       const J = {
         ...s
-      }, N = (F, Pe, ae) => {
-        ae.trim() === "" ? delete F[Pe] : F[Pe] = ae;
+      }, N = (F, Pe, te) => {
+        te.trim() === "" ? delete F[Pe] : F[Pe] = te;
       };
       N(J, "writeFunc", h.value), N(J, "rawStrFuncStart", G.value), N(J, "rawStrFuncEnd", w.value);
       const W = {
@@ -3312,13 +3312,13 @@ function Wn(e, a) {
         title: o.value ? a().restore : a().expand,
         "data-tab-expand": t.id,
         "data-maximized": o.value ? "true" : "false"
-      }, p(u)), [i(ee, {
+      }, p(u)), [i(ae, {
         size: "14",
         icon: o.value ? "mdi-arrow-collapse" : "mdi-arrow-expand"
       }, null)]), i("div", b({
         class: "dv-default-tab-action",
         "data-tab-close": t.id
-      }, p(() => t.close())), [i(ee, {
+      }, p(() => t.close())), [i(ae, {
         size: "14",
         icon: "mdi-close"
       }, null)])]);
@@ -3447,6 +3447,8 @@ const Bt = /* @__PURE__ */ H({
       } : {}
     })
   },
+  // the editor: right of the left column; closed and open again, by what
+  // there is (left of the Preview, else above the panels below)
   {
     id: "editor",
     label: "Editor",
@@ -3455,10 +3457,26 @@ const Bt = /* @__PURE__ */ H({
       id: "editor",
       component: "editor",
       title: "Editor",
-      position: {
-        referencePanel: "explorer",
-        direction: "right"
-      }
+      ...e.getPanel("explorer") ? {
+        position: {
+          referencePanel: "explorer",
+          direction: "right"
+        }
+      } : e.getPanel("structure") ? {
+        position: {
+          referencePanel: "structure",
+          direction: "right"
+        }
+      } : e.getPanel("docs") ? {
+        position: {
+          referencePanel: "docs",
+          direction: "left"
+        }
+      } : e.panels.length ? {
+        position: {
+          direction: "above"
+        }
+      } : {}
     })
   },
   {
@@ -3704,7 +3722,7 @@ const Bt = /* @__PURE__ */ H({
         toolbarButton: !0,
         tabExpand: !0
       }
-    ] : [], ...e.extraPanels], h = /* @__PURE__ */ new Set(["docs", ...I.filter((c) => c.tabExpand).map((c) => c.id)]), G = Wn(h, () => ({
+    ] : [], ...e.extraPanels], h = /* @__PURE__ */ new Set(["editor", "explorer", "structure", "docs", ...I.filter((c) => c.tabExpand).map((c) => c.id)]), G = Wn(h, () => ({
       expand: t.value.expand,
       restore: t.value.restore
     })), w = x(() => I.map((c) => ({
@@ -3807,11 +3825,11 @@ const Bt = /* @__PURE__ */ H({
         }
       }
     });
-    const ae = "gad-ide.bottom.height";
+    const te = "gad-ide.bottom.height";
     function q(c) {
       let m = 0;
       try {
-        m = Number(localStorage.getItem(ae)) || 0;
+        m = Number(localStorage.getItem(te)) || 0;
       } catch {
       }
       const A = Math.max(160, c.height - 120);
@@ -3858,7 +3876,7 @@ const Bt = /* @__PURE__ */ H({
       const m = I.find((T) => T.id === c), A = (U = o == null ? void 0 : o.getPanel(c)) == null ? void 0 : U.api.height;
       if (!(!m || (m.placement ?? "bottom") !== "bottom" || !A))
         try {
-          localStorage.setItem(ae, String(Math.round(A)));
+          localStorage.setItem(te, String(Math.round(A)));
         } catch {
         }
     }
@@ -3872,7 +3890,7 @@ const Bt = /* @__PURE__ */ H({
           A && (Ue(c), o.removePanel(A));
         }
     }
-    const te = {
+    const $ = {
       buttons: x(() => I.filter((c) => c.toolbarButton).map((c) => ({
         id: c.id,
         label: c.label,
@@ -3888,7 +3906,7 @@ const Bt = /* @__PURE__ */ H({
         m && !o.getPanel(c) && Z(o, m), (A = o.getPanel(c)) == null || A.api.setActive();
       }
     };
-    na(Dn, te);
+    na(Dn, $);
     const be = (c, m, A = !1) => i(y, {
       key: c.id,
       size: "small",
@@ -3900,7 +3918,7 @@ const Bt = /* @__PURE__ */ H({
       onClick: m
     }, {
       default: () => [c.label]
-    }), ze = x(() => te.buttons.value.filter((c) => c.bottom && c.strip === "bottom")), he = (c, m = "bottom", A = () => te.open(c.id), Y = !1) => {
+    }), ze = x(() => $.buttons.value.filter((c) => c.bottom && c.strip === "bottom")), he = (c, m = "bottom", A = () => $.open(c.id), Y = !1) => {
       const U = r.has(c.id), T = N.value === c.id, ge = U && !h.has(c.id), pe = m === "right" ? U ? "mdi-chevron-right" : "mdi-chevron-left" : m === "left" ? U ? "mdi-chevron-left" : "mdi-chevron-right" : U ? "mdi-chevron-down" : "mdi-chevron-up";
       return i("span", {
         key: c.id,
@@ -3915,12 +3933,12 @@ const Bt = /* @__PURE__ */ H({
         "data-extra-open": c.id,
         "data-open": U ? "true" : "false",
         onClick: () => U ? Je(c.id, !1) : A()
-      }, [i(ee, {
+      }, [i(ae, {
         size: "16",
         icon: c.icon
       }, null), i("span", {
         class: "gad-ide__strip-label"
-      }, [c.label]), i(ee, {
+      }, [c.label]), i(ae, {
         size: "14",
         icon: pe
       }, null)]), ge && i("button", {
@@ -3930,7 +3948,7 @@ const Bt = /* @__PURE__ */ H({
         "data-strip-expand": c.id,
         "data-maximized": T ? "true" : "false",
         onClick: () => V(c.id)
-      }, [i(ee, {
+      }, [i(ae, {
         size: "14",
         icon: T ? "mdi-arrow-collapse" : "mdi-arrow-expand"
       }, null)])]);
@@ -3939,6 +3957,10 @@ const Bt = /* @__PURE__ */ H({
       label: t.value.preview,
       icon: "mdi-file-eye-outline"
     }, Ge = x(() => [{
+      id: "editor",
+      label: t.value.editor,
+      icon: "mdi-file-document-edit-outline"
+    }, {
       id: "explorer",
       label: t.value.explorer,
       icon: "mdi-file-tree-outline"
@@ -3946,7 +3968,7 @@ const Bt = /* @__PURE__ */ H({
       id: "structure",
       label: t.value.structure,
       icon: "mdi-file-tree"
-    }].filter((c) => z(c.id))), Ze = x(() => te.buttons.value.filter((c) => c.bottom && c.strip === "left")), Xe = x(() => M.value.map((c) => ({
+    }].filter((c) => z(c.id))), Ze = x(() => $.buttons.value.filter((c) => c.bottom && c.strip === "left")), Xe = x(() => M.value.map((c) => ({
       id: c.id,
       label: c.label,
       visible: r.has(c.id)
@@ -3970,7 +3992,7 @@ const Bt = /* @__PURE__ */ H({
       }, [i("div", {
         class: "gad-ide__header",
         "data-ide-header": !0
-      }, [te.buttons.value.filter((m) => !m.bottom && m.align === "left").map((m) => be(m, () => te.open(m.id))), i(y, {
+      }, [$.buttons.value.filter((m) => !m.bottom && m.align === "left").map((m) => be(m, () => $.open(m.id))), i(y, {
         size: "small",
         variant: "text",
         prependIcon: "mdi-cog-outline",
@@ -3981,7 +4003,7 @@ const Bt = /* @__PURE__ */ H({
         default: () => [t.value.settings]
       }), i("span", {
         class: "gad-ide__header-spacer"
-      }, null), te.buttons.value.filter((m) => !m.bottom && m.align === "right").map((m) => be(m, () => te.open(m.id))), e.headerActions.map((m) => (
+      }, null), $.buttons.value.filter((m) => !m.bottom && m.align === "right").map((m) => be(m, () => $.open(m.id))), e.headerActions.map((m) => (
         // with a label, its text beside the icon; else an icon button
         // (no children: a default slot, even empty, hides the icon)
         m.label ? i(y, {
@@ -4010,7 +4032,7 @@ const Bt = /* @__PURE__ */ H({
       }, [Ge.value.length + Ze.value.length > 0 && i("div", {
         class: "gad-ide__strip gad-ide__strip--side gad-ide__strip--left",
         "data-ide-strip-left": !0
-      }, [Ge.value.map((m) => he(m, "left", () => ca(m.id))), Ze.value.map((m) => he(m, "left"))]), i("div", {
+      }, [Ge.value.map((m) => he(m, "left", () => m.id === "editor" ? $.open(m.id) : ca(m.id))), Ze.value.map((m) => he(m, "left"))]), i("div", {
         class: "gad-ide__dock"
       }, [i(Zi, {
         style: {

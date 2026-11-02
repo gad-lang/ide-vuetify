@@ -56,7 +56,17 @@ const PANELS: PanelDef[] = [
         : a.getPanel("editor") ? { position: { referencePanel: "editor", direction: "left" } } : {}),
     }),
   },
-  { id: "editor", label: "Editor", word: "editor", add: (a) => a.addPanel({ id: "editor", component: "editor", title: "Editor", position: { referencePanel: "explorer", direction: "right" } }) },
+  // the editor: right of the left column; closed and open again, by what
+  // there is (left of the Preview, else above the panels below)
+  {
+    id: "editor", label: "Editor", word: "editor", add: (a) => a.addPanel({
+      id: "editor", component: "editor", title: "Editor",
+      ...(a.getPanel("explorer") ? { position: { referencePanel: "explorer", direction: "right" } }
+        : a.getPanel("structure") ? { position: { referencePanel: "structure", direction: "right" } }
+          : a.getPanel("docs") ? { position: { referencePanel: "docs", direction: "left" } }
+            : a.panels.length ? { position: { direction: "above" } } : {}),
+    }),
+  },
   {
     id: "structure", label: "Structure", word: "structure", add: (a) => a.addPanel({
       id: "structure", component: "structure", title: "Structure",
@@ -180,8 +190,9 @@ export default defineComponent({
         : [];
     const extras = [...gitPanels, ...props.extraPanels];
     // the tabs: dockview's, with the expand button of the panels that have it
-    // in their tab (tabExpand) — and of the Preview's
-    const tabExpand = new Set(["docs", ...extras.filter((x) => x.tabExpand).map((x) => x.id)]);
+    // in their tab (tabExpand) — and of the IDE's own of the strips: the
+    // Editor, the Explorer, the Structure, the Preview
+    const tabExpand = new Set(["editor", "explorer", "structure", "docs", ...extras.filter((x) => x.tabExpand).map((x) => x.id)]);
     const PanelTab = tabFor(tabExpand, () => ({ expand: messages.value.expand, restore: messages.value.restore }));
 
     // the host's panels (extraPanels): placed by the editor (or the first
@@ -466,10 +477,11 @@ export default defineComponent({
       );
     };
     const previewBtn = { id: "docs", label: messages.value.preview, icon: "mdi-file-eye-outline" };
-    // the left strip: the Explorer above the Structure, then the panels
-    // whose button is there (Changes)
+    // the left strip: the Editor, the Explorer, the Structure, then the
+    // panels whose button is there (Changes)
     const leftBtns = computed(() =>
       [
+        { id: "editor", label: messages.value.editor, icon: "mdi-file-document-edit-outline" },
         { id: "explorer", label: messages.value.explorer, icon: "mdi-file-tree-outline" },
         { id: "structure", label: messages.value.structure, icon: "mdi-file-tree" },
       ].filter((b) => hasPanel(b.id)),
@@ -533,7 +545,7 @@ export default defineComponent({
         <div class="gad-ide__main">
           {leftBtns.value.length + leftExtras.value.length > 0 && (
             <div class="gad-ide__strip gad-ide__strip--side gad-ide__strip--left" data-ide-strip-left>
-              {leftBtns.value.map((b) => stripBtn(b, "left", () => openSide(b.id)))}
+              {leftBtns.value.map((b) => stripBtn(b, "left", () => (b.id === "editor" ? extraPanels.open(b.id) : openSide(b.id))))}
               {leftExtras.value.map((b) => stripBtn(b, "left"))}
             </div>
           )}
