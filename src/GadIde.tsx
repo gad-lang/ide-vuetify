@@ -26,6 +26,7 @@ import { ConfirmDialog, PromptDialog } from "./PromptDialog";
 import UrlImportDialog from "./UrlImportDialog";
 import MoveDialog from "./MoveDialog";
 import { panelFor } from "./panels/PanelExtra";
+import { tabFor } from "./panels/PanelTab";
 import PanelChanges from "./panels/PanelChanges";
 import PanelGit from "./panels/PanelGit";
 import { IdeExtraPanelsKey, type ExtraPanel, type HeaderAction } from "./extraPanels";
@@ -171,13 +172,17 @@ export default defineComponent({
     const gitPanels: ExtraPanel[] =
       props.workspace.git && props.api.git
         ? [
-            { id: "changes", label: messages.value.changes, icon: "mdi-file-compare", component: PanelChanges, toolbarButton: true, buttonAlign: "right",
-              headerExpand: true, expandTitle: messages.value.expand, collapseTitle: messages.value.restore },
-            { id: "git", label: messages.value.git, icon: "mdi-source-branch", component: PanelGit, toolbarButton: true,
-              headerExpand: true, expandTitle: messages.value.expand, collapseTitle: messages.value.restore },
+            // Changes: its button in the left strip, below the Structure
+            { id: "changes", label: messages.value.changes, icon: "mdi-file-compare", component: PanelChanges, toolbarButton: true,
+              strip: "left", tabExpand: true },
+            { id: "git", label: messages.value.git, icon: "mdi-source-branch", component: PanelGit, toolbarButton: true, tabExpand: true },
           ]
         : [];
     const extras = [...gitPanels, ...props.extraPanels];
+    // the tabs: dockview's, with the expand button of the panels that have it
+    // in their tab (tabExpand) — and of the Preview's
+    const tabExpand = new Set(["docs", ...extras.filter((x) => x.tabExpand).map((x) => x.id)]);
+    const PanelTab = tabFor(tabExpand, () => ({ expand: messages.value.expand, restore: messages.value.restore }));
 
     // the host's panels (extraPanels): placed by the editor (or the first
     // panel there is), their components wrapped (PanelExtra)
@@ -387,6 +392,7 @@ export default defineComponent({
             icon: x.icon ?? "mdi-view-split-horizontal",
             align: x.buttonAlign ?? ("left" as const),
             bottom: (x.placement ?? "bottom") === "bottom",
+            strip: x.strip ?? ("bottom" as const),
           })),
       ),
       open: (id: string) => {
@@ -416,13 +422,15 @@ export default defineComponent({
     );
 
     // the bottom strip's buttons: open or closed, a click turns it
-    const bottomButtons = computed(() => extraPanels.buttons.value.filter((b) => b.bottom));
+    const bottomButtons = computed(() => extraPanels.buttons.value.filter((b) => b.bottom && b.strip === "bottom"));
     // a strip's button (the bottom's, the right's): a click opens its panel,
     // another closes it; open, a button beside it expands it over the others
     // and brings it back
     const stripBtn = (b: { id: string; label: string; icon: string }, side: "bottom" | "right" | "left" = "bottom", onOpen = () => extraPanels.open(b.id), disabled = false) => {
       const open = visible.has(b.id);
       const max = maximized.value === b.id;
+      // its expand button in its tab: none here
+      const expand = open && !tabExpand.has(b.id);
       const chevron =
         side === "right" ? (open ? "mdi-chevron-right" : "mdi-chevron-left")
           : side === "left" ? (open ? "mdi-chevron-left" : "mdi-chevron-right")
@@ -442,7 +450,7 @@ export default defineComponent({
             <span class="gad-ide__strip-label">{b.label}</span>
             <VIcon size="14" icon={chevron} />
           </button>
-          {open && (
+          {expand && (
             <button
               type="button"
               class="gad-ide__strip-btn gad-ide__strip-expand"
@@ -458,13 +466,15 @@ export default defineComponent({
       );
     };
     const previewBtn = { id: "docs", label: messages.value.preview, icon: "mdi-file-eye-outline" };
-    // the left strip: the Explorer above the Structure
+    // the left strip: the Explorer above the Structure, then the panels
+    // whose button is there (Changes)
     const leftBtns = computed(() =>
       [
         { id: "explorer", label: messages.value.explorer, icon: "mdi-file-tree-outline" },
         { id: "structure", label: messages.value.structure, icon: "mdi-file-tree" },
       ].filter((b) => hasPanel(b.id)),
     );
+    const leftExtras = computed(() => extraPanels.buttons.value.filter((b) => b.bottom && b.strip === "left"));
 
     const panelToggles = computed<PanelToggle[]>(() =>
       panelDefs.value.map((p) => ({ id: p.id, label: p.label, visible: visible.has(p.id) })),
@@ -521,13 +531,15 @@ export default defineComponent({
           )}
         </div>
         <div class="gad-ide__main">
-          {leftBtns.value.length > 0 && (
+          {leftBtns.value.length + leftExtras.value.length > 0 && (
             <div class="gad-ide__strip gad-ide__strip--side gad-ide__strip--left" data-ide-strip-left>
               {leftBtns.value.map((b) => stripBtn(b, "left", () => openSide(b.id)))}
+              {leftExtras.value.map((b) => stripBtn(b, "left"))}
             </div>
           )}
           <div class="gad-ide__dock">
-            <DockviewVue style={{ height: "100%" }} theme={dvTheme.value} components={allComponents} onReady={onReady} />
+            <DockviewVue style={{ height: "100%" }} theme={dvTheme.value} components={allComponents}
+              defaultTabComponent={PanelTab as unknown as VueComponent} onReady={onReady} />
           </div>
           {/* The right strip: the Preview — closed, its button; a click opens
               it right of the editor (its width by the sash), another closes it. */}

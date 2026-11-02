@@ -23,6 +23,12 @@ export interface ExtraPanel {
     /** where in the header its button is: with the others, at the left
      * (default), or at the right */
     buttonAlign?: "left" | "right";
+    /** where its button is when it is placed below: the bottom strip
+     * (default), or the left one — below the Explorer and the Structure */
+    strip?: "bottom" | "left";
+    /** the expand/collapse button in its tab, beside the close one: none
+     * floats over it, none beside its strip's button */
+    tabExpand?: boolean;
     /** its component draws the expand/collapse button in its own header
      * (ExpandButton, by ExtraPanelExpandKey): none floats over it */
     headerExpand?: boolean;
@@ -40,6 +46,7 @@ export interface IdeExtraPanels {
         icon: string;
         align: "left" | "right";
         bottom: boolean;
+        strip: "bottom" | "left";
     }[]>;
     open: (id: string) => void;
 }

@@ -37,7 +37,7 @@ export function panelFor(def: ExtraPanel) {
       return () => (
         <div class="gad-ide__extra" data-extra-panel={def.id}>
           <div class="gad-ide__extra-body">{h(def.component, def.props ?? {})}</div>
-          {!def.headerExpand && <ExpandButton class="gad-ide__extra-expand" variant="tonal" />}
+          {!def.headerExpand && !def.tabExpand && <ExpandButton class="gad-ide__extra-expand" variant="tonal" />}
         </div>
       );
     },
